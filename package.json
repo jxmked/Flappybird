@@ -1,0 +1,53 @@
+{
+  "name": "flappybird",
+  "description": "Mimicking the old retro game FlappyBird but as a web app",
+
+  "version": "0.0.0",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js --mode production --devtool false",
+    "dev": "webpack --config webpack.config.js --mode development --devtool source-map --watch",
+    "start": "npm run dev",
+    "prettier-format": "prettier --config .prettierrc \"./src\" \"./types\" --write",
+    "prettier-format:md": "prettier --config .prettierrc \"./*.js\" --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jxmked/FlappyBird.git"
+  },
+  "keywords": [
+    "canvas",
+    "2d-games",
+    "typescript",
+    "opensource",
+    "retro"
+  ],
+  "author": "Jovan De Guia",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jxmked/FlappyBird/issues"
+  },
+  "homepage": "https://jxmked.github.io/FlappyBird/",
+  "devDependencies": {
+    "@types/gtag.js": "^0.0.12",
+    "@types/raf": "^3.4.0",
+    "browser-sync": "^2.27.11",
+    "browser-sync-webpack-plugin": "^2.3.0",
+    "css-loader": "^6.7.3",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "interpolate-html-plugin": "^4.0.0",
+    "mini-css-extract-plugin": "^2.7.2",
+    "postcss-loader": "^7.0.2",
+    "prettier": "^2.8.2",
+    "raf": "^3.4.1",
+    "sass": "^1.57.1",
+    "sass-loader": "^13.2.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.4.2",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-pwa-manifest": "^4.3.0"
+  }
+}
