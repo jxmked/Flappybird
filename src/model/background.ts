@@ -1,7 +1,7 @@
 import { asset } from '../utils';
 import bgImgDay from '../assets/sprites/background/day.png';
 import bgImgNight from '../assets/sprites/background/night.png';
-import { rescaleDim, IRescaleDim } from '../utils';
+import { rescaleDim, IRescaleDim, lerp } from '../utils';
 
 export default class Background {
   backgroundImage: { [key: string]: HTMLImageElement };
@@ -13,7 +13,9 @@ export default class Background {
 
   constructor() {
     this.backgroundImage = {};
-    this.velocity = { x: 0.4, y: 0 };
+    
+    // Percentage
+    this.velocity = { x: 0.0002, y: 0 };
     this.coordinate = { x: 0, y: 0 };
     this.canvasSize = {
       width: 0,
@@ -63,12 +65,18 @@ export default class Background {
         { width: max }
       );
     }
-
-    console.log(this.backgroundSize);
   }
 
   Update() {
-    this.coordinate.x += this.velocity.x;
+    /**
+     * We use linear interpolation instead of by pixel to move the object.
+     * It is to keep the speed same in different Screen Sizes & Screen DPI.
+     * 
+     * The only problem that left is the time difference.
+     * We cannot rely on fps since it is not a constant value.
+     * Which means is the game will speed up or slow down based on fps
+     * */
+    this.coordinate.x += lerp(0, this.canvasSize.width,this.velocity.x);
     this.coordinate.y += this.velocity.y;
   }
 

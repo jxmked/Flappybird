@@ -1,6 +1,6 @@
 import { asset } from '../utils';
 import platformImage from '../assets/sprites/base.png';
-import { rescaleDim, IRescaleDim } from '../utils';
+import { rescaleDim, IRescaleDim, lerp } from '../utils';
 
 export default class Platform {
   velocity: IVelocity;
@@ -10,7 +10,8 @@ export default class Platform {
   img: undefined | HTMLImageElement;
 
   constructor() {
-    this.velocity = { x: 1, y: 0 };
+    // Percentage
+    this.velocity = { x: 0.001, y: 0 };
     this.coordinate = { x: 0, y: 0 };
     this.canvasSize = {
       width: 0,
@@ -56,7 +57,11 @@ export default class Platform {
   }
 
   Update() {
-    this.coordinate.x += this.velocity.x;
+    /**
+     * We use linear interpolation instead of by pixel to move the object.
+     * It is to keep the speed same in different Screen Sizes & Screen DPI
+     * */
+    this.coordinate.x += lerp(0, this.canvasSize.width, this.velocity.x);
     this.coordinate.y += this.velocity.y;
   }
 

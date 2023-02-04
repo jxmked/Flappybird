@@ -37,16 +37,16 @@ import { AssetLoader } from './utils';
 
 export default (callback: Function): void => {
   const assetArray = [
-    /* sfDie,
+    /*sfDie,
     sfHit,
     sfPoint,
     sfSwoosh,
     sfWing,
-    mainIcon,
+    mainIcon, */
     pipeTopGreen,
     pipeBottomRed,
     pipeBottomGreen,
-    pipeTopRed, */
+    pipeTopRed, 
     bgDay,
     bgNight,
     /*  birdYellowMidFlap,
