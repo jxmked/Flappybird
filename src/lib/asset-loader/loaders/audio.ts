@@ -10,7 +10,7 @@ export default class AudioLoader extends AbstractLoader {
 
   load(): Promise<IPromiseResolve> {
     // Load Event Count
-    this.ready = 3;
+    this.ready = 2;
 
     return new Promise<IPromiseResolve>((resolve: Function, reject) => {
       const audio = new Audio();

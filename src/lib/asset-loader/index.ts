@@ -26,13 +26,17 @@ export default class AssetsLoader {
       throw new Error('No available driver for file: ' + source);
     });
 
-    Promise.all(InitializeLoad).then((resolveArray: IPromiseResolve[]) => {
-      resolveArray.forEach((resolve: IPromiseResolve) => {
-        AssetsLoader.assets.set(resolve['source'], resolve['object']);
-      });
+    Promise.all(InitializeLoad)
+      .then((resolveArray: IPromiseResolve[]) => {
+        resolveArray.forEach((resolve: IPromiseResolve) => {
+          AssetsLoader.assets.set(resolve['source'], resolve['object']);
+        });
 
-      this.callback();
-    });
+        this.callback();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   // Call the instance function after all assets has been loaded

@@ -1,6 +1,6 @@
-export type IRescaleDim = { width: number } | { height: number };
+type IRescaleDim = { width: number } | { height: number };
 
-export const rescaleDim = (oldDim: IDimension, newDim: IRescaleDim): IDimension => {
+const rescaleDim = (oldDim: IDimension, newDim: IRescaleDim): IDimension => {
   const filledDim: IDimension = {
     width: 0,
     height: 0
@@ -16,3 +16,5 @@ export const rescaleDim = (oldDim: IDimension, newDim: IRescaleDim): IDimension 
 
   return filledDim;
 };
+
+export { rescaleDim, IRescaleDim };

@@ -111,7 +111,7 @@ module.exports = function (env, config) {
           loader: 'file-loader'
         },
         {
-          test: /\.(wav|mp3|mp4|avi)$/i,
+          test: /\.(wav|mp3|mp4|avi|ogg)$/i,
           loader: 'file-loader'
         },
         {
