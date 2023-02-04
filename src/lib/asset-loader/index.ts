@@ -9,7 +9,7 @@ export default class AssetsLoader {
 
   constructor(sources: string[]) {
     this.callback = () => {};
-    
+
     const InitializeLoad = sources.map((source: string) => {
       for (const loader of AssetsLoader.loaders) {
         const instance = new loader(source);

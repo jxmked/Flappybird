@@ -7,6 +7,8 @@ const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 const GA4WebpackPlugin = require('ga4-webpack-plugin');
 const package = require('./package.json');
 
+const WorkboxPlugin = require('workbox-webpack-plugin');
+
 /**
  * First Webpack Config
  *
@@ -45,6 +47,39 @@ const CONFIG = {
   }
 };
 
+let prodPlugins = [
+  new WebpackPwaManifest({
+    name: CONFIG.appName,
+    short_name: CONFIG.shortAppName,
+    description: CONFIG.description,
+    orientation: 'portrait',
+    start_url: '.',
+    background_color: CONFIG.colors.background,
+    theme_color: CONFIG.colors.theme,
+    icons: [
+      {
+        src: CONFIG.icons.src,
+        sizes: CONFIG.icons.sizes,
+        purpose: 'maskable'
+      }
+    ],
+
+    // Asset config
+    fingerprints: false, // Remove hashed in filename
+    publicPath: './', // Make sure the url starts with
+    inject: true, // Insert html tag <link rel="manifest" ... />
+    filename: 'site.webmanifest'
+  }),
+  new WorkboxPlugin.GenerateSW({
+    clientsClaim: true,
+    skipWaiting: true
+  })
+];
+
+if (devMode) {
+  prodPlugins = [];
+}
+
 module.exports = function (env, config) {
   if (process.env['NODE' + '_ENV'] === void 0) {
     // From flag '--mode'
@@ -61,29 +96,30 @@ module.exports = function (env, config) {
   return {
     entry: CONFIG.input.entry,
     module: {
-      rules: [{
+      rules: [
+        {
           test: /\.tsx?$/,
           use: 'ts-loader',
           exclude: /node_modules/
-        }, {
+        },
+        {
           test: /\.(jpe?g|png|gif|svg|webp)$/i,
           loader: 'file-loader'
-        }, {
+        },
+        {
           test: /\.(woff|ttf|otf|eot|woff2)$/i,
           loader: 'file-loader'
-        }, {
+        },
+        {
           test: /\.(wav|mp3|mp4|avi)$/i,
           loader: 'file-loader'
-        }, {
+        },
+        {
           test: /\.((s[ca]|c)ss)$/,
           exclude: /node_modules/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader',
-            'postcss-loader',
-            'sass-loader'
-          ]
-      }]
+          use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
+        }
+      ]
     },
 
     resolve: {
@@ -104,7 +140,7 @@ module.exports = function (env, config) {
 
     plugins: [
       new GA4WebpackPlugin({
-        id: "G-JPJZGW7PW6",
+        id: 'G-JPJZGW7PW6',
         inject: !devMode, // Only inject in build mode
         callPageView: true
       }),
@@ -129,7 +165,7 @@ module.exports = function (env, config) {
         //   manifest: './src/site.webmanifest',
         showErrors: devMode, // Include html error on emitted file
         meta: {
-          'viewport': 'width=device-width, initial-scale=1, shrink-to-fit=no' + (CONFIG.windowResizeable?'':',user-scalable=no'),
+          'viewport': 'width=device-width, initial-scale=1, shrink-to-fit=no' + (CONFIG.windowResizeable ? '' : ',user-scalable=no'),
           'robots': 'index,follow',
           'referrer': 'origin',
           'charset': { charset: 'UTF-8' },
@@ -187,35 +223,13 @@ module.exports = function (env, config) {
         chunkFilename: CONFIG.output.chunk + '.css'
       }),
 
-      new WebpackPwaManifest({
-        name: CONFIG.appName,
-        short_name: CONFIG.shortAppName,
-        description: CONFIG.description,
-        orientation: 'portrait',
-        start_url: '.',
-        background_color: CONFIG.colors.background,
-        theme_color: CONFIG.colors.theme,
-        icons: [
-          {
-            src: CONFIG.icons.src,
-            sizes: CONFIG.icons.sizes,
-            purpose: 'maskable'
-          }
-        ],
-
-        // Asset config
-        fingerprints: false, // Remove hashed in filename
-        publicPath: './', // Make sure the url starts with
-        inject: true, // Insert html tag <link rel="manifest" ... />
-        filename: 'site.webmanifest'
-      }),
-
       new InterpolateHtmlPlugin({
         CDN: '',
         PUBLIC_URL: '',
         TITLE: CONFIG.appName,
-        APP_VERSION: package.version
+        APP_VERSION: package.version,
+        APP_MODE: devMode ? 'development' : 'production'
       })
-    ]
+    ].concat(prodPlugins)
   };
 };
