@@ -5,13 +5,11 @@ import { IPromiseResolve, ILoaders } from './interfaces';
 export default class AssetsLoader {
   private static assets: Map<string, any> = new Map<string, any>();
   private callback: Function;
-  private static sources: string[] = [];
   private static loaders: ILoaders[] = [AudioLoader, ImageLoader];
 
   constructor(sources: string[]) {
     this.callback = () => {};
-    AssetsLoader.sources.push(...sources);
-
+    
     const InitializeLoad = sources.map((source: string) => {
       for (const loader of AssetsLoader.loaders) {
         const instance = new loader(source);
@@ -36,10 +34,6 @@ export default class AssetsLoader {
       this.callback();
     });
   }
-
-  /**
-   * Public Methods
-   * */
 
   // Call the instance function after all assets has been loaded
   then(callback: Function): void {
