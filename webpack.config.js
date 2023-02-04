@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
+const GA4WebpackPlugin = require('ga4-webpack-plugin');
 const package = require('./package.json');
 
 /**
@@ -102,6 +103,12 @@ module.exports = function (env, config) {
     },
 
     plugins: [
+      new GA4WebpackPlugin({
+        id: "G-JPJZGW7PW6",
+        inject: !devMode, // Only inject in build mode
+        callPageView: true
+      }),
+
       new BrowserSyncPlugin({
         host: 'localhost',
         port: 3000,
