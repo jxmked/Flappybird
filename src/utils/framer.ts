@@ -1,3 +1,3 @@
-import framer from '../lib/stats'
+import framer from '../lib/stats';
 
-export { framer } 
+export { framer };

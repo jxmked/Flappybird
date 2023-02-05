@@ -7,49 +7,45 @@ export default class Game {
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
   platform: PlatformModel;
-  pipes:PipeModel[];
-  
+  pipes: PipeModel[];
+
   constructor(canvas: HTMLCanvasElement) {
     this.background = new BgModel();
     this.canvas = canvas;
     this.context = this.canvas.getContext('2d')!;
     this.platform = new PlatformModel();
     this.pipes = [];
-    
   }
 
   init(): void {
     this.background.init();
     this.platform.init();
-    
   }
-  
-  addPipe(hollPosition:number): void {
+
+  addPipe(hollPosition: number): void {
     const x = new PipeModel();
-    x.coordinate.x = 100
-    x.setHollPosition(10)
-    
-    this.pipes.push(x)
+    x.coordinate.x = 100;
+    x.setHollPosition(10);
+
+    this.pipes.push(x);
   }
 
   Resize({ width, height }: IDimension): void {
     this.background.resize({ width, height });
     this.platform.resize({ width, height });
-    
-    for(const pipe of this.pipes) {
-      pipe.resize({width, height});
+
+    for (const pipe of this.pipes) {
+      pipe.resize({ width, height });
     }
-    
-    this.addPipe(8)
-    
-    
+
+    this.addPipe(8);
   }
 
   Update(): void {
     this.background.Update();
     this.platform.Update();
-    
-    for(const pipe of this.pipes) {
+
+    for (const pipe of this.pipes) {
       pipe.Update();
     }
   }
@@ -59,8 +55,8 @@ export default class Game {
 
     this.background.Display(this.context);
     this.platform.Display(this.context);
-    
-    for(const pipe of this.pipes) {
+
+    for (const pipe of this.pipes) {
       pipe.Display(this.context);
     }
   }

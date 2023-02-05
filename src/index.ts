@@ -20,7 +20,6 @@ if (document.querySelector('[name=app_mode]')!.getAttribute('content') === 'prod
   }
 }
 
-
 const canvas = document.querySelector('#main-canvas')! as HTMLCanvasElement;
 const canvasDimension = {
   width: 1080 * 2,
@@ -37,31 +36,39 @@ const stacks: Function[] = [];
 const Game = new GameObject(canvas);
 const fps = new Framer(Game.context);
 
-fps.text({
-  x: 50, y: 50
-}, "", " Cycle");
-fps.container({
-  x: 10, 
-  y: 10,
-}, {
-  x: 230,
-  y: 70
-});
+fps.text(
+  {
+    x: 50,
+    y: 50
+  },
+  '',
+  ' Cycle'
+);
+fps.container(
+  {
+    x: 10,
+    y: 10
+  },
+  {
+    x: 230,
+    y: 70
+  }
+);
 
 /**
  * Update the game
  * */
 const GameUpdate = (): void => {
   Game.Update();
-  fps.mark()
+  fps.mark();
   raf(GameUpdate);
 };
 
 const GameDisplay = (): void => {
   Game.Display();
-  
+
   raf(GameDisplay);
-}
+};
 
 const ScreenResize = () => {
   const { innerWidth, innerHeight } = window;

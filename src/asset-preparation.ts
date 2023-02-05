@@ -46,7 +46,7 @@ export default (callback: Function): void => {
     pipeTopGreen,
     pipeBottomRed,
     pipeBottomGreen,
-    pipeTopRed, 
+    pipeTopRed,
     bgDay,
     bgNight,
     /*  birdYellowMidFlap,

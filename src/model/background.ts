@@ -13,7 +13,7 @@ export default class Background {
 
   constructor() {
     this.backgroundImage = {};
-    
+
     // Percentage
     this.velocity = { x: 0.0002, y: 0 };
     this.coordinate = { x: 0, y: 0 };
@@ -71,12 +71,12 @@ export default class Background {
     /**
      * We use linear interpolation instead of by pixel to move the object.
      * It is to keep the speed same in different Screen Sizes & Screen DPI.
-     * 
+     *
      * The only problem that left is the time difference.
      * We cannot rely on fps since it is not a constant value.
      * Which means is the game will speed up or slow down based on fps
      * */
-    this.coordinate.x += lerp(0, this.canvasSize.width,this.velocity.x);
+    this.coordinate.x += lerp(0, this.canvasSize.width, this.velocity.x);
     this.coordinate.y += this.velocity.y;
   }
 
