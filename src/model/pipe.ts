@@ -38,8 +38,8 @@ export default class Pipe {
 
     this.hollSize = 0;
     this.pipeSize = {
-      width: 0,
-      height: 0
+      width: 120,
+      height: 300
     };
 
     this.img = void 0;
@@ -61,21 +61,22 @@ export default class Pipe {
         bottom: asset(pipeBottomGreen)
       }
     };
-
+    
     this.use('green');
   }
 
-  setHollPosition(position: number): void {
-    this.hollSize = lerp(0, this.canvasSize.height, 0.04);
+  setHollPosition(position: number, hollSize: number): void {
+    // Update Pipe Size
+    const min = lerp(0, Math.min(this.canvasSize.height, this.canvasSize.width), 0.2);
+    this.pipeSize = rescaleDim(this.pipeSize, { width: min });
+    
+    // Positioning holl
+    this.hollSize = lerp(0, this.canvasSize.height, hollSize);
     this.hollPositiion = position;
-
-    this.pipePosition.top.y = position - this.hollSize / 2;
-    this.pipePosition.bottom.y = this.canvasSize.height - (position - this.hollSize / 2);
-
-    console.log(position - this.hollSize / 2);
-    console.log(this.canvasSize)
-    console.log(this.canvasSize.height);
-    console.log(this.pipePosition);
+    this.pipePosition.top.y = Math.abs(position - (this.hollSize / 2));
+    this.pipePosition.bottom.y = Math.abs(position - this.hollSize);
+    
+    console.log(this.pipePosition)
   }
 
   resize({ width, height }: IDimension): void {
@@ -93,33 +94,23 @@ export default class Pipe {
     const { x, y } = this.coordinate;
     const { width, height } = this.pipeSize;
 
-    /**
-     * We need to calculate the new height based on new width
-     * to prevent squashing the image that create a cropped image.
-     *
-     * Keep watching on aspect ratio!
-     * */
-
-    context.beginPath();
-
-    /*context.arc(x, this.pipePosition.top.y, 10, 0, Math.PI * 2);
-   
-   */
+   /* context.beginPath();
+    context.arc(x, this.pipePosition.top.y, 10, 0, Math.PI * 2);
     context.fillStyle = 'black';
     context.fill();
-
+    context.closePath();
+    context.beginPath()
     context.arc(x, this.pipePosition.bottom.y, 10, 0, Math.PI * 2);
     context.fillStyle = 'red';
     context.fill();
-
-    context.closePath();
-    /*   // prettier-ignore
+    context.closePath(); */
+    // prettier-ignore
       const resizedA= rescaleDim({ 
         width: this.img!.top.width,
         height: this.img!.top.height
       }, { width });
-
-      context.drawImage(this.img!.top, x, (height - resizedA.height), resizedA.width, resizedA.height);
+      
+      context.drawImage(this.img!.top, this.pipePosition.top.x, (this.pipePosition.top.y - resizedA.height), resizedA.width, resizedA.height);
 
       // prettier-ignore
       const resizedB = rescaleDim({ 
@@ -127,7 +118,7 @@ export default class Pipe {
         height: this.img!.bottom.height
       }, { width });
 
-      context.drawImage(this.img!.bottom, x, y, resizedB.width, resizedB.height);
-    */
+      context.drawImage(this.img!.bottom, this.pipePosition.bottom.x, this.pipePosition.bottom.y, resizedB.width, resizedB.height);
+    
   }
 }

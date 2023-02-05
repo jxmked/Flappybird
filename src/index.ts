@@ -4,6 +4,9 @@ import prepareAssets from './asset-preparation';
 import GameObject from './game';
 import { rescaleDim, framer as Framer } from './utils';
 
+import SFX from './model/sfx';
+
+
 if (document.querySelector('[name=app_mode]')!.getAttribute('content') === 'production') {
   // Load Service Worker
   if ('serviceWorker' in navigator) {
@@ -22,8 +25,8 @@ if (document.querySelector('[name=app_mode]')!.getAttribute('content') === 'prod
 
 const canvas = document.querySelector('#main-canvas')! as HTMLCanvasElement;
 const canvasDimension = {
-  width: 1080 * 2,
-  height: 1755 * 2
+  width: 424,
+  height: 806
 };
 
 /**
@@ -73,18 +76,25 @@ const GameDisplay = (): void => {
 const ScreenResize = () => {
   const { innerWidth, innerHeight } = window;
   let sizeResult: IDimension;
-
+  const scaleFactor = window.devicePixelRatio;
   if (innerHeight < innerWidth) {
     // Reize the canvas
+    const x = canvas.offsetWidth * scaleFactor;
     sizeResult = rescaleDim(canvasDimension, { width: innerWidth });
   } else {
+    const y = canvas.offsetHeight * scaleFactor;
     sizeResult = rescaleDim(canvasDimension, { height: innerHeight });
   }
-
+ // canvas.style.width = String(innerWidth);
+  //canvas.style.height = String(innerHeight);
   canvas.height = sizeResult.height;
   canvas.width = sizeResult.width;
   Game.Resize(sizeResult);
+  
+  console.log(innerWidth, innerHeight)
 };
+
+
 
 window.addEventListener('DOMContentLoaded', () => {
   // Load Assets
@@ -104,3 +114,9 @@ window.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('resize', () => {
   stacks.push(ScreenResize);
 });
+
+
+canvas.addEventListener("touchstart", () => {
+  SFX.stop()
+  SFX.wing();
+})
