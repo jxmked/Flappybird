@@ -73,6 +73,7 @@ export default class Pipe {
     this.pipePosition.bottom.y = this.canvasSize.height - (position - this.hollSize / 2);
 
     console.log(position - this.hollSize / 2);
+    console.log(this.canvasSize)
     console.log(this.canvasSize.height);
     console.log(this.pipePosition);
   }

@@ -35,6 +35,7 @@ export default class Game {
     this.platform.resize({ width, height });
 
     for (const pipe of this.pipes) {
+      console.log(pipe.canvasSize)
       pipe.resize({ width, height });
     }
 

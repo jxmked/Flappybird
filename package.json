@@ -29,12 +29,12 @@
   },
   "homepage": "https://jxmked.github.io/FlappyBird/",
   "devDependencies": {
-    "@types/gtag.js": "^0.0.12",
     "@types/raf": "^3.4.0",
     "browser-sync": "^2.27.11",
     "browser-sync-webpack-plugin": "^2.3.0",
     "css-loader": "^6.7.3",
     "file-loader": "^6.2.0",
+    "ga4-webpack-plugin": "^1.0.1",
     "html-webpack-plugin": "^5.5.0",
     "interpolate-html-plugin": "^4.0.0",
     "mini-css-extract-plugin": "^2.7.2",
@@ -49,10 +49,5 @@
     "webpack-cli": "^5.0.1",
     "webpack-pwa-manifest": "^4.3.0",
     "workbox-webpack-plugin": "^6.5.4"
-  },
-  "dependencies": {
-    "ga4-webpack-plugin": "^1.0.0",
-    "google-analytics-webpack-plugin": "^1.0.2",
-    "webpack-inject-plugin": "^1.5.5"
   }
 }
