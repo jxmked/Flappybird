@@ -3,9 +3,8 @@ import raf from 'raf';
 import prepareAssets from './asset-preparation';
 import GameObject from './game';
 import { rescaleDim, framer as Framer } from './utils';
-
+import EventHandler from './events';
 import SFX from './model/sfx';
-
 
 if (document.querySelector('[name=app_mode]')!.getAttribute('content') === 'production') {
   // Load Service Worker
@@ -25,9 +24,10 @@ if (document.querySelector('[name=app_mode]')!.getAttribute('content') === 'prod
 
 const canvas = document.querySelector('#main-canvas')! as HTMLCanvasElement;
 const canvasDimension = {
-  width: 424,
-  height: 806
+  width: 500,
+  height: 779
 };
+let isLoaded = false;
 
 /**
  * While waiting to all assets to load
@@ -39,24 +39,10 @@ const stacks: Function[] = [];
 const Game = new GameObject(canvas);
 const fps = new Framer(Game.context);
 
-fps.text(
-  {
-    x: 50,
-    y: 50
-  },
-  '',
-  ' Cycle'
-);
-fps.container(
-  {
-    x: 10,
-    y: 10
-  },
-  {
-    x: 230,
-    y: 70
-  }
-);
+// prettier-ignore
+fps.text({ x: 50, y: 50 }, '', ' Cycle');
+// prettier-ignore
+fps.container({ x: 10, y: 10}, { x: 230, y: 70});
 
 /**
  * Update the game
@@ -76,29 +62,23 @@ const GameDisplay = (): void => {
 const ScreenResize = () => {
   const { innerWidth, innerHeight } = window;
   let sizeResult: IDimension;
-  const scaleFactor = window.devicePixelRatio;
-  if (innerHeight < innerWidth) {
-    // Reize the canvas
-    const x = canvas.offsetWidth * scaleFactor;
-    sizeResult = rescaleDim(canvasDimension, { width: innerWidth });
-  } else {
-    const y = canvas.offsetHeight * scaleFactor;
-    sizeResult = rescaleDim(canvasDimension, { height: innerHeight });
-  }
- // canvas.style.width = String(innerWidth);
-  //canvas.style.height = String(innerHeight);
+  sizeResult = rescaleDim(canvasDimension, { height: innerHeight });
+
+  // Adjust the canvas DOM size
+  canvas.style.width = String(sizeResult.width / 2);
+  canvas.style.height = String(sizeResult.height / 2);
+
+  // Adjust Canvas Drawing Size
   canvas.height = sizeResult.height;
   canvas.width = sizeResult.width;
+
   Game.Resize(sizeResult);
-  
-  console.log(innerWidth, innerHeight)
 };
-
-
 
 window.addEventListener('DOMContentLoaded', () => {
   // Load Assets
   prepareAssets(() => {
+    isLoaded = true;
     // Begin
     Game.init();
     ScreenResize();
@@ -108,15 +88,17 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     raf(GameDisplay);
     raf(GameUpdate);
+
+    // Listen to events: Mouse, Touch, Keyboard
+    EventHandler(Game);
   });
 });
 
 window.addEventListener('resize', () => {
-  stacks.push(ScreenResize);
+  if (!isLoaded) {
+    stacks.push(ScreenResize);
+    return;
+  }
+
+  ScreenResize();
 });
-
-
-canvas.addEventListener("touchstart", () => {
-  SFX.stop()
-  SFX.wing();
-})

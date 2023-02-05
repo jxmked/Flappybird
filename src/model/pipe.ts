@@ -3,7 +3,7 @@ import pipeTopGreen from '../assets/sprites/pipe/top-green.png';
 import pipeBottomRed from '../assets/sprites/pipe/bottom-red.png';
 import pipeBottomGreen from '../assets/sprites/pipe/bottom-green.png';
 import pipeTopRed from '../assets/sprites/pipe/top-red.png';
-import { rescaleDim, IRescaleDim, lerp } from '../utils';
+import { rescaleDim, lerp } from '../utils';
 
 export interface IPairPipe {
   top: HTMLImageElement;
@@ -17,18 +17,22 @@ export interface IPipePairPosition {
 
 export default class Pipe {
   velocity: IVelocity;
+
+  /**
+   * x = X Transition
+   * y = Holl Position
+   */
   coordinate: ICoordinate;
   canvasSize: IDimension;
   pipeSize: IDimension;
   pipeImg: { [key: string]: IPairPipe };
   img: undefined | IPairPipe;
-  hollPositiion: number;
   hollSize: number;
   pipePosition: IPipePairPosition;
 
   constructor() {
     // Percentage
-    this.velocity = { x: 0.0002, y: 0 };
+    this.velocity = { x: 0.002, y: 0 };
     this.coordinate = { x: 0, y: 0 };
     this.canvasSize = {
       width: 0,
@@ -43,7 +47,6 @@ export default class Pipe {
     };
 
     this.img = void 0;
-    this.hollPositiion = 0;
     this.pipePosition = {
       top: { x: 0, y: 0 },
       bottom: { x: 0, y: 0 }
@@ -61,64 +64,62 @@ export default class Pipe {
         bottom: asset(pipeBottomGreen)
       }
     };
-    
+
     this.use('green');
   }
 
   setHollPosition(position: number, hollSize: number): void {
-    // Update Pipe Size
-    const min = lerp(0, Math.min(this.canvasSize.height, this.canvasSize.width), 0.2);
-    this.pipeSize = rescaleDim(this.pipeSize, { width: min });
-    
     // Positioning holl
     this.hollSize = lerp(0, this.canvasSize.height, hollSize);
-    this.hollPositiion = position;
-    this.pipePosition.top.y = Math.abs(position - (this.hollSize / 2));
-    this.pipePosition.bottom.y = Math.abs(position - this.hollSize);
-    
-    console.log(this.pipePosition)
+    this.coordinate.y = position;
+    this.pipePosition.top.y = this.coordinate.y;
+    this.pipePosition.bottom.y = this.coordinate.y + this.hollSize;
+    this.pipePosition.bottom.x = this.coordinate.x;
+    this.pipePosition.top.x = this.coordinate.x;
+    this.coordinate.x = this.canvasSize.width;
   }
 
   resize({ width, height }: IDimension): void {
     this.canvasSize.width = width;
     this.canvasSize.height = height;
+
+    // Update Pipe Size
+    const min = lerp(0, Math.min(this.canvasSize.height, this.canvasSize.width), 0.18);
+    this.pipeSize = rescaleDim(this.pipeSize, { width: min });
+  }
+
+  isOut(): boolean {
+    return this.coordinate.x < 0;
   }
 
   use(select: 'green' | 'red'): void {
     this.img = this.pipeImg[select as keyof typeof this.pipeImg];
   }
 
-  Update(): void {}
+  Update(): void {
+    this.coordinate.x -= lerp(0, this.canvasSize.width, this.velocity.x);
+    this.pipePosition.bottom.x = this.coordinate.x;
+    this.pipePosition.top.x = this.coordinate.x;
+  }
 
   Display(context: CanvasRenderingContext2D): void {
-    const { x, y } = this.coordinate;
-    const { width, height } = this.pipeSize;
+    const { width } = this.pipeSize;
 
-   /* context.beginPath();
-    context.arc(x, this.pipePosition.top.y, 10, 0, Math.PI * 2);
-    context.fillStyle = 'black';
-    context.fill();
-    context.closePath();
-    context.beginPath()
-    context.arc(x, this.pipePosition.bottom.y, 10, 0, Math.PI * 2);
-    context.fillStyle = 'red';
-    context.fill();
-    context.closePath(); */
     // prettier-ignore
-      const resizedA= rescaleDim({ 
-        width: this.img!.top.width,
-        height: this.img!.top.height
-      }, { width });
-      
-      context.drawImage(this.img!.top, this.pipePosition.top.x, (this.pipePosition.top.y - resizedA.height), resizedA.width, resizedA.height);
+    const resizedA = rescaleDim({
+      width: this.img!.top.width,
+      height: this.img!.top.height
+    }, { width });
 
-      // prettier-ignore
-      const resizedB = rescaleDim({ 
-        width: this.img!.bottom.width,
-        height: this.img!.bottom.height
-      }, { width });
+    context.drawImage(this.img!.top, this.pipePosition.top.x, this.pipePosition.top.y - resizedA.height, resizedA.width, resizedA.height);
 
-      context.drawImage(this.img!.bottom, this.pipePosition.bottom.x, this.pipePosition.bottom.y, resizedB.width, resizedB.height);
-    
+    // prettier-ignore
+    const resizedB = rescaleDim({
+      width: this.img!.bottom.width,
+      height: this.img!.bottom.height
+    }, { width });
+
+    console.log(this.pipePosition.bottom);
+    context.drawImage(this.img!.bottom, this.pipePosition.bottom.x, this.pipePosition.bottom.y - 100, resizedB.width, resizedB.height);
   }
 }

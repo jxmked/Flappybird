@@ -3,7 +3,6 @@ import PlatformModel from './model/platform';
 import PipeModel from './model/pipe';
 import SFX from './model/sfx';
 
-
 export default class Game {
   background: BgModel;
   canvas: HTMLCanvasElement;
@@ -11,54 +10,63 @@ export default class Game {
   platform: PlatformModel;
   pipes: PipeModel[];
 
+  temp: ICoordinate;
+
   constructor(canvas: HTMLCanvasElement) {
     this.background = new BgModel();
     this.canvas = canvas;
     this.context = this.canvas.getContext('2d')!;
     this.platform = new PlatformModel();
     this.pipes = [];
-    
+
+    // Pipe and Platform X Velocity
+    this.platform.velocity.x = 0.0027;
+
+    this.temp = { x: 0, y: 0 };
   }
 
   init(): void {
     this.background.init();
     this.platform.init();
     new SFX().init();
-    SFX.die()
+    SFX.swoosh();
   }
 
   addPipe(hollPosition: number): void {
-    const x = new PipeModel();
-    x.coordinate.x = 100;
-    x.resize({
+    const pipe = new PipeModel();
+
+    pipe.resize({
       width: this.canvas.width,
       height: this.canvas.height
-    })
-    x.setHollPosition(100, 0.3);
-    x.init();
-    this.pipes.push(x);
+    });
+
+    pipe.velocity.x = this.platform.velocity.x;
+
+    pipe.setHollPosition(hollPosition, 0.9);
+
+    pipe.init();
+    this.pipes.push(pipe);
   }
 
   Resize({ width, height }: IDimension): void {
     this.background.resize({ width, height });
     this.platform.resize({ width, height });
 
-
-    this.addPipe(8);
-
     for (const pipe of this.pipes) {
       pipe.resize({ width, height });
     }
-
-    
   }
 
   Update(): void {
     this.background.Update();
     this.platform.Update();
 
-    for (const pipe of this.pipes) {
-      pipe.Update();
+    for (let index = 0; index < this.pipes.length; index++) {
+      this.pipes[index].Update();
+
+      if (this.pipes[index].isOut()) {
+        this.pipes.splice(index, 1);
+      }
     }
   }
 
@@ -66,10 +74,23 @@ export default class Game {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.background.Display(this.context);
-    this.platform.Display(this.context);
 
     for (const pipe of this.pipes) {
       pipe.Display(this.context);
     }
+
+    this.context.beginPath();
+    this.context.arc(this.temp.x, this.temp.y, 10, 0, Math.PI * 2);
+    this.context.fillStyle = 'red';
+    this.context.fill();
+    this.context.closePath();
+
+    this.platform.Display(this.context);
+  }
+
+  onClick({ x, y }: ICoordinate): void {
+    this.temp = { x, y };
+
+    this.addPipe(100);
   }
 }
