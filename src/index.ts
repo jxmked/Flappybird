@@ -86,6 +86,7 @@ window.addEventListener('DOMContentLoaded', () => {
     for (const stack of stacks) {
       stack();
     }
+
     raf(GameDisplay);
     raf(GameUpdate);
 

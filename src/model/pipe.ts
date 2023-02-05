@@ -42,7 +42,7 @@ export default class Pipe {
 
     this.hollSize = 0;
     this.pipeSize = {
-      width: 120,
+      width: 100,
       height: 300
     };
 
@@ -71,6 +71,7 @@ export default class Pipe {
   setHollPosition(position: number, hollSize: number): void {
     // Positioning holl
     this.hollSize = lerp(0, this.canvasSize.height, hollSize);
+
     this.coordinate.y = position;
     this.pipePosition.top.y = this.coordinate.y;
     this.pipePosition.bottom.y = this.coordinate.y + this.hollSize;
@@ -89,7 +90,7 @@ export default class Pipe {
   }
 
   isOut(): boolean {
-    return this.coordinate.x < 0;
+    return this.coordinate.x + this.pipeSize.width < 0;
   }
 
   use(select: 'green' | 'red'): void {
@@ -119,7 +120,6 @@ export default class Pipe {
       height: this.img!.bottom.height
     }, { width });
 
-    console.log(this.pipePosition.bottom);
-    context.drawImage(this.img!.bottom, this.pipePosition.bottom.x, this.pipePosition.bottom.y - 100, resizedB.width, resizedB.height);
+    context.drawImage(this.img!.bottom, this.pipePosition.bottom.x, this.pipePosition.bottom.y, resizedB.width, resizedB.height);
   }
 }

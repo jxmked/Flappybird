@@ -42,7 +42,7 @@ export default class Game {
 
     pipe.velocity.x = this.platform.velocity.x;
 
-    pipe.setHollPosition(hollPosition, 0.9);
+    pipe.setHollPosition(hollPosition, 0.2);
 
     pipe.init();
     this.pipes.push(pipe);
@@ -90,7 +90,7 @@ export default class Game {
 
   onClick({ x, y }: ICoordinate): void {
     this.temp = { x, y };
-
+    SFX.wing();
     this.addPipe(100);
   }
 }
