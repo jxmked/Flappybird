@@ -2,6 +2,7 @@ import BgModel from './model/background';
 import PlatformModel from './model/platform';
 import PipeModel from './model/pipe';
 import SFX from './model/sfx';
+import { lerp } from './utils';
 
 export default class Game {
   background: BgModel;
@@ -9,6 +10,8 @@ export default class Game {
   context: CanvasRenderingContext2D;
   platform: PlatformModel;
   pipes: PipeModel[];
+  lastPipeXDist: number;
+  PipeDist: number;
 
   temp: ICoordinate;
 
@@ -21,6 +24,12 @@ export default class Game {
 
     // Pipe and Platform X Velocity
     this.platform.velocity.x = 0.0027;
+
+    // Last Pipe DIstance
+    this.lastPipeXDist = 0;
+
+    // Pipe Distance
+    this.PipeDist = 0.1;
 
     this.temp = { x: 0, y: 0 };
   }
@@ -57,9 +66,24 @@ export default class Game {
     }
   }
 
+  PipeGenerator(): void {
+    this.lastPipeXDist++;
+
+    if ((this.lastPipeXDist / this.canvas.width) * 100 >= lerp(0, this.canvas.width, this.PipeDist)) {
+      const height = lerp(0, this.canvas.height, 0.1);
+      const platformHeight = lerp(0, this.canvas.height - this.platform.platformSize.height, 0.75);
+      const rdm = Math.floor(Math.random() * (this.canvas.height - height - platformHeight)) + height;
+
+      this.addPipe(rdm);
+      this.lastPipeXDist = 0;
+    }
+  }
+
   Update(): void {
     this.background.Update();
     this.platform.Update();
+
+    this.PipeGenerator();
 
     for (let index = 0; index < this.pipes.length; index++) {
       this.pipes[index].Update();
@@ -91,6 +115,5 @@ export default class Game {
   onClick({ x, y }: ICoordinate): void {
     this.temp = { x, y };
     SFX.wing();
-    this.addPipe(100);
   }
 }

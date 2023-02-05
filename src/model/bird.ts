@@ -11,65 +11,61 @@ import birdYellowUpFlap from '../assets/sprites/bird/yellow-up-flap.png';
 import Sfx from './sfx';
 
 interface IBirdObject {
-    up:HTMLImageElement;
-    mid:HTMLImageElement;
-    down:HTMLImageElement;
+  up: HTMLImageElement;
+  mid: HTMLImageElement;
+  down: HTMLImageElement;
 }
 
-type IBirdColors = "yellow"|"red"|"blue";
+type IBirdColors = 'yellow' | 'red' | 'blue';
 export default class Bird {
-    birdColorObject:{[key:string]:IBirdObject};
-    color:IBirdColors;
-    birdImg: undefined|IBirdObject;
-    constructor() {
-        this.birdColorObject = {};
-        this.color = "yellow";
-        this.birdImg = void 0;
-    }
+  birdColorObject: { [key: string]: IBirdObject };
+  color: IBirdColors;
+  birdImg: undefined | IBirdObject;
+  constructor() {
+    this.birdColorObject = {};
+    this.color = 'yellow';
+    this.birdImg = void 0;
+  }
 
-    init(): void {
-        this.birdColorObject = {
-            yellow: {
-                up: asset(birdYellowUpFlap),
-                mid: asset(birdYellowMidFlap),
-                down: asset(birdYellowDownFlap)
-            },
-            blue: {
-                up: asset(birdBlueUpFlap),
-                mid: asset(birdBlueMidFlap),
-                down: asset(birdBlueDownFlap)
-            },
-            red: {
-                up: asset(birdRedUpFlap),
-                mid: asset(birdRedMidFlap),
-                down: asset(birdRedDownFlap)
-            }
-        }
+  init(): void {
+    this.birdColorObject = {
+      yellow: {
+        up: asset(birdYellowUpFlap),
+        mid: asset(birdYellowMidFlap),
+        down: asset(birdYellowDownFlap)
+      },
+      blue: {
+        up: asset(birdBlueUpFlap),
+        mid: asset(birdBlueMidFlap),
+        down: asset(birdBlueDownFlap)
+      },
+      red: {
+        up: asset(birdRedUpFlap),
+        mid: asset(birdRedMidFlap),
+        down: asset(birdRedDownFlap)
+      }
+    };
 
-        this.use("yellow");
-    }
+    this.use('yellow');
+  }
 
-    flap(): void {
-        Sfx.wing()
-    }
+  flap(): void {
+    Sfx.wing();
+  }
 
-    isDead(): boolean {
-        return false
-    }
+  isDead(): boolean {
+    return false;
+  }
 
-    playDead(): void {
-        Sfx.die();
-    }
+  playDead(): void {
+    Sfx.die();
+  }
 
-    use(color:IBirdColors): void {
-        this.birdImg = this.birdColorObject[color as keyof typeof this.birdColorObject];
-    }
+  use(color: IBirdColors): void {
+    this.birdImg = this.birdColorObject[color as keyof typeof this.birdColorObject];
+  }
 
-    Update(): void {
+  Update(): void {}
 
-    }
-
-    Display(context:CanvasRenderingContext2D): void {
-
-    }
+  Display(context: CanvasRenderingContext2D): void {}
 }

@@ -57,7 +57,7 @@ export default (callback: Function): void => {
     birdRedUpFlap,
     birdBlueDownFlap,
     birdBlueMidFlap,
-    birdBlueUpFlap, 
+    birdBlueUpFlap,
     /* n9,
     n8,
     n7,
