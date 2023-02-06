@@ -5,7 +5,7 @@
 
 
 export type IWebSfxObject = {[key:string]:string}
-export type IWebSfxCache = {[key:string]:ArrayBuffer};
+export type IWebSfxCache = {[key:string]:AudioBuffer};
 export interface ILoadRequest {
   content:AudioBuffer;
   name:string;
@@ -30,6 +30,9 @@ export default class WebSfx {
     autoInitAudioContext:false,
     files:{}
   }
+  
+  public static isInit: boolean = false;
+  
   /**
    * Load Files and call the callback function after all files has been loaded
    * 
@@ -76,21 +79,25 @@ export default class WebSfx {
   }
   
   public static initAudioContext(): void {
-    if(WebSfx.audioContext) return;
+    if(WebSfx.audioContext !== void 0) return;
     
     const audioContext = new (window.AudioContext||webkitAudioContext)();
     const gain = audioContext.createGain();
     
-    gain.gain.value = 0.5;
+    //gain.gain.value = 0.5;
     
     gain.connect(audioContext.destination);
     
     WebSfx.gainContext = gain;
     WebSfx.audioContext = audioContext;
+    
+    WebSfx.isInit = true;
   }
   
-  public static volume(num:number): void {
+  public static set volume(num:number) {
+    if(typeof WebSfx.gainContext === void 0) throw new TypeError("Static WebSfx.initAudioContext does not initialize");
     
+    WebSfx.gainContext!.gain.value = num;
   }
   
   private static load(files:IWebSfxObject, complete:Function, level:number=0): void {

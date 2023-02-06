@@ -38,7 +38,6 @@ export default class Game {
     this.background.init();
     this.platform.init();
     new SFX().init();
-    SFX.swoosh();
   }
 
   addPipe(hollPosition: number): void {
@@ -115,5 +114,6 @@ export default class Game {
   onClick({ x, y }: ICoordinate): void {
     this.temp = { x, y };
     SFX.wing();
+    console.log("fuck")
   }
 }

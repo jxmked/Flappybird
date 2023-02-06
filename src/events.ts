@@ -3,12 +3,15 @@
  */
 
 import Game from './game';
+import WebSfx from './lib/web-sfx';
 
 export default (Game: Game) => {
   interface IMouse {
     down: boolean;
     position: ICoordinate;
   }
+  
+  let clicked = false;
 
   const mouse: IMouse = {
     down: false,
@@ -17,6 +20,13 @@ export default (Game: Game) => {
       y: 0
     }
   };
+  
+  const likeClickedEvent = () => {
+    if(clicked) return;
+    
+    Game.onClick(mouse.position);
+    clicked = true;
+  }
 
   const mouseMove = ({ x, y }: ICoordinate, evt: MouseEvent | TouchEvent | KeyboardEvent): void => {
     evt.preventDefault();
@@ -29,6 +39,7 @@ export default (Game: Game) => {
     mouse.position.x = x;
     mouse.position.y = y;
     mouse.down = false;
+    clicked = false;
   };
 
   const mouseDown = ({ x, y }: ICoordinate, evt: MouseEvent | TouchEvent | KeyboardEvent): void => {
@@ -36,9 +47,11 @@ export default (Game: Game) => {
     mouse.position.x = x;
     mouse.position.y = y;
     mouse.down = true;
+    
+    WebSfx.initAudioContext();
 
     if (mouse.down) {
-      Game.onClick(mouse.position);
+      likeClickedEvent();
     }
   };
 
@@ -74,19 +87,25 @@ export default (Game: Game) => {
   Game.canvas.addEventListener('touchstart', (evt: TouchEvent) => {
     let x = evt.touches[0].clientX;
     let y = evt.touches[0].clientY;
-
+    
     x = evt.touches[0].pageX - Game.canvas.offsetLeft;
     y = evt.touches[0].pageY - Game.canvas.offsetTop;
     mouseDown({ x, y }, evt);
   });
 
   Game.canvas.addEventListener('touchend', (evt: TouchEvent) => {
+    if(evt.touches.length < 1 ) {
+      
+      mouseUP(mouse.position, evt);
+      
+      return;
+    }
     let x = evt.touches[0].clientX;
     let y = evt.touches[0].clientY;
 
     x = evt.touches[0].pageX - Game.canvas.offsetLeft;
     y = evt.touches[0].pageY - Game.canvas.offsetTop;
-    mouseDown({ x, y }, evt);
+    mouseUP({ x, y }, evt);
   });
 
   Game.canvas.addEventListener('touchmove', (evt: TouchEvent) => {
