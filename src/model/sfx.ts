@@ -3,17 +3,21 @@ import sfHit from '../assets/audio/hit.ogg';
 import sfPoint from '../assets/audio/point.ogg';
 import sfSwoosh from '../assets/audio/swoosh.ogg';
 import sfWing from '../assets/audio/wing.ogg';
-import UIFX from 'uifx';
+
+//import UIFX from 'uifx';
+
+import sfx from '../lib/web-sfx';
+
 
 export default class Sfx {
-  static sounds: { [key: string]: UIFX };
+  //static sounds: { [key: string]: UIFX };
 
   constructor() {
-    Sfx.sounds = {};
+  //  Sfx.sounds = {};
   }
 
   init() {
-    Sfx.sounds = {
+   /* Sfx.sounds = {
       die: new UIFX(sfDie, { throttleMs: 100 }),
       hit: new UIFX(sfHit, { throttleMs: 100 }),
       point: new UIFX(sfPoint, { throttleMs: 100 }),
@@ -21,32 +25,32 @@ export default class Sfx {
       wing: new UIFX(sfWing, { throttleMs: 100 })
     };
 
-    Sfx.volume(1);
+    Sfx.volume(1); */
   }
 
   static volume(num: number): void {
-    for (const index in Sfx.sounds) {
+  /*  for (const index in Sfx.sounds) {
       Sfx.sounds[index].setVolume(num);
-    }
+    } */
   }
 
   static die(): void {
-    Sfx.sounds.die.play();
+    sfx.play('die');
   }
 
   static point(): void {
-    Sfx.sounds.point.play();
+    sfx.play('point');
   }
 
   static hit(): void {
-    Sfx.sounds.hit.play();
+    sfx.play('hit');
   }
 
   static swoosh(): void {
-    Sfx.sounds.swoosh.play();
+    sfx.play('swoosh');
   }
 
   static wing(): void {
-    Sfx.sounds.wing.play();
+    sfx.play('wing');
   }
 }

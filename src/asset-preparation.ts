@@ -33,15 +33,15 @@ import gameInfo from './assets/sprites/message.png';
 import gameOver from './assets/sprites/gameover.png';
 import gamePlatform from './assets/sprites/base.png';
 
+// For Images
 import { AssetLoader } from './utils';
 
+// For Sound Effects. Interactive Audio
+import WebSfx from './lib/web-sfx';
+
 export default (callback: Function): void => {
+  
   const assetArray = [
-    sfDie,
-    sfHit,
-    sfPoint,
-    sfSwoosh,
-    sfWing,
     //mainIcon,
     pipeTopGreen,
     pipeBottomRed,
@@ -72,6 +72,17 @@ export default (callback: Function): void => {
     gameOver, */
     gamePlatform
   ];
-
-  new AssetLoader(assetArray).then(callback);
+  
+  // Do not load images and sfx at the same time
+  new AssetLoader(assetArray).then(() => {
+    new WebSfx({
+      hit: sfHit,
+      wing: sfWing,
+      swoosh: sfSwoosh,
+      die: sfDie,
+      point: sfPoint
+    }, () => {
+      callback();
+    })
+  });
 };

@@ -4,7 +4,7 @@ import prepareAssets from './asset-preparation';
 import GameObject from './game';
 import { rescaleDim, framer as Framer } from './utils';
 import EventHandler from './events';
-import SFX from './model/sfx';
+import WebSfx from './lib/web-sfx';
 
 if (document.querySelector('[name=app_mode]')!.getAttribute('content') === 'production') {
   // Load Service Worker
@@ -49,6 +49,8 @@ fps.container({ x: 10, y: 10}, { x: 230, y: 70});
  * */
 const GameUpdate = (): void => {
   Game.Update();
+  Game.Display();
+  
   fps.mark();
   raf(GameUpdate);
 };
@@ -76,22 +78,33 @@ const ScreenResize = () => {
 };
 
 window.addEventListener('DOMContentLoaded', () => {
+  
+  /**
+   * Initialize Audio Context
+   * 
+   * This thing should be on event where gesture has been detected
+   * */
+  WebSfx.initAudioContext()
+  
   // Load Assets
   prepareAssets(() => {
     isLoaded = true;
     // Begin
     Game.init();
     ScreenResize();
-
+    
+    
+    
     for (const stack of stacks) {
       stack();
     }
 
-    raf(GameDisplay);
+    //raf(GameDisplay);
     raf(GameUpdate);
 
     // Listen to events: Mouse, Touch, Keyboard
     EventHandler(Game);
+    
   });
 });
 
