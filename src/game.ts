@@ -114,6 +114,6 @@ export default class Game {
   onClick({ x, y }: ICoordinate): void {
     this.temp = { x, y };
     SFX.wing();
-    console.log("fuck")
+    console.log('fuck');
   }
 }

@@ -8,16 +8,15 @@ import sfWing from '../assets/audio/wing.ogg';
 
 import sfx from '../lib/web-sfx';
 
-
 export default class Sfx {
   //static sounds: { [key: string]: UIFX };
 
   constructor() {
-  //  Sfx.sounds = {};
+    //  Sfx.sounds = {};
   }
 
   init() {
-   /* Sfx.sounds = {
+    /* Sfx.sounds = {
       die: new UIFX(sfDie, { throttleMs: 100 }),
       hit: new UIFX(sfHit, { throttleMs: 100 }),
       point: new UIFX(sfPoint, { throttleMs: 100 }),
@@ -29,7 +28,7 @@ export default class Sfx {
   }
 
   static volume(num: number): void {
-  /*  for (const index in Sfx.sounds) {
+    /*  for (const index in Sfx.sounds) {
       Sfx.sounds[index].setVolume(num);
     } */
   }

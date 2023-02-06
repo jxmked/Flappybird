@@ -40,7 +40,6 @@ import { AssetLoader } from './utils';
 import WebSfx from './lib/web-sfx';
 
 export default (callback: Function): void => {
-  
   const assetArray = [
     //mainIcon,
     pipeTopGreen,
@@ -72,17 +71,20 @@ export default (callback: Function): void => {
     gameOver, */
     gamePlatform
   ];
-  
+
   // Do not load images and sfx at the same time
   new AssetLoader(assetArray).then(() => {
-    new WebSfx({
-      hit: sfHit,
-      wing: sfWing,
-      swoosh: sfSwoosh,
-      die: sfDie,
-      point: sfPoint
-    }, () => {
-      callback();
-    })
+    new WebSfx(
+      {
+        hit: sfHit,
+        wing: sfWing,
+        swoosh: sfSwoosh,
+        die: sfDie,
+        point: sfPoint
+      },
+      () => {
+        callback();
+      }
+    );
   });
 };

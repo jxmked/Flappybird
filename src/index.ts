@@ -50,7 +50,7 @@ fps.container({ x: 10, y: 10}, { x: 230, y: 70});
 const GameUpdate = (): void => {
   Game.Update();
   Game.Display();
-  
+
   fps.mark();
   raf(GameUpdate);
 };
@@ -78,23 +78,20 @@ const ScreenResize = () => {
 };
 
 window.addEventListener('DOMContentLoaded', () => {
-  
   /**
    * Initialize Audio Context
-   * 
+   *
    * This thing should be on event where gesture has been detected
    * */
-  WebSfx.initAudioContext()
-  
+  WebSfx.initAudioContext();
+
   // Load Assets
   prepareAssets(() => {
     isLoaded = true;
     // Begin
     Game.init();
     ScreenResize();
-    
-    
-    
+
     for (const stack of stacks) {
       stack();
     }
@@ -104,7 +101,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Listen to events: Mouse, Touch, Keyboard
     EventHandler(Game);
-    
   });
 });
 
