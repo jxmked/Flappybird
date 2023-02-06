@@ -4,7 +4,7 @@ import prepareAssets from './asset-preparation';
 import GameObject from './game';
 import { rescaleDim, framer as Framer } from './utils';
 import EventHandler from './events';
-import WebSfx from './lib/web-sfx';
+//import WebSfx from './lib/web-sfx';
 
 if (document.querySelector('[name=app_mode]')!.getAttribute('content') === 'production') {
   // Load Service Worker
@@ -83,7 +83,7 @@ window.addEventListener('DOMContentLoaded', () => {
    *
    * This thing should be on event where gesture has been detected
    * */
-  WebSfx.initAudioContext();
+  //WebSfx.initAudioContext();
 
   // Load Assets
   prepareAssets(() => {

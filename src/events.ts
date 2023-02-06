@@ -12,7 +12,6 @@ export default (Game: Game) => {
   }
 
   let clicked = false;
-
   const mouse: IMouse = {
     down: false,
     position: {
@@ -35,6 +34,11 @@ export default (Game: Game) => {
   };
 
   const mouseUP = ({ x, y }: ICoordinate, evt: MouseEvent | TouchEvent | KeyboardEvent): void => {
+    /**
+     * Required due to autoplay restriction
+     * */
+    WebSfx.init();
+
     evt.preventDefault();
     mouse.position.x = x;
     mouse.position.y = y;
@@ -43,12 +47,15 @@ export default (Game: Game) => {
   };
 
   const mouseDown = ({ x, y }: ICoordinate, evt: MouseEvent | TouchEvent | KeyboardEvent): void => {
+    /**
+     * Required due to autoplay restriction
+     * */
+    WebSfx.init();
+
     evt.preventDefault();
     mouse.position.x = x;
     mouse.position.y = y;
     mouse.down = true;
-
-    WebSfx.initAudioContext();
 
     if (mouse.down) {
       likeClickedEvent();
