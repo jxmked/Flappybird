@@ -55,12 +55,6 @@ const GameUpdate = (): void => {
   raf(GameUpdate);
 };
 
-const GameDisplay = (): void => {
-  Game.Display();
-
-  raf(GameDisplay);
-};
-
 const ScreenResize = () => {
   const { innerWidth, innerHeight } = window;
   let sizeResult: IDimension;
@@ -78,13 +72,6 @@ const ScreenResize = () => {
 };
 
 window.addEventListener('DOMContentLoaded', () => {
-  /**
-   * Initialize Audio Context
-   *
-   * This thing should be on event where gesture has been detected
-   * */
-  //WebSfx.initAudioContext();
-
   // Load Assets
   prepareAssets(() => {
     isLoaded = true;
@@ -96,7 +83,6 @@ window.addEventListener('DOMContentLoaded', () => {
       stack();
     }
 
-    //raf(GameDisplay);
     raf(GameUpdate);
 
     // Listen to events: Mouse, Touch, Keyboard
