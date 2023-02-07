@@ -19,6 +19,14 @@ export default (Game: Game) => {
       y: 0
     }
   };
+  
+  const getBoundedPosition = ({x, y}:ICoordinate): ICoordinate => {
+    const { left, top, width, height } = Game.canvas.getBoundingClientRect();
+    const dx: number = ((x - left) / width) * Game.canvas.width;
+    const dy: number = ((y - top) / height) * Game.canvas.height;
+    
+    return { x: dx, y: dy }
+  }
 
   const likeClickedEvent = () => {
     if (clicked) return;
@@ -29,8 +37,7 @@ export default (Game: Game) => {
 
   const mouseMove = ({ x, y }: ICoordinate, evt: MouseEvent | TouchEvent | KeyboardEvent): void => {
     evt.preventDefault();
-    mouse.position.x = x;
-    mouse.position.y = y;
+    mouse.position = getBoundedPosition({x, y});
   };
 
   const mouseUP = ({ x, y }: ICoordinate, evt: MouseEvent | TouchEvent | KeyboardEvent): void => {
@@ -40,8 +47,7 @@ export default (Game: Game) => {
     WebSfx.init();
 
     evt.preventDefault();
-    mouse.position.x = x;
-    mouse.position.y = y;
+    mouse.position = getBoundedPosition({x, y});
     mouse.down = false;
     clicked = false;
   };
@@ -53,8 +59,7 @@ export default (Game: Game) => {
     WebSfx.init();
 
     evt.preventDefault();
-    mouse.position.x = x;
-    mouse.position.y = y;
+    mouse.position = getBoundedPosition({x, y});
     mouse.down = true;
 
     if (mouse.down) {
@@ -67,8 +72,8 @@ export default (Game: Game) => {
     let x = evt.clientX;
     let y = evt.clientY;
 
-    x = evt.pageX - Game.canvas.offsetLeft;
-    y = evt.pageY - Game.canvas.offsetTop;
+   // x = evt.pageX - Game.canvas.offsetLeft;
+   // y = evt.pageY - Game.canvas.offsetTop;
     mouseDown({ x, y }, evt);
   });
 
@@ -76,8 +81,8 @@ export default (Game: Game) => {
     let x = evt.clientX;
     let y = evt.clientY;
 
-    x = evt.pageX - Game.canvas.offsetLeft;
-    y = evt.pageY - Game.canvas.offsetTop;
+   // x = evt.pageX - Game.canvas.offsetLeft;
+   // y = evt.pageY - Game.canvas.offsetTop;
     mouseUP({ x, y }, evt);
   });
 
@@ -85,8 +90,8 @@ export default (Game: Game) => {
     let x = evt.clientX;
     let y = evt.clientY;
 
-    x = evt.pageX - Game.canvas.offsetLeft;
-    y = evt.pageY - Game.canvas.offsetTop;
+  //  x = evt.pageX - Game.canvas.offsetLeft;
+  //  y = evt.pageY - Game.canvas.offsetTop;
     mouseMove({ x, y }, evt);
   });
 
@@ -95,30 +100,31 @@ export default (Game: Game) => {
     let x = evt.touches[0].clientX;
     let y = evt.touches[0].clientY;
 
-    x = evt.touches[0].pageX - Game.canvas.offsetLeft;
-    y = evt.touches[0].pageY - Game.canvas.offsetTop;
+  //  x = evt.touches[0].pageX - Game.canvas.offsetLeft;
+  //  y = evt.touches[0].pageY - Game.canvas.offsetTop;
     mouseDown({ x, y }, evt);
   });
 
   Game.canvas.addEventListener('touchend', (evt: TouchEvent) => {
     if (evt.touches.length < 1) {
       mouseUP(mouse.position, evt);
-
       return;
     }
+    
     let x = evt.touches[0].clientX;
     let y = evt.touches[0].clientY;
 
-    x = evt.touches[0].pageX - Game.canvas.offsetLeft;
-    y = evt.touches[0].pageY - Game.canvas.offsetTop;
+  //  x = evt.touches[0].pageX - Game.canvas.offsetLeft;
+  //  y = evt.touches[0].pageY - Game.canvas.offsetTop;
     mouseUP({ x, y }, evt);
   });
 
   Game.canvas.addEventListener('touchmove', (evt: TouchEvent) => {
     let x = evt.touches[0].clientX;
     let y = evt.touches[0].clientY;
-    x = evt.touches[0].pageX - Game.canvas.offsetLeft;
-    y = evt.touches[0].pageY - Game.canvas.offsetTop;
+    
+  //  x = evt.touches[0].pageX - Game.canvas.offsetLeft;
+  //  y = evt.touches[0].pageY - Game.canvas.offsetTop;
     mouseDown({ x, y }, evt);
   });
 

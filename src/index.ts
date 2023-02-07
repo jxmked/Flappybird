@@ -67,8 +67,8 @@ const ScreenResize = () => {
   sizeResult = rescaleDim(canvasDimension, { height: innerHeight });
 
   // Adjust the canvas DOM size
-  canvas.style.width = String(sizeResult.width / 2);
-  canvas.style.height = String(sizeResult.height / 2);
+  canvas.style.maxWidth = String(sizeResult.width / 2);
+  canvas.style.maxHeight = String(sizeResult.height / 2);
 
   // Adjust Canvas Drawing Size
   canvas.height = sizeResult.height;
