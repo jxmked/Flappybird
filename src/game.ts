@@ -103,7 +103,7 @@ export default class Game {
     }
 
     this.platform.Display(this.context);
-    
+
     this.context.beginPath();
     this.context.arc(this.temp.x, this.temp.y, 10, 0, Math.PI * 2);
     this.context.fillStyle = 'red';
