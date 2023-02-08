@@ -4,6 +4,7 @@ import PipeModel from './model/pipe';
 import BirdModel from './model/bird';
 import SFX from './model/sfx';
 import { lerp } from './utils';
+import Sfx from './model/sfx';
 
 export default class Game {
   background: BgModel;
@@ -25,13 +26,13 @@ export default class Game {
     this.pipes = [];
 
     // Pipe and Platform X Velocity
-    this.platform.velocity.x = 0.0027;
+    this.platform.velocity.x = 0.005;
 
     // Last Pipe DIstance
     this.lastPipeXDist = 0;
 
     // Pipe Distance
-    this.PipeDist = 0.1;
+    this.PipeDist = 0.07;
 
     this.temp = { x: 0, y: 0 };
     this.bird = new BirdModel();
@@ -64,15 +65,20 @@ export default class Game {
     this.background.resize({ width, height });
     this.platform.resize({ width, height });
     this.bird.resize({ width, height });
-
+    this.bird.platformHeight = this.platform.platformSize.height;
     for (const pipe of this.pipes) {
       pipe.resize({ width, height });
     }
+    this.canvas.width = width;
+    this.canvas.height = height;
   }
 
   PipeGenerator(): void {
     this.lastPipeXDist++;
 
+    /**
+     * Pipes must have 1% gap of each other from canvas width
+     */
     if ((this.lastPipeXDist / this.canvas.width) * 100 >= lerp(0, this.canvas.width, this.PipeDist)) {
       const height = lerp(0, this.canvas.height, 0.1);
       const platformHeight = lerp(0, this.canvas.height - this.platform.platformSize.height, 0.75);
@@ -84,6 +90,7 @@ export default class Game {
   }
 
   Update(): void {
+    if (!this.bird.alive) return;
     this.background.Update();
     this.platform.Update();
 
@@ -96,6 +103,9 @@ export default class Game {
         this.pipes.splice(index, 1);
       }
     }
+
+    this.bird.Update();
+    this.bird.isDead(this.pipes);
   }
 
   Display(): void {
@@ -120,6 +130,7 @@ export default class Game {
 
   onClick({ x, y }: ICoordinate): void {
     this.temp = { x, y };
-    SFX.wing();
+    this.bird.flap();
+    Sfx.hit();
   }
 }

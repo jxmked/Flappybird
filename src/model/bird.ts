@@ -9,6 +9,7 @@ import birdBlueMidFlap from '../assets/sprites/bird/blue-mid-flap.png';
 import birdBlueDownFlap from '../assets/sprites/bird/blue-down-flap.png';
 import birdYellowUpFlap from '../assets/sprites/bird/yellow-up-flap.png';
 import Sfx from './sfx';
+import Pipe from './pipe';
 
 export interface IBirdObject {
   up: HTMLImageElement;
@@ -23,7 +24,6 @@ export interface IProps {
   jump: number;
   position: ICoordinate;
   width: number;
-  height: number;
   flapState: number; // Array(Up, Mid, Down)
 }
 
@@ -33,11 +33,20 @@ export default class Bird {
   birdImg: undefined | IBirdObject;
   props: IProps;
   canvasSize: IDimension;
+  velocity: IVelocity;
+  platformHeight: number;
+  rescaledImg: IDimension;
+  alive: boolean;
 
   constructor() {
     this.birdColorObject = {};
+    this.alive = true;
     this.color = 'yellow';
     this.birdImg = void 0;
+    this.velocity = {
+      x: 0,
+      y: 0
+    };
     this.props = {
       gravity: 0,
       jump: -6,
@@ -46,10 +55,15 @@ export default class Bird {
         y: 0
       },
       width: 0, // Define the width and the image automatically scale up to that
-      height: 0,
-      flapState: 0
+      flapState: 1
     };
+
     this.canvasSize = {
+      width: 0,
+      height: 0
+    };
+    this.platformHeight = 0;
+    this.rescaledImg = {
       width: 0,
       height: 0
     };
@@ -79,15 +93,43 @@ export default class Bird {
 
   resize({ width, height }: IDimension): void {
     this.canvasSize = { width, height };
-    this.props.width = lerp(0, width, 0.1);
+    this.props.width = lerp(0, width, 0.11);
+    this.props.position.x = lerp(0, width, 0.15);
+    this.velocity.y = lerp(0, height, 0.0003);
+    this.props.jump = -lerp(0, height, 0.008);
   }
 
   flap(): void {
+    console.log(this.props.position, this.canvasSize.height);
+    if (this.props.position.y < 0) {
+      return;
+    }
     Sfx.wing();
+    this.props.gravity = this.props.jump;
   }
 
-  isDead(): boolean {
-    return false;
+  isDead(pipes: Pipe[]): boolean {
+    const posX = this.props.position.x;
+    const posY = this.props.position.y;
+
+    if (posY > Math.abs(this.canvasSize.height - this.platformHeight - this.rescaledImg.height)) {
+      Sfx.hit();
+      this.alive = false;
+      this.use('red');
+      return !this.alive;
+    }
+
+    for (const pipe of pipes) {
+      try {
+        const { x, y } = pipe.pipePosition.top;
+        const { width, height } = pipe.pipeSize;
+
+        if (x - width > posX) {
+          this.use('red');
+        }
+      } catch (err) {}
+    }
+    return !this.alive;
   }
 
   playDead(): void {
@@ -98,7 +140,11 @@ export default class Bird {
     this.birdImg = this.birdColorObject[color as keyof typeof this.birdColorObject];
   }
 
-  Update(): void {}
+  Update(): void {
+    if (!this.alive) return;
+    this.props.gravity += this.velocity.y;
+    this.props.position.y += this.props.gravity;
+  }
 
   Display(context: CanvasRenderingContext2D): void {
     const flapArr = ['up', 'mid', 'down'] as keyof typeof this.birdImg;
@@ -113,9 +159,7 @@ export default class Bird {
       },
       { width }
     );
-
-    x = 50;
-    y = 50;
+    this.rescaledImg = resized;
 
     context.beginPath();
     context.arc(x, y, 10, 0, Math.PI * 2);
