@@ -1,6 +1,7 @@
 import BgModel from './model/background';
 import PlatformModel from './model/platform';
 import PipeModel from './model/pipe';
+import BirdModel from './model/bird';
 import SFX from './model/sfx';
 import { lerp } from './utils';
 
@@ -14,7 +15,8 @@ export default class Game {
   PipeDist: number;
 
   temp: ICoordinate;
-
+  bird: BirdModel;
+  
   constructor(canvas: HTMLCanvasElement) {
     this.background = new BgModel();
     this.canvas = canvas;
@@ -32,9 +34,11 @@ export default class Game {
     this.PipeDist = 0.1;
 
     this.temp = { x: 0, y: 0 };
+    this.bird = new BirdModel();
   }
 
   init(): void {
+    this.bird.init();
     this.background.init();
     this.platform.init();
     new SFX().init();
@@ -59,6 +63,7 @@ export default class Game {
   Resize({ width, height }: IDimension): void {
     this.background.resize({ width, height });
     this.platform.resize({ width, height });
+    this.bird.resize({width, height})
 
     for (const pipe of this.pipes) {
       pipe.resize({ width, height });
@@ -104,6 +109,8 @@ export default class Game {
 
     this.platform.Display(this.context);
 
+    this.bird.Display(this.context);
+    
     this.context.beginPath();
     this.context.arc(this.temp.x, this.temp.y, 10, 0, Math.PI * 2);
     this.context.fillStyle = 'red';
