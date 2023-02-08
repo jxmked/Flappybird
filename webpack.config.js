@@ -76,10 +76,6 @@ let prodPlugins = [
   })
 ];
 
-if (devMode) {
-  prodPlugins = [];
-}
-
 module.exports = function (env, config) {
   if (process.env['NODE' + '_ENV'] === void 0) {
     // From flag '--mode'
@@ -91,6 +87,7 @@ module.exports = function (env, config) {
   if (devMode) {
     CONFIG.output.name = '[name]';
     CONFIG.output.chunk = '[id]';
+    prodPlugins = [];
   }
 
   return {

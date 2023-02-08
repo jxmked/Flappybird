@@ -46,7 +46,7 @@ export default class Bird {
         x: 0,
         y: 0
       },
-      width: 50,// Define the width and the image automatically scale up to that
+      width: 0,// Define the width and the image automatically scale up to that
       height: 0,
       flapState: 0
     }
@@ -104,7 +104,7 @@ export default class Bird {
   Display(context: CanvasRenderingContext2D): void {
     const flapArr = ["up", "mid", "down"] as keyof typeof this.birdImg;
     
-    const { x, y } = this.props.position;
+    let { x, y } = this.props.position;
     const { width, gravity, flapState } = this.props;
     const img:HTMLImageElement = this.birdImg![flapArr[flapState]]
     const resized = rescaleDim(
@@ -114,7 +114,9 @@ export default class Bird {
       },
       { width }
     );
-
+    
+    x = 50
+    y = 50
     
     context.beginPath();
     context.arc(x, y, 10, 0, Math.PI * 2);
@@ -122,16 +124,18 @@ export default class Bird {
     context.fill();
     context.closePath();
 
-
+    const xPos = resized.width/2;
+    const yPos = resized.height/2;
+    
     context.save();
     context.translate(x, y);
-    context.translate(resized.width / 2, resized.height / 2);
+    context.translate(xPos, yPos);
     
     // Rotate Based On Gravity
     context.rotate(((Math.PI / 2) * gravity) / 20);
     
     
-    context.drawImage(img, -resized.width / 2, -resized.height / 2)//, resized.width, resized.height);
+    context.drawImage(img, -xPos, -yPos, resized.width, resized.height);
 
     context.restore();
     

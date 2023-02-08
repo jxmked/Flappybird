@@ -32,7 +32,7 @@ export default class WebSfx {
    * @param callback = complete function
    * */
   constructor(files: IWebSfxObject, callback: Function) {
-    WebSfx.audioContext = new (AudioContext || webkitAudioContext)();
+    WebSfx.audioContext = WebSfx.AudioContext;
 
     WebSfx.audioContext.addEventListener('statechange', () => {
       WebSfx.isReady = WebSfx.audioContext.state === 'running';
@@ -40,21 +40,28 @@ export default class WebSfx {
 
     WebSfx.load(files, callback);
   }
+  
+  static get AudioContext(): AudioContext {
+    return new (AudioContext||webkitAudioContext)();
+  }
 
   public static play(key: string): void {
     if (typeof WebSfx.Cached[key] === void 0) {
       throw new TypeError(`Key ${key} does not load or not exists.`);
     }
-
+    
+    if (WebSfx.gainContext === void 0) {
+      console.warn("WebSfx.play cannot execute. AudioContext is not started or resumed")
+      return;
+    }
+    
     if (!WebSfx.isReady) return;
 
     try {
       const context = WebSfx.audioContext!;
-      const gain = WebSfx.gainContext!;
       const bufferSource = context.createBufferSource();
-
       bufferSource.buffer = WebSfx.Cached[key];
-      bufferSource.connect(gain);
+      bufferSource.connect(WebSfx.gainContext!);
       bufferSource.start();
     } catch (err) {
       throw new Error(`Failed to play audio: ${key}. Error: ${err}`);
@@ -62,8 +69,9 @@ export default class WebSfx {
   }
 
   public static volume(num: number) {
-    if (typeof WebSfx.gainContext === void 0) {
-      throw new TypeError('Static WebSfx.initAudioContext does not initialize');
+    if (WebSfx.gainContext === void 0) {
+      console.warn("WebSfx.volume cannot set volume. AudioContext is not started or resumed")
+      return;
     }
 
     try {
@@ -72,17 +80,21 @@ export default class WebSfx {
   }
 
   public static async init(): Promise<void> {
-    if (WebSfx.isReady) return;
-
+    /**
+     * Sometimes, WebSfx.audioContext.state returns "running" that makes
+     * WebSfx.isReady to true. However, we can check the WebSfx.gainContext
+     * if is set or not since it cannot be created without starting or resuming
+     * the audioContext.
+     * */
+    if (WebSfx.isReady && WebSfx.gainContext !== void 0) return;
+    
     // We should start after user event
-    await WebSfx.audioContext.resume();
+    await  WebSfx.audioContext.resume();
 
-    const audioContext = WebSfx.audioContext!;
-    const gain = audioContext.createGain();
-
+    const gain = WebSfx.audioContext.createGain();
+    
     // Output channel
-    gain.connect(audioContext.destination);
-
+    gain.connect(WebSfx.audioContext.destination);
     WebSfx.gainContext = gain;
   }
 
@@ -135,7 +147,7 @@ export default class WebSfx {
 
         // But luckily, we can do cache the AudioBuffer
         const content = await WebSfx.audioContext!.decodeAudioData(buffer);
-
+        
         resolve({ content, path, name });
       } catch (err) {
         reject();
