@@ -57,12 +57,11 @@ const GameUpdate = (): void => {
 
 const ScreenResize = () => {
   const { innerWidth, innerHeight } = window;
-  let sizeResult: IDimension;
-  sizeResult = rescaleDim(canvasDimension, { height: innerHeight });
+  const sizeResult = rescaleDim(canvasDimension, { height: innerHeight });
 
   // Adjust the canvas DOM size
-  canvas.style.maxWidth = String(sizeResult.width / 2);
-  canvas.style.maxHeight = String(sizeResult.height / 2);
+  canvas.style.maxWidth = String(sizeResult.width) + 'px';
+  canvas.style.maxHeight = String(sizeResult.height) + 'px';
 
   // Adjust Canvas Drawing Size
   canvas.height = sizeResult.height;

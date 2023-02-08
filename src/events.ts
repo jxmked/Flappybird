@@ -132,8 +132,21 @@ export default (Game: Game) => {
   document.addEventListener('keydown', (evt: KeyboardEvent) => {
     const { key, keyCode, code } = evt;
 
-    if (key === ' ' || keyCode === 32 || code === 'Space') {
+    if (key === ' ' || keyCode === 32 || code === 'Space' || key === 'Enter' || keyCode === 13 || code === 'NumpadEnter' || code === 'Enter') {
       mouseDown(
+        {
+          x: Game.canvas.width / 2,
+          y: Game.canvas.height / 2
+        },
+        evt
+      );
+    }
+  });
+
+  document.addEventListener('keyup', (evt: KeyboardEvent) => {
+    const { key, keyCode, code } = evt;
+    if (key === ' ' || keyCode === 32 || code === 'Space' || key === 'Enter' || keyCode === 13 || code === 'NumpadEnter' || code === 'Enter') {
+      mouseUP(
         {
           x: Game.canvas.width / 2,
           y: Game.canvas.height / 2
