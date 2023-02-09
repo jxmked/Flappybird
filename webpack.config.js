@@ -6,6 +6,7 @@ const WebpackPwaManifest = require('webpack-pwa-manifest');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 const GA4WebpackPlugin = require('ga4-webpack-plugin');
 const package = require('./package.json');
+const webpack = require("webpack");
 
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
@@ -27,7 +28,12 @@ const CONFIG = {
     entry: './src/index.ts', // Typescript only
     dir: 'src'
   },
-
+  
+  // Changing this during runtime will not going to parse it.
+  // Restart the webpack to load
+  env: {
+    
+  },
   windowResizeable: false,
 
   // Manifesting and information
@@ -80,6 +86,9 @@ module.exports = function (env, config) {
   if (process.env['NODE' + '_ENV'] === void 0) {
     // From flag '--mode'
     devMode = config.mode !== 'production';
+    CONFIG.env['NODE_ENV'] = config.mode;
+  } else {
+    CONFIG.env['NODE_ENV'] = process.env['NODE' + '_ENV'];
   }
 
   console.log('DEV MODE: ' + String(devMode) + '\n');
@@ -89,7 +98,7 @@ module.exports = function (env, config) {
     CONFIG.output.chunk = '[id]';
     prodPlugins = [];
   }
-
+  
   return {
     entry: CONFIG.input.entry,
     module: {
@@ -136,6 +145,9 @@ module.exports = function (env, config) {
     },
 
     plugins: [
+      new webpack.DefinePlugin({
+        "process.env": Object.fromEntries(Object.entries(CONFIG.env).map((x) => [x[0], JSON.stringify(x[1])])),
+      }),
       new GA4WebpackPlugin({
         id: 'G-JPJZGW7PW6',
         inject: !devMode, // Only inject in build mode

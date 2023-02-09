@@ -4,9 +4,11 @@ import prepareAssets from './asset-preparation';
 import GameObject from './game';
 import { rescaleDim, framer as Framer } from './utils';
 import EventHandler from './events';
+
+
 //import WebSfx from './lib/web-sfx';
 
-if (document.querySelector('[name=app_mode]')!.getAttribute('content') === 'production') {
+if (process.env.NODE_ENV !== 'development') {
   // Load Service Worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
