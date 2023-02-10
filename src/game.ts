@@ -89,7 +89,10 @@ export default class Game {
   }
 
   Update(): void {
-    if (!this.bird.alive) return;
+    if (!this.bird.alive) {
+      this.bird.Update();
+      return;
+    }
     this.background.Update();
     this.platform.Update();
 
@@ -104,9 +107,9 @@ export default class Game {
     }
 
     this.bird.Update();
-    const res = this.bird.isDead(this.pipes);
-    if (res) {
+    if (this.bird.isDead(this.pipes)) {
       Sfx.hit();
+      this.bird.playDead();
     }
   }
 
@@ -135,7 +138,7 @@ export default class Game {
     ctx.globalAlpha = 1; // Required
     ctx.font = '30px monospace';
     ctx.fillStyle = '#58d130';
-    ctx.fillText(this.bird.score, 500, 500);
+    ctx.fillText(String(this.bird.score), 500, 500);
     ctx.closePath();
     
   }

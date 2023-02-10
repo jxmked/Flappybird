@@ -33,7 +33,6 @@
     "browser-sync": "^2.27.11",
     "browser-sync-webpack-plugin": "^2.3.0",
     "css-loader": "^6.7.3",
-    "dotenv": "^16.0.3",
     "file-loader": "^6.2.0",
     "ga4-webpack-plugin": "^1.0.1",
     "html-webpack-plugin": "^5.5.0",
