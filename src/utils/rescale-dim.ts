@@ -1,9 +1,9 @@
 /**
  * A function that automatically rescale the given dimension and
  * returns new scaled dimension.
- * 
+ *
  * @param oldDim - Initial {width, height} dimension.
- * @param newDim - New Dimension to match width. Its either { width } or { height } but cannot both. 
+ * @param newDim - New Dimension to match width. Its either { width } or { height } but cannot both.
  */
 type IRescaleDim = { width: number } | { height: number };
 

@@ -33,13 +33,13 @@ export default class Bird {
   props: IProps;
   canvasSize: IDimension;
   platformHeight: number;
-  
+
   radius: number;
   alive: boolean;
   velocity: IVelocity;
   score: number;
-  coordinate:ICoordinate;
-  died:boolean;
+  coordinate: ICoordinate;
+  died: boolean;
   ballColor: string;
 
   constructor() {
@@ -112,9 +112,9 @@ export default class Bird {
   }
 
   doesHitTheFloor(): boolean {
-    return (this.coordinate.y + (this.radius * 2) > Math.abs(this.canvasSize.height - this.platformHeight))
+    return this.coordinate.y + this.radius * 2 > Math.abs(this.canvasSize.height - this.platformHeight);
   }
-  
+
   isDead(pipes: Pipe[]): boolean {
     const posX = this.coordinate.x;
     const posY = this.coordinate.y;
@@ -132,7 +132,7 @@ export default class Bird {
         const hcx = pipe.coordinate.x;
         const hcy = pipe.coordinate.y;
         const size = pipe.hollSize / 2; // Radius
-        const width = pipe.pipeSize.width / 2; // Half Size
+        const width = Pipe.pipeSize.width / 2; // Half Size
 
         // Skip past pipe
         // ---------- Out
@@ -141,14 +141,14 @@ export default class Bird {
         // Is Inside of Pipes?
         // In ----------
         if (Math.abs(hcx - width) <= posX + this.radius) {
-          // Will get score after passing the 
+          // Will get score after passing the
           // center width of pipe
           if (hcx < posX && !pipe.isPassed) {
             this.score++;
             Sfx.point();
             pipe.isPassed = true;
           }
-          
+
           // Top Pipe ---------- Bottom Pipe
           if (Math.abs(hcy - size) >= posY - diameter || hcy + size <= posY + diameter) {
             this.alive = false;
@@ -166,7 +166,7 @@ export default class Bird {
   }
 
   playDead(): void {
-    if(this.died) return 
+    if (this.died) return;
     Sfx.die();
     this.died = true;
   }

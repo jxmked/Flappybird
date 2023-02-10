@@ -24,7 +24,10 @@ export default class Pipe {
    */
   coordinate: ICoordinate;
   canvasSize: IDimension;
-  pipeSize: IDimension;
+  static pipeSize: IDimension = {
+    width: 100,
+    height: 300
+  };
   pipeImg: { [key: string]: IPairPipe };
   img: undefined | IPairPipe;
   hollSize: number;
@@ -44,10 +47,6 @@ export default class Pipe {
     this.pipeImg = {};
 
     this.hollSize = 0;
-    this.pipeSize = {
-      width: 100,
-      height: 300
-    };
 
     this.img = void 0;
     this.pipePosition = {
@@ -97,11 +96,11 @@ export default class Pipe {
 
     // Update Pipe Size
     const min = lerp(0, Math.min(this.canvasSize.height, this.canvasSize.width), 0.18);
-    this.pipeSize = rescaleDim(this.pipeSize, { width: min });
+    Pipe.pipeSize = rescaleDim(Pipe.pipeSize, { width: min });
   }
 
   isOut(): boolean {
-    return this.coordinate.x + this.pipeSize.width < 0;
+    return this.coordinate.x + Pipe.pipeSize.width < 0;
   }
 
   use(select: 'green' | 'red'): void {
@@ -115,7 +114,7 @@ export default class Pipe {
   }
 
   Display(context: CanvasRenderingContext2D): void {
-    const width = this.pipeSize.width / 2;
+    const width = Pipe.pipeSize.width / 2;
     const ch = this.canvasSize.height;
     const ctx = context;
 
