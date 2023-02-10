@@ -31,7 +31,7 @@ export default class Game {
     this.lastPipeXDist = 0;
 
     // Pipe Distance
-    this.PipeDist = 0.07;
+    this.PipeDist = 0.007;
 
     this.temp = { x: 0, y: 0 };
     this.bird = new BirdModel();
@@ -104,10 +104,10 @@ export default class Game {
     }
 
     this.bird.Update();
-   const res = this.bird.isDead(this.pipes);
-   if(res) {
-     Sfx.hit()
-   }
+    const res = this.bird.isDead(this.pipes);
+    if (res) {
+      Sfx.hit();
+    }
   }
 
   Display(): void {
@@ -128,6 +128,16 @@ export default class Game {
     this.context.fillStyle = 'red';
     this.context.fill();
     this.context.closePath();
+    
+    const ctx = this.context;
+    
+    ctx.beginPath();
+    ctx.globalAlpha = 1; // Required
+    ctx.font = '30px monospace';
+    ctx.fillStyle = '#58d130';
+    ctx.fillText(this.bird.score, 500, 500);
+    ctx.closePath();
+    
   }
 
   onClick({ x, y }: ICoordinate): void {

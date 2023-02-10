@@ -5,7 +5,6 @@ import GameObject from './game';
 import { rescaleDim, framer as Framer } from './utils';
 import EventHandler from './events';
 
-
 //import WebSfx from './lib/web-sfx';
 
 if (process.env.NODE_ENV !== 'development') {
@@ -58,16 +57,21 @@ const GameUpdate = (): void => {
 };
 
 const ScreenResize = () => {
-  const { innerWidth, innerHeight } = window;
+  const { innerHeight } = window;
   const sizeResult = rescaleDim(canvasDimension, { height: innerHeight });
 
   // Adjust the canvas DOM size
   canvas.style.maxWidth = String(sizeResult.width) + 'px';
   canvas.style.maxHeight = String(sizeResult.height) + 'px';
 
+  sizeResult.width = sizeResult.width * 2;
+  sizeResult.height = sizeResult.height * 2;
+
   // Adjust Canvas Drawing Size
   canvas.height = sizeResult.height;
   canvas.width = sizeResult.width;
+
+  console.log(`Canvas Size: ${sizeResult.width}x${sizeResult.height}`);
 
   Game.Resize(sizeResult);
 };

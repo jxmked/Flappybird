@@ -29,10 +29,13 @@ export default class Pipe {
   img: undefined | IPairPipe;
   hollSize: number;
   pipePosition: IPipePairPosition;
+  isPassed: boolean;
 
   constructor() {
     // Percentage
     this.velocity = { x: 0.002, y: 0 };
+
+    // Holl Position
     this.coordinate = { x: 0, y: 0 };
     this.canvasSize = {
       width: 0,
@@ -51,6 +54,7 @@ export default class Pipe {
       top: { x: 0, y: 0 },
       bottom: { x: 0, y: 0 }
     };
+    this.isPassed = false;
   }
 
   init(): void {
@@ -72,12 +76,19 @@ export default class Pipe {
     // Positioning holl
     this.hollSize = lerp(0, this.canvasSize.height, hollSize);
 
+    /**
+     * The Logic is
+     *
+     * Center Point = hollposition + (hollSize / 2)
+     * */
+    // From 0 to top boundary
     this.coordinate.y = position;
+    this.coordinate.x = this.canvasSize.width;
+
     this.pipePosition.top.y = this.coordinate.y;
     this.pipePosition.bottom.y = this.coordinate.y + this.hollSize;
     this.pipePosition.bottom.x = this.coordinate.x;
     this.pipePosition.top.x = this.coordinate.x;
-    this.coordinate.x = this.canvasSize.width;
   }
 
   resize({ width, height }: IDimension): void {
@@ -104,7 +115,42 @@ export default class Pipe {
   }
 
   Display(context: CanvasRenderingContext2D): void {
-    const { width } = this.pipeSize;
+    const width = this.pipeSize.width / 2;
+    const ch = this.canvasSize.height;
+    const ctx = context;
+
+    const posX = this.coordinate.x;
+    const posY = this.coordinate.y;
+    const size = this.hollSize / 2;
+
+    // Mid point
+    /*ctx.beginPath();
+    ctx.arc(posX, posY, size, 0, Math.PI * 2)
+    ctx.fillStyle= "white";
+    ctx.fill()
+    ctx.closePath(); */
+
+    // Top
+    ctx.beginPath();
+    ctx.moveTo(posX - width, 0);
+    ctx.lineTo(posX - width, Math.abs(posY - size));
+    ctx.lineTo(posX + width, Math.abs(posY - size));
+    ctx.lineTo(posX + width, 0);
+    ctx.strokeStyle = 'white';
+    ctx.stroke();
+    ctx.closePath();
+
+    // Bottom
+    ctx.beginPath();
+    ctx.moveTo(posX - width, posY + size);
+    ctx.lineTo(posX - width, ch);
+    ctx.lineTo(posX + width, ch);
+    ctx.lineTo(posX + width, posY + size);
+    ctx.lineTo(posX - width, posY + size);
+    ctx.strokeStyle = 'white';
+    ctx.stroke();
+    ctx.closePath();
+    return;
 
     // prettier-ignore
     const resizedA = rescaleDim({

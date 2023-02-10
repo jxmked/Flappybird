@@ -37,12 +37,16 @@ export default class Bird {
   platformHeight: number;
   rescaledImg: IDimension;
   alive: boolean;
+  score: number;
+  
+  ballColor: string;
 
   constructor() {
     this.birdColorObject = {};
     this.alive = true;
     this.color = 'yellow';
     this.birdImg = void 0;
+    this.ballColor = 'yellow';
     this.velocity = {
       x: 0,
       y: 0
@@ -67,6 +71,7 @@ export default class Bird {
       width: 0,
       height: 0
     };
+    this.score = 0;
   }
 
   init(): void {
@@ -100,7 +105,7 @@ export default class Bird {
   }
 
   flap(): void {
-   // console.log(this.props.position, this.canvasSize.height);
+    // console.log(this.props.position, this.canvasSize.height);
     if (this.props.position.y < 0) {
       return;
     }
@@ -121,19 +126,40 @@ export default class Bird {
 
     for (const pipe of pipes) {
       try {
-        const { x, y } = pipe.pipePosition.top;
-        const { width, height } = pipe.pipeSize;
+        // Midpoint Holl Coordinate
+        const hcx = pipe.coordinate.x;
+        const hcy = pipe.coordinate.y;
+        const size = pipe.hollSize / 2; // Radius
+        const width = pipe.pipeSize.width / 2; // Half Size
 
-        if (!(
-            posX >= x + width || 
-            posY >= y + height || 
-            posX + this.rescaledImg.width <= x || 
-            posY + this.rescaledImg.height <= y)) {
-          this.alive = false;
-          break;
+        // Skip past pipe
+        // ---------- Out
+        if (hcx + width < posX) continue;
+
+        // Is Inside of Pipes?
+        // In ----------
+        if (Math.abs(hcx - width) <= posX) {
+          // Will get score after passing the 
+          // center width of pipe
+          if (hcx < posX && !pipe.isPassed) {
+            this.score++;
+            Sfx.point();
+            pipe.isPassed = true;
+          }
+          
+          // Top Pipe ---------- Bottom Pipe
+          if (Math.abs(hcy - size) >= posY || hcy + size <= posY) {
+            this.alive = false;
+            break;
+          }
         }
+
+        // Only the first pipe should be check
+
+        break;
       } catch (err) {}
     }
+
     return !this.alive;
   }
 
@@ -152,10 +178,19 @@ export default class Bird {
   }
 
   Display(context: CanvasRenderingContext2D): void {
+    const ctx = context;
     const flapArr = ['up', 'mid', 'down'] as keyof typeof this.birdImg;
 
     let { x, y } = this.props.position;
     const { width, gravity, flapState } = this.props;
+
+    ctx.beginPath();
+    ctx.arc(x, y, 10, 0, Math.PI * 2);
+    ctx.fillStyle = this.ballColor;
+    ctx.fill();
+    ctx.closePath();
+
+    return;
     const img: HTMLImageElement = this.birdImg![flapArr[flapState]];
     const resized = rescaleDim(
       {
@@ -165,12 +200,6 @@ export default class Bird {
       { width }
     );
     this.rescaledImg = resized;
-
-    context.beginPath();
-    context.arc(x, y, 10, 0, Math.PI * 2);
-    context.fillStyle = 'blue';
-    context.fill();
-    context.closePath();
 
     const xPos = resized.width / 2;
     const yPos = resized.height / 2;
