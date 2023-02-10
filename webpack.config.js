@@ -129,7 +129,7 @@ module.exports = function (env, config) {
     },
 
     resolve: {
-      extensions: ['.ts', '.tsx', 'scss', 'sass', 'css']
+      extensions: ['.ts', '.tsx', '.scss', '.sass', '.css']
     },
 
     output: {

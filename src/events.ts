@@ -72,8 +72,6 @@ export default (Game: Game) => {
     let x = evt.clientX;
     let y = evt.clientY;
 
-    // x = evt.pageX - Game.canvas.offsetLeft;
-    // y = evt.pageY - Game.canvas.offsetTop;
     mouseDown({ x, y }, evt);
   });
 
@@ -81,8 +79,6 @@ export default (Game: Game) => {
     let x = evt.clientX;
     let y = evt.clientY;
 
-    // x = evt.pageX - Game.canvas.offsetLeft;
-    // y = evt.pageY - Game.canvas.offsetTop;
     mouseUP({ x, y }, evt);
   });
 
@@ -90,8 +86,6 @@ export default (Game: Game) => {
     let x = evt.clientX;
     let y = evt.clientY;
 
-    //  x = evt.pageX - Game.canvas.offsetLeft;
-    //  y = evt.pageY - Game.canvas.offsetTop;
     mouseMove({ x, y }, evt);
   });
 
@@ -100,8 +94,6 @@ export default (Game: Game) => {
     let x = evt.touches[0].clientX;
     let y = evt.touches[0].clientY;
 
-    //  x = evt.touches[0].pageX - Game.canvas.offsetLeft;
-    //  y = evt.touches[0].pageY - Game.canvas.offsetTop;
     mouseDown({ x, y }, evt);
   });
 
@@ -114,8 +106,6 @@ export default (Game: Game) => {
     let x = evt.touches[0].clientX;
     let y = evt.touches[0].clientY;
 
-    //  x = evt.touches[0].pageX - Game.canvas.offsetLeft;
-    //  y = evt.touches[0].pageY - Game.canvas.offsetTop;
     mouseUP({ x, y }, evt);
   });
 
@@ -123,8 +113,6 @@ export default (Game: Game) => {
     let x = evt.touches[0].clientX;
     let y = evt.touches[0].clientY;
 
-    //  x = evt.touches[0].pageX - Game.canvas.offsetLeft;
-    //  y = evt.touches[0].pageY - Game.canvas.offsetTop;
     mouseDown({ x, y }, evt);
   });
 

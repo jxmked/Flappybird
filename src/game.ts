@@ -2,7 +2,6 @@ import BgModel from './model/background';
 import PlatformModel from './model/platform';
 import PipeModel from './model/pipe';
 import BirdModel from './model/bird';
-import SFX from './model/sfx';
 import { lerp } from './utils';
 import Sfx from './model/sfx';
 
@@ -42,7 +41,7 @@ export default class Game {
     this.bird.init();
     this.background.init();
     this.platform.init();
-    new SFX().init();
+    new Sfx().init();
   }
 
   addPipe(hollPosition: number): void {
@@ -105,7 +104,10 @@ export default class Game {
     }
 
     this.bird.Update();
-    this.bird.isDead(this.pipes);
+   const res = this.bird.isDead(this.pipes);
+   if(res) {
+     Sfx.hit()
+   }
   }
 
   Display(): void {
@@ -131,6 +133,5 @@ export default class Game {
   onClick({ x, y }: ICoordinate): void {
     this.temp = { x, y };
     this.bird.flap();
-    Sfx.hit();
   }
 }

@@ -100,7 +100,7 @@ export default class Bird {
   }
 
   flap(): void {
-    console.log(this.props.position, this.canvasSize.height);
+   // console.log(this.props.position, this.canvasSize.height);
     if (this.props.position.y < 0) {
       return;
     }
@@ -124,8 +124,13 @@ export default class Bird {
         const { x, y } = pipe.pipePosition.top;
         const { width, height } = pipe.pipeSize;
 
-        if (x - width > posX) {
-          this.use('red');
+        if (!(
+            posX >= x + width || 
+            posY >= y + height || 
+            posX + this.rescaledImg.width <= x || 
+            posY + this.rescaledImg.height <= y)) {
+          this.alive = false;
+          break;
         }
       } catch (err) {}
     }
