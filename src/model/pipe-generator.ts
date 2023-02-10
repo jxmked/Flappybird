@@ -41,9 +41,15 @@ export default class PipeGenerator {
    * Width of platform
    */
   width: number;
-
+  
+  /**
+   * Height of Canvas
+   * */
   height: number;
-
+  
+  /**
+   * Pipe Array
+   * */
   pipes: Pipe[];
 
   constructor() {
@@ -90,7 +96,7 @@ export default class PipeGenerator {
     const radius = lerp(0, this.height, this.radius);
     return {
       position: {
-        x: this.width + Pipe.pipeSize.width * 10,
+        x: this.width + Pipe.pipeSize.width,
         y: randomClamp(this.range.min + radius, this.range.max - this.range.min - radius)
       },
       radius: this.radius

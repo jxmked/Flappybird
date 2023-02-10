@@ -31,7 +31,7 @@ export default class Game {
     this.lastPipeXDist = 0;
 
     // Pipe Distance
-    this.PipeDist = 0.007;
+    this.PipeDist = 0.03;
     this.pipeGenerator = new PipeGenerator();
 
     this.temp = { x: 0, y: 0 };
@@ -55,7 +55,7 @@ export default class Game {
 
     pipe.velocity.x = this.platform.velocity.x;
 
-    pipe.setHollPosition(position.y, radius);
+    pipe.setHollPosition(position, radius);
 
     pipe.init();
     this.pipeGenerator.pipes.push(pipe);
@@ -71,7 +71,7 @@ export default class Game {
       max: height - this.platform.platformSize.height,
       width: width,
       height: height,
-      distance: 0.07,
+      distance: this.PipeDist,
       radius: 0.2
     });
 
@@ -100,6 +100,7 @@ export default class Game {
       const pipeAttr = this.pipeGenerator.generate();
       this.addPipe(pipeAttr);
     }
+    
     for (let index = 0; index < this.pipeGenerator.pipes.length; index++) {
       this.pipeGenerator.pipes[index].Update();
 

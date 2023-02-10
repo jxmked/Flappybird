@@ -71,7 +71,7 @@ export default class Pipe {
     this.use('green');
   }
 
-  setHollPosition(position: number, hollSize: number): void {
+  setHollPosition(coordinate:ICoordinate, hollSize: number): void {
     // Positioning holl
     this.hollSize = lerp(0, this.canvasSize.height, hollSize);
 
@@ -81,13 +81,7 @@ export default class Pipe {
      * Center Point = hollposition + (hollSize / 2)
      * */
     // From 0 to top boundary
-    this.coordinate.y = position;
-    this.coordinate.x = this.canvasSize.width;
-
-    this.pipePosition.top.y = this.coordinate.y;
-    this.pipePosition.bottom.y = this.coordinate.y + this.hollSize;
-    this.pipePosition.bottom.x = this.coordinate.x;
-    this.pipePosition.top.x = this.coordinate.x;
+    this.coordinate = coordinate;
   }
 
   resize({ width, height }: IDimension): void {
@@ -109,8 +103,6 @@ export default class Pipe {
 
   Update(): void {
     this.coordinate.x -= lerp(0, this.canvasSize.width, this.velocity.x);
-    this.pipePosition.bottom.x = this.coordinate.x;
-    this.pipePosition.top.x = this.coordinate.x;
   }
 
   Display(context: CanvasRenderingContext2D): void {
