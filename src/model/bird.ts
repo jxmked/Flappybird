@@ -1,4 +1,4 @@
-import { asset, lerp, rescaleDim } from '../utils';
+import { asset, lerp, rescaleDim, clamp } from '../utils';
 import birdYellowMidFlap from '../assets/sprites/bird/yellow-mid-flap.png';
 import birdYellowDownFlap from '../assets/sprites/bird/yellow-down-flap.png';
 import birdRedUpFlap from '../assets/sprites/bird/red-up-flap.png';
@@ -23,6 +23,7 @@ export interface IProps {
   gravity: number;
   jump: number;
   width: number;
+  height: number;
   flapState: number; // Array(Up, Mid, Down)
 }
 
@@ -41,6 +42,25 @@ export default class Bird {
   coordinate: ICoordinate;
   died: boolean;
   ballColor: string;
+
+  /**
+   * height to match with.
+   *
+   * We rely on height instead of width because of
+   * top and bottom pipe gap
+   * */
+  height: number;
+
+  /**
+   * Scaled width and height
+   * */
+  scaled: IDimension;
+
+  /**
+   * Bird Rotation
+   * -5 - 20
+   * */
+  rotation: number;
 
   constructor() {
     this.radius = 10;
@@ -61,8 +81,9 @@ export default class Bird {
     this.props = {
       gravity: 0,
       jump: -6,
-      width: 0, // Define the width and the image automatically scale up to that
-      flapState: 1
+      width: 34,
+      flapState: 1,
+      height: 24
     };
 
     this.canvasSize = {
@@ -71,6 +92,12 @@ export default class Bird {
     };
     this.platformHeight = 0;
     this.score = 0;
+    this.height = 0;
+    this.scaled = {
+      width: 0,
+      height: 0
+    };
+    this.rotation = 0;
   }
 
   init(): void {
@@ -97,10 +124,19 @@ export default class Bird {
 
   resize({ width, height }: IDimension): void {
     this.canvasSize = { width, height };
-    this.props.width = lerp(0, width, 0.11);
+
     this.coordinate.x = lerp(0, width, 0.15);
     this.velocity.y = lerp(0, height, 0.0003);
     this.props.jump = -lerp(0, height, 0.008);
+    this.height = lerp(0, height, 0.024);
+
+    this.scaled = rescaleDim(
+      {
+        width: this.props.width,
+        height: this.props.height
+      },
+      { height: this.height }
+    );
   }
 
   flap(): void {
@@ -112,14 +148,12 @@ export default class Bird {
   }
 
   doesHitTheFloor(): boolean {
-    return this.coordinate.y + this.radius * 2 > Math.abs(this.canvasSize.height - this.platformHeight);
+    return this.coordinate.y + this.scaled.height > Math.abs(this.canvasSize.height - this.platformHeight);
   }
 
   isDead(pipes: Pipe[]): boolean {
     const posX = this.coordinate.x;
     const posY = this.coordinate.y;
-    // I don't know why diameter but it works
-    const diameter = this.radius * 2;
 
     if (this.doesHitTheFloor()) {
       this.alive = false;
@@ -136,11 +170,11 @@ export default class Bird {
 
         // Skip past pipe
         // ---------- Out
-        if (hcx + width < posX - this.radius) continue;
+        if (hcx + width < posX - this.scaled.width) continue;
 
         // Is Inside of Pipes?
         // In ----------
-        if (Math.abs(hcx - width) <= posX + this.radius) {
+        if (Math.abs(hcx - width) <= posX + this.scaled.width) {
           // Will get score after passing the
           // center width of pipe
           if (hcx < posX && !pipe.isPassed) {
@@ -150,7 +184,7 @@ export default class Bird {
           }
 
           // Top Pipe ---------- Bottom Pipe
-          if (Math.abs(hcy - size) >= posY - diameter || hcy + size <= posY + diameter) {
+          if (Math.abs(hcy - size) >= posY - this.scaled.height || hcy + size <= posY + this.scaled.height) {
             this.alive = false;
             break;
           }
@@ -181,44 +215,31 @@ export default class Bird {
     }
     this.props.gravity += this.velocity.y;
     this.coordinate.y += this.props.gravity;
+
+    this.props.gravity = clamp(-5, 20, this.props.gravity);
   }
 
   Display(context: CanvasRenderingContext2D): void {
-    const ctx = context;
     const flapArr = ['up', 'mid', 'down'] as keyof typeof this.birdImg;
 
     let { x, y } = this.coordinate;
-    const { width, gravity, flapState } = this.props;
+    const { gravity, flapState } = this.props;
 
-    ctx.beginPath();
-    ctx.arc(x, y, this.radius, 0, Math.PI * 2);
-    ctx.fillStyle = this.ballColor;
-    ctx.fill();
-    ctx.closePath();
+    context.beginPath();
+    //context.arc(x, y, this.radius, 0, Math.PI * 2);
+    context.ellipse(x, y, this.scaled.width, this.scaled.height, 0, 0, Math.PI * 2);
+    context.fillStyle = this.ballColor;
+    context.fill();
+    context.closePath();
 
-    //return;
     const img: HTMLImageElement = this.birdImg![flapArr[flapState]];
-    const resized = rescaleDim(
-      {
-        width: img.width,
-        height: img.height
-      },
-      { width }
-    );
-    // this.rescaledImg = resized;
-
-    const xPos = resized.width / 2;
-    const yPos = resized.height / 2;
-
+    context.beginPath();
     context.save();
     context.translate(x, y);
-    context.translate(xPos, yPos);
-
-    // Rotate Based On Gravity
-    context.rotate(((Math.PI / 2) * gravity) / 20);
-
-    context.drawImage(img, -xPos, -yPos, resized.width, resized.height);
-
+    context.rotate(((Math.PI / 2) * this.rotation) / 20);
+    context.translate(-this.scaled.width, -this.scaled.height);
+    context.drawImage(img, 0, 0, this.scaled.width * 2, this.scaled.height * 2);
     context.restore();
+    context.closePath();
   }
 }

@@ -33,7 +33,7 @@ export default class Pipe {
   hollSize: number;
   pipePosition: IPipePairPosition;
   isPassed: boolean;
- 
+
   constructor() {
     // Percentage
     this.velocity = { x: 0.002, y: 0 };
@@ -117,9 +117,9 @@ export default class Pipe {
       width: this.img!.top.width,
       height: this.img!.top.height
     }, { width: width * 2 });
-    
+
     context.drawImage(this.img!.top, posX - width, -(topImgDim.height - Math.abs(posY - size)), topImgDim.width, topImgDim.height);
-  
+
     // prettier-ignore
     const botImgDim = rescaleDim({
       width: this.img!.bottom.width,
