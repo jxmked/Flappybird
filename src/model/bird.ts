@@ -196,7 +196,7 @@ export default class Bird {
     ctx.fill();
     ctx.closePath();
 
-    return;
+    //return;
     const img: HTMLImageElement = this.birdImg![flapArr[flapState]];
     const resized = rescaleDim(
       {

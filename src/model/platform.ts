@@ -71,15 +71,6 @@ export default class Platform {
     const sequence = Math.ceil(this.canvasSize.width / width) + 1;
     const offset = x % width;
 
-    context.beginPath();
-    context.moveTo(0, y);
-    context.lineTo(width, y);
-    context.strokeStyle = 'white';
-    context.stroke();
-    context.closePath();
-
-    return;
-
     for (let i = 0; i < sequence; i++) {
       context.drawImage(this.img!, i * width - offset, y, width, height);
     }

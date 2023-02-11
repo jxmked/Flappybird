@@ -33,7 +33,7 @@ export default class Pipe {
   hollSize: number;
   pipePosition: IPipePairPosition;
   isPassed: boolean;
-
+ 
   constructor() {
     // Percentage
     this.velocity = { x: 0.002, y: 0 };
@@ -107,56 +107,25 @@ export default class Pipe {
 
   Display(context: CanvasRenderingContext2D): void {
     const width = Pipe.pipeSize.width / 2;
-    const ch = this.canvasSize.height;
-    const ctx = context;
 
     const posX = this.coordinate.x;
     const posY = this.coordinate.y;
     const size = this.hollSize / 2;
 
-    // Mid point
-    /*ctx.beginPath();
-    ctx.arc(posX, posY, size, 0, Math.PI * 2)
-    ctx.fillStyle= "white";
-    ctx.fill()
-    ctx.closePath(); */
-
-    // Top
-    ctx.beginPath();
-    ctx.moveTo(posX - width, 0);
-    ctx.lineTo(posX - width, Math.abs(posY - size));
-    ctx.lineTo(posX + width, Math.abs(posY - size));
-    ctx.lineTo(posX + width, 0);
-    ctx.strokeStyle = 'white';
-    ctx.stroke();
-    ctx.closePath();
-
-    // Bottom
-    ctx.beginPath();
-    ctx.moveTo(posX - width, posY + size);
-    ctx.lineTo(posX - width, ch);
-    ctx.lineTo(posX + width, ch);
-    ctx.lineTo(posX + width, posY + size);
-    ctx.lineTo(posX - width, posY + size);
-    ctx.strokeStyle = 'white';
-    ctx.stroke();
-    ctx.closePath();
-    return;
-
     // prettier-ignore
-    const resizedA = rescaleDim({
+    const topImgDim = rescaleDim({
       width: this.img!.top.width,
       height: this.img!.top.height
-    }, { width });
-
-    context.drawImage(this.img!.top, this.pipePosition.top.x, this.pipePosition.top.y - resizedA.height, resizedA.width, resizedA.height);
-
+    }, { width: width * 2 });
+    
+    context.drawImage(this.img!.top, posX - width, -(topImgDim.height - Math.abs(posY - size)), topImgDim.width, topImgDim.height);
+  
     // prettier-ignore
-    const resizedB = rescaleDim({
+    const botImgDim = rescaleDim({
       width: this.img!.bottom.width,
       height: this.img!.bottom.height
-    }, { width });
+    }, { width: width * 2 });
 
-    context.drawImage(this.img!.bottom, this.pipePosition.bottom.x, this.pipePosition.bottom.y, resizedB.width, resizedB.height);
+    context.drawImage(this.img!.bottom, posX - width, posY + size, botImgDim.width, botImgDim.height);
   }
 }

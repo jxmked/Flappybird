@@ -81,8 +81,6 @@ export default class Background {
   }
 
   Display(context: CanvasRenderingContext2D) {
-    return;
-
     const { width, height } = this.backgroundSize;
     const { x, y } = this.coordinate;
     const sequence = Math.ceil(this.canvasSize.width / width) + 1;
