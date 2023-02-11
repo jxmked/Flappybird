@@ -1,3 +1,5 @@
+import { IBirdColors } from './model/bird';
+
 /**
  * Environment Contants
  */
@@ -12,7 +14,7 @@ export const CANVAS_DIMENSION = {
 export const SFX_VOLUME = 1;
 
 // Acceleration
-export const A = 9.8;
+export const ACCELERATION = 9.8;
 
 // Air resistance
 export const DRAG = 0.25;
@@ -22,7 +24,7 @@ export const DRAG = 0.25;
  */
 
 // Jump Height. Based on canvas height. (Percentage 0 - 1)
-export const BIRD_JUMP_HEIGHT = 0.1;
+export const BIRD_JUMP_HEIGHT = -0.008;
 
 // Fixed X-Axis position of bird. Based on canvas width. (Percentage 0 - 1)
 export const BIRD_X_POSITION = 0.15;
@@ -31,7 +33,17 @@ export const BIRD_X_POSITION = 0.15;
 export const BIRD_MAX_ROTAION = 90;
 
 // Minimum angle of bird in degree
-export const BIRD_MIN_ROTATION = -40;
+export const BIRD_MIN_ROTATION = -15;
+
+export const BIRD_HEIGHT = 0.1;
+
+export const BIRD_WEIGHT = 0.00044;
+
+export const BIRD_MAX_UP_VELOCITY = -0.3;
+
+export const BIRD_MAX_DOWN_VELOCITY = 0.32;
+
+export const BIRD_DEFAULT_COLOR: IBirdColors = 'yellow';
 
 // Initial Dimension of a bird
 /**
@@ -50,7 +62,7 @@ export const BIRD_INITIAL_DIMENSION: IDimension = {
 export const PIPE_DISTANCE = 0.4;
 
 // Holl size of pipe. Based on canvas height. (0 - 1)
-export const PIPE_HOLL_SIZE = 0.2;
+export const PIPE_HOLL_SIZE = 0.17;
 
 // Minimum gap of pipe holl to very top and platform. Based on height. (0 - 1)
 export const PIPE_MIN_GAP = 0.1;

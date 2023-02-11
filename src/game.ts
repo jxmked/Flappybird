@@ -24,7 +24,7 @@ export default class Game {
     this.platform = new PlatformModel();
 
     // Pipe and Platform X Velocity
-    this.platform.velocity.x = 0.005;
+    this.platform.velocity.x = 0.0058;
 
     // Pipe Distance
     this.PipeDist = 0.4;
@@ -60,6 +60,9 @@ export default class Game {
   Resize({ width, height }: IDimension): void {
     this.background.resize({ width, height });
     this.platform.resize({ width, height });
+
+    // Set Platform size first
+    BirdModel.platformHeight = this.platform.platformSize.height;
     this.bird.resize({ width, height });
 
     this.pipeGenerator.resize({
@@ -68,10 +71,8 @@ export default class Game {
       width: width,
       height: height,
       distance: this.PipeDist,
-      radius: 0.2
+      radius: 0.18
     });
-
-    this.bird.platformHeight = this.platform.platformSize.height;
 
     for (const pipe of this.pipeGenerator.pipes) {
       pipe.resize({ width, height });

@@ -11,6 +11,20 @@ import birdYellowUpFlap from '../assets/sprites/bird/yellow-up-flap.png';
 import Sfx from './sfx';
 import Pipe from './pipe';
 
+// prettier-ignore
+import {
+  BIRD_JUMP_HEIGHT,
+  BIRD_X_POSITION,
+  BIRD_MAX_ROTAION,
+  BIRD_MIN_ROTATION,
+  BIRD_HEIGHT,
+  BIRD_INITIAL_DIMENSION,
+  BIRD_WEIGHT,
+  BIRD_MAX_UP_VELOCITY,
+  BIRD_MAX_DOWN_VELOCITY,
+  BIRD_DEFAULT_COLOR
+} from '../constants';
+
 export interface IBirdObject {
   up: HTMLImageElement;
   mid: HTMLImageElement;
@@ -19,28 +33,26 @@ export interface IBirdObject {
 
 export type IBirdColors = 'yellow' | 'red' | 'blue';
 
-export interface IProps {
-  gravity: number;
-  jump: number;
-  width: number;
-  height: number;
-  flapState: number; // Array(Up, Mid, Down)
-}
-
 export default class Bird {
-  birdColorObject: { [key: string]: IBirdObject };
-  color: IBirdColors;
-  birdImg: undefined | IBirdObject;
-  props: IProps;
-  canvasSize: IDimension;
-  platformHeight: number;
+  static platformHeight: number = 0;
 
-  radius: number;
+  birdColorObject: { [key: string]: IBirdObject };
+  birdImg: undefined | IBirdObject;
+
+  canvasSize: IDimension;
+
   alive: boolean;
   velocity: IVelocity;
   score: number;
   coordinate: ICoordinate;
   died: boolean;
+
+  /**
+   * 0 - Up
+   * 1 - Mid
+   * 2 - Down
+   * */
+  wingState: number;
 
   /**
    * height to match with.
@@ -57,11 +69,11 @@ export default class Bird {
 
   /**
    * Bird Rotation (Degree)
-   * -40 - 90
    * */
   rotation: number;
 
   /**
+   * Where its going?
    * waiting | up | down
    */
   birdState: string;
@@ -72,20 +84,14 @@ export default class Bird {
   targetY: number;
 
   /**
-   * Weight
+   * Applied jump Force
    */
-  static weight: number = 3;
-
-  /**
-   * Height of jump
-   */
-  jump: number;
+  up_force: number;
 
   constructor() {
     this.targetY = 0;
-    this.jump = 0;
+    this.up_force = 0;
     this.birdState = 'waiting';
-    this.radius = 10;
     this.died = false;
     this.coordinate = {
       x: 0,
@@ -93,32 +99,25 @@ export default class Bird {
     };
     this.birdColorObject = {};
     this.alive = true;
-    this.color = 'yellow';
+
     this.birdImg = void 0;
     this.velocity = {
       x: 0,
       y: 0
-    };
-    this.props = {
-      gravity: 0,
-      jump: -6,
-      width: 34,
-      flapState: 1,
-      height: 24
     };
 
     this.canvasSize = {
       width: 0,
       height: 0
     };
-    this.platformHeight = 0;
     this.score = 0;
     this.height = 0;
     this.scaled = {
       width: 0,
       height: 0
     };
-    this.rotation = 90;
+    this.rotation = 0;
+    this.wingState = 1;
   }
 
   init(): void {
@@ -140,24 +139,17 @@ export default class Bird {
       }
     };
 
-    this.use('yellow');
+    this.use(BIRD_DEFAULT_COLOR);
   }
 
   resize({ width, height }: IDimension): void {
     this.canvasSize = { width, height };
+    this.velocity.y = lerp(0, Bird.platformHeight, 0.5); // To remove
+    this.coordinate.y = lerp(0, Bird.platformHeight, 0.5);
+    this.coordinate.x = lerp(0, width, BIRD_X_POSITION);
+    this.height = lerp(0, Bird.platformHeight, BIRD_HEIGHT);
 
-    this.coordinate.x = lerp(0, width, 0.15);
-    this.velocity.y = lerp(0, height, 0.0003);
-    this.props.jump = -lerp(0, height, 0.008);
-    this.height = lerp(0, height, 0.024);
-
-    this.scaled = rescaleDim(
-      {
-        width: this.props.width,
-        height: this.props.height
-      },
-      { height: this.height }
-    );
+    this.scaled = rescaleDim(BIRD_INITIAL_DIMENSION, { height: this.height });
   }
 
   flap(): void {
@@ -165,11 +157,11 @@ export default class Bird {
       return;
     }
     Sfx.wing();
-    this.props.gravity = this.props.jump;
+    this.up_force = lerp(0, this.canvasSize.height, BIRD_JUMP_HEIGHT);
   }
 
   doesHitTheFloor(): boolean {
-    return this.coordinate.y + this.scaled.height > Math.abs(this.canvasSize.height - this.platformHeight);
+    return this.coordinate.y + this.scaled.height > Math.abs(this.canvasSize.height - Bird.platformHeight);
   }
 
   isDead(pipes: Pipe[]): boolean {
@@ -253,30 +245,31 @@ export default class Bird {
     // Always above the floor
     if (this.doesHitTheFloor()) return;
 
-    this.props.gravity += this.velocity.y;
-    this.coordinate.y += clamp(-10, 20, this.props.gravity);
+    const mx_down_velocity = lerp(0, this.canvasSize.height, BIRD_MAX_DOWN_VELOCITY);
+    const mx_up_velocity = lerp(0, this.canvasSize.height, BIRD_MAX_UP_VELOCITY);
 
-    this.rotation += this.props.gravity - 5;
-    this.rotation = clamp(-40, 90, this.rotation);
+    this.coordinate.y += clamp(mx_up_velocity, mx_down_velocity, this.up_force);
+    this.up_force += lerp(0, this.canvasSize.height, BIRD_WEIGHT);
+    this.rotation += this.up_force - 10;
+
+    this.rotation = clamp(BIRD_MIN_ROTATION, BIRD_MAX_ROTAION, this.rotation);
 
     if (this.rotation > 70) {
-      this.props.flapState = 1;
+      this.wingState = 1;
     }
   }
 
   changeFlapState(): void {
-    if (this.props.flapState < 0) {
-      this.props.flapState = 1;
+    if (this.wingState < 0) {
+      this.wingState = 1;
     }
   }
 
   Display(context: CanvasRenderingContext2D): void {
     const flapArr = ['up', 'mid', 'down'] as keyof typeof this.birdImg;
+    const { x, y } = this.coordinate;
+    const img: HTMLImageElement = this.birdImg![flapArr[this.wingState]];
 
-    let { x, y } = this.coordinate;
-    let flapState = this.props.flapState;
-
-    const img: HTMLImageElement = this.birdImg![flapArr[flapState]];
     context.beginPath();
     context.save();
     context.translate(x, y);
