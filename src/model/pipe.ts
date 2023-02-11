@@ -98,7 +98,7 @@ export default class Pipe {
     this.canvasSize.height = height;
 
     // Update Pipe Size
-    const min = lerp(0, Math.min(this.canvasSize.height, this.canvasSize.width), 0.18);
+    const min = lerp(0, this.canvasSize.width, 0.18);
     Pipe.pipeSize = rescaleDim(Pipe.pipeSize, { width: min });
 
     // Resize holl size
