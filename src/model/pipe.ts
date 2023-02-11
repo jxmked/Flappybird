@@ -71,7 +71,7 @@ export default class Pipe {
     this.use('green');
   }
 
-  setHollPosition(coordinate:ICoordinate, hollSize: number): void {
+  setHollPosition(coordinate: ICoordinate, hollSize: number): void {
     // Positioning holl
     this.hollSize = lerp(0, this.canvasSize.height, hollSize);
 

@@ -24,33 +24,33 @@ export default class PipeGenerator {
   /**
    * Minimum and Maximum number to generate locate
    */
-  range: IRange;
+  private range: IRange;
 
   /**
    * Expected Pipe Distance.
    * Percentage
    */
-  distance: number;
+  private distance: number;
 
   /**
    * Holl radius
    */
-  radius: number;
+  private radius: number;
 
   /**
    * Width of platform
    */
-  width: number;
-  
+  private width: number;
+
   /**
    * Height of Canvas
    * */
-  height: number;
-  
+  private height: number;
+
   /**
    * Pipe Array
    * */
-  pipes: Pipe[];
+  public pipes: Pipe[];
 
   constructor() {
     this.range = { max: 0, min: 0 };
@@ -61,7 +61,7 @@ export default class PipeGenerator {
     this.pipes = [];
   }
 
-  resize({ min, max, distance, radius, width, height }: IPipeGeneratorOption): void {
+  public resize({ min, max, distance, radius, width, height }: IPipeGeneratorOption): void {
     this.range = { max, min };
     this.distance = lerp(0, width, distance);
     this.radius = radius;
@@ -73,7 +73,7 @@ export default class PipeGenerator {
    * Will return true if the distance of last pipe is equal or greater than
    * expected distance
    */
-  needPipe(): boolean {
+  public needPipe(): boolean {
     const pipeLen = this.pipes.length;
 
     if (pipeLen === 0) {
@@ -92,7 +92,7 @@ export default class PipeGenerator {
    * Would generate pipe with random Y position of mid point
    * and with fixed size
    */
-  generate(): IPipeGeneratorValue {
+  public generate(): IPipeGeneratorValue {
     const radius = lerp(0, this.height, this.radius);
     return {
       position: {

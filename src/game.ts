@@ -100,7 +100,7 @@ export default class Game {
       const pipeAttr = this.pipeGenerator.generate();
       this.addPipe(pipeAttr);
     }
-    
+
     for (let index = 0; index < this.pipeGenerator.pipes.length; index++) {
       this.pipeGenerator.pipes[index].Update();
 
