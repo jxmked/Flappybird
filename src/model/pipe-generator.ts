@@ -81,7 +81,8 @@ export default class PipeGenerator {
     }
 
     // Get the last pipe and check if the distance of it is equal or greater than max width
-    if (this.distance <= ((this.width - this.pipes[pipeLen - 1].coordinate.x) / this.width) * 100) {
+    //if (this.distance <= ((this.width - this.pipes[pipeLen - 1].coordinate.x) / this.width) * 100) {
+    if (this.distance <= this.width - this.pipes[pipeLen - 1].coordinate.x) {
       return true;
     }
 

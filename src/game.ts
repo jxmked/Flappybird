@@ -11,7 +11,6 @@ export default class Game {
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
   platform: PlatformModel;
-  lastPipeXDist: number;
   PipeDist: number;
 
   temp: ICoordinate;
@@ -27,11 +26,8 @@ export default class Game {
     // Pipe and Platform X Velocity
     this.platform.velocity.x = 0.005;
 
-    // Last Pipe DIstance
-    this.lastPipeXDist = 0;
-
     // Pipe Distance
-    this.PipeDist = 0.03;
+    this.PipeDist = 0.4;
     this.pipeGenerator = new PipeGenerator();
 
     this.temp = { x: 0, y: 0 };

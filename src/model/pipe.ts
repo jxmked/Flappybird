@@ -34,12 +34,16 @@ export default class Pipe {
   pipePosition: IPipePairPosition;
   isPassed: boolean;
 
+  untouchedHollsize: number;
   constructor() {
     // Percentage
     this.velocity = { x: 0.002, y: 0 };
 
     // Holl Position
     this.coordinate = { x: 0, y: 0 };
+
+    // The original hollsize, (The Percentage)
+    this.untouchedHollsize = 0;
     this.canvasSize = {
       width: 0,
       height: 0
@@ -74,6 +78,7 @@ export default class Pipe {
   setHollPosition(coordinate: ICoordinate, hollSize: number): void {
     // Positioning holl
     this.hollSize = lerp(0, this.canvasSize.height, hollSize);
+    this.untouchedHollsize = hollSize;
 
     /**
      * The Logic is
@@ -85,12 +90,24 @@ export default class Pipe {
   }
 
   resize({ width, height }: IDimension): void {
+    // Save the coordinate of pipe holl
+    const oldX = (this.coordinate.x / this.canvasSize.width) * 100;
+    const oldY = (this.coordinate.y / this.canvasSize.height) * 100;
+
     this.canvasSize.width = width;
     this.canvasSize.height = height;
 
     // Update Pipe Size
     const min = lerp(0, Math.min(this.canvasSize.height, this.canvasSize.width), 0.18);
     Pipe.pipeSize = rescaleDim(Pipe.pipeSize, { width: min });
+
+    // Resize holl size
+    this.hollSize = lerp(0, this.canvasSize.height, this.untouchedHollsize);
+
+    //  Relocate the pipe holl
+    // I'm getting a problem when i am using lerp() for this.
+    this.coordinate.x = (oldX * this.canvasSize.width) / 100;
+    this.coordinate.y = (oldY * this.canvasSize.height) / 100;
   }
 
   isOut(): boolean {

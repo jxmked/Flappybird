@@ -57,8 +57,8 @@ export default class Bird {
   scaled: IDimension;
 
   /**
-   * Bird Rotation
-   * -5 - 20
+   * Bird Rotation (Degree)
+   * -45 - 90
    * */
   rotation: number;
 
@@ -97,7 +97,7 @@ export default class Bird {
       width: 0,
       height: 0
     };
-    this.rotation = 0;
+    this.rotation = 90;
   }
 
   init(): void {
@@ -160,6 +160,7 @@ export default class Bird {
       return !this.alive;
     }
 
+    const boundary = this.getRotatedWidth() - this.scaled.height / 2;
     for (const pipe of pipes) {
       try {
         // Midpoint Holl Coordinate
@@ -170,11 +171,11 @@ export default class Bird {
 
         // Skip past pipe
         // ---------- Out
-        if (hcx + width < posX - this.scaled.width) continue;
+        if (hcx + width < posX - boundary) continue;
 
         // Is Inside of Pipes?
         // In ----------
-        if (Math.abs(hcx - width) <= posX + this.scaled.width) {
+        if (Math.abs(hcx - width) <= posX + boundary) {
           // Will get score after passing the
           // center width of pipe
           if (hcx < posX && !pipe.isPassed) {
@@ -191,7 +192,6 @@ export default class Bird {
         }
 
         // Only the first pipe should be check
-
         break;
       } catch (err) {}
     }
@@ -199,44 +199,68 @@ export default class Bird {
     return !this.alive;
   }
 
+  /**
+   * Get the new width of an oval/ellipse shape based on angle
+   *
+   * @returns new width based on rotation
+   */
+  getRotatedWidth(): number {
+    const rad = (this.rotation * Math.PI) / 180;
+    const res = Math.abs(this.scaled.width * Math.cos(rad)) + Math.abs(this.scaled.height * Math.sin(rad));
+    return res > this.scaled.width ? this.scaled.width : res;
+  }
+
+  /**
+   * Play Die sound once once the bird died
+   */
   playDead(): void {
     if (this.died) return;
     Sfx.die();
     this.died = true;
   }
 
+  /**
+   * Change the color of the bird
+   *
+   * @param color string color of bird. (red | yellow | blue)
+   */
   use(color: IBirdColors): void {
     this.birdImg = this.birdColorObject[color as keyof typeof this.birdColorObject];
   }
 
   Update(): void {
-    if (this.doesHitTheFloor()) {
-      return;
-    }
-    this.props.gravity += this.velocity.y;
-    this.coordinate.y += this.props.gravity;
+    // Always above the floor
+    if (this.doesHitTheFloor()) return;
 
-    this.props.gravity = clamp(-5, 20, this.props.gravity);
+    this.props.gravity += this.velocity.y;
+    this.coordinate.y += clamp(-10, 20, this.props.gravity);
+
+    this.rotation += this.props.gravity - 5;
+    this.rotation = clamp(-45, 90, this.rotation);
   }
 
   Display(context: CanvasRenderingContext2D): void {
     const flapArr = ['up', 'mid', 'down'] as keyof typeof this.birdImg;
 
     let { x, y } = this.coordinate;
-    const { gravity, flapState } = this.props;
-
-    context.beginPath();
-    //context.arc(x, y, this.radius, 0, Math.PI * 2);
-    context.ellipse(x, y, this.scaled.width, this.scaled.height, 0, 0, Math.PI * 2);
-    context.fillStyle = this.ballColor;
-    context.fill();
-    context.closePath();
+    const { flapState } = this.props;
+    // context.save()
+    // context.beginPath();
+    // context.translate(x, y);
+    // context.rotate((this.rotation * Math.PI) / 180)
+    // //context.arc(x, y, this.radius, 0, Math.PI * 2);
+    // context.ellipse(0, 0, this.scaled.width, this.scaled.height, 0, 0, Math.PI * 2);
+    // context.fillStyle = this.ballColor;
+    // context.fill();
+    // context.closePath();
+    // context.restore();
 
     const img: HTMLImageElement = this.birdImg![flapArr[flapState]];
     context.beginPath();
     context.save();
     context.translate(x, y);
-    context.rotate(((Math.PI / 2) * this.rotation) / 20);
+    // context.rotate(((Math.PI / 2) * this.rotation) / 20);
+    context.rotate((this.rotation * Math.PI) / 180);
     context.translate(-this.scaled.width, -this.scaled.height);
     context.drawImage(img, 0, 0, this.scaled.width * 2, this.scaled.height * 2);
     context.restore();
