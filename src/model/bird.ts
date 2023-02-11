@@ -41,7 +41,6 @@ export default class Bird {
   score: number;
   coordinate: ICoordinate;
   died: boolean;
-  ballColor: string;
 
   /**
    * height to match with.
@@ -58,11 +57,34 @@ export default class Bird {
 
   /**
    * Bird Rotation (Degree)
-   * -45 - 90
+   * -40 - 90
    * */
   rotation: number;
 
+  /**
+   * waiting | up | down
+   */
+  birdState: string;
+
+  /**
+   * Target Position every jump
+   */
+  targetY: number;
+
+  /**
+   * Weight
+   */
+  static weight: number = 3;
+
+  /**
+   * Height of jump
+   */
+  jump: number;
+
   constructor() {
+    this.targetY = 0;
+    this.jump = 0;
+    this.birdState = 'waiting';
     this.radius = 10;
     this.died = false;
     this.coordinate = {
@@ -73,7 +95,6 @@ export default class Bird {
     this.alive = true;
     this.color = 'yellow';
     this.birdImg = void 0;
-    this.ballColor = 'yellow';
     this.velocity = {
       x: 0,
       y: 0
@@ -236,30 +257,29 @@ export default class Bird {
     this.coordinate.y += clamp(-10, 20, this.props.gravity);
 
     this.rotation += this.props.gravity - 5;
-    this.rotation = clamp(-45, 90, this.rotation);
+    this.rotation = clamp(-40, 90, this.rotation);
+
+    if (this.rotation > 70) {
+      this.props.flapState = 1;
+    }
+  }
+
+  changeFlapState(): void {
+    if (this.props.flapState < 0) {
+      this.props.flapState = 1;
+    }
   }
 
   Display(context: CanvasRenderingContext2D): void {
     const flapArr = ['up', 'mid', 'down'] as keyof typeof this.birdImg;
 
     let { x, y } = this.coordinate;
-    const { flapState } = this.props;
-    // context.save()
-    // context.beginPath();
-    // context.translate(x, y);
-    // context.rotate((this.rotation * Math.PI) / 180)
-    // //context.arc(x, y, this.radius, 0, Math.PI * 2);
-    // context.ellipse(0, 0, this.scaled.width, this.scaled.height, 0, 0, Math.PI * 2);
-    // context.fillStyle = this.ballColor;
-    // context.fill();
-    // context.closePath();
-    // context.restore();
+    let flapState = this.props.flapState;
 
     const img: HTMLImageElement = this.birdImg![flapArr[flapState]];
     context.beginPath();
     context.save();
     context.translate(x, y);
-    // context.rotate(((Math.PI / 2) * this.rotation) / 20);
     context.rotate((this.rotation * Math.PI) / 180);
     context.translate(-this.scaled.width, -this.scaled.height);
     context.drawImage(img, 0, 0, this.scaled.width * 2, this.scaled.height * 2);

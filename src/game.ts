@@ -125,11 +125,11 @@ export default class Game {
 
     this.bird.Display(this.context);
 
-    this.context.beginPath();
-    this.context.arc(this.temp.x, this.temp.y, 10, 0, Math.PI * 2);
-    this.context.fillStyle = 'red';
-    this.context.fill();
-    this.context.closePath();
+    // this.context.beginPath();
+    // this.context.arc(this.temp.x, this.temp.y, 10, 0, Math.PI * 2);
+    // this.context.fillStyle = 'red';
+    // this.context.fill();
+    // this.context.closePath();
 
     const ctx = this.context;
 
