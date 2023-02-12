@@ -41,12 +41,34 @@ export interface IBirdImages {
 export type IBirdColors = 'yellow' | 'red' | 'blue';
 
 export default class Bird extends ParentClass {
+  /**
+   * Platform Height
+   * */
   static platformHeight = 0;
 
+  /**
+   * Bird color selections
+   * */
   birdColorObject: IBirdImages;
+
+  /**
+   * Bird Images
+   * */
   birdImg: undefined | IBirdObject;
+
+  /**
+   * Bird state
+   * */
   alive: boolean;
+
+  /**
+   * Score
+   * */
   score: number;
+
+  /**
+   * Will be use to play sound once dies
+   * */
   died: boolean;
 
   /**
@@ -75,31 +97,18 @@ export default class Bird extends ParentClass {
   rotation: number;
 
   /**
-   * Where its going?
-   * waiting | up | down
-   */
-  birdState: string;
-
-  /**
-   * Target Position every jump
-   */
-  targetY: number;
-
-  /**
-   * Applied jump Force
-   */
-  up_force: number;
-
+   * A state changer for wings
+   * */
   backNForth: BackNForthCounter;
 
+  /**
+   * Calculated Fixed Force to up
+   * */
   force: number;
 
   constructor() {
     super();
 
-    this.targetY = 0;
-    this.up_force = 0;
-    this.birdState = 'waiting';
     this.died = false;
     this.birdColorObject = {
       yellow: {
@@ -134,9 +143,16 @@ export default class Bird extends ParentClass {
       [45, 55],
       [90, 100]
     ]);
-    this.backNForth.speed(10);
+    this.backNForth.speed(30);
   }
 
+  /**
+   * We Initialize the constructor of the object first while the assets
+   * is still loading.
+   *
+   * We call this init() method after the all required
+   * asset has been loaded.
+   * */
   init(): void {
     this.birdColorObject = {
       yellow: {
@@ -159,10 +175,16 @@ export default class Bird extends ParentClass {
     this.use(BIRD_DEFAULT_COLOR);
   }
 
+  /**
+   * Resizing canvas is pretty tricky but
+   * to keep the position of the object
+   * we do use percentages than pixels since percentages
+   * does keep the position.
+   *
+   * */
   resize({ width, height }: IDimension): void {
     super.resize({ width, height });
 
-    this.velocity.y = lerp(0, Bird.platformHeight, 0.5); // To remove
     this.coordinate.y = lerp(0, Bird.platformHeight, 0.5);
     this.coordinate.x = lerp(0, width, BIRD_X_POSITION);
     this.height = lerp(0, Bird.platformHeight, BIRD_HEIGHT);
@@ -171,14 +193,23 @@ export default class Bird extends ParentClass {
     this.scaled = rescaleDim(BIRD_INITIAL_DIMENSION, { height: this.height });
   }
 
+  /**
+   * Add lift to bird that slowly decrease by weight
+   * */
   flap(): void {
+    // Prevent flapping when the height of bird is
+    // at the very top of canvas or the bird is not alive
     if (this.coordinate.y < 0 || !this.alive) {
       return;
     }
+
     Sfx.wing();
-    this.up_force = this.force;
+    this.velocity.y = this.force;
   }
 
+  /**
+   * Check if the bird touches the platform
+   * */
   doesHitTheFloor(): boolean {
     return (
       this.coordinate.y + this.scaled.height >
@@ -186,16 +217,19 @@ export default class Bird extends ParentClass {
     );
   }
 
+  /**
+   * Check if the bird collided with the pipes
+   * */
   isDead(pipes: Pipe[]): boolean {
-    const posX = this.coordinate.x;
-    const posY = this.coordinate.y;
-
     if (this.doesHitTheFloor()) {
       this.alive = false;
       return !this.alive;
     }
 
+    const posX = this.coordinate.x;
+    const posY = this.coordinate.y;
     const boundary = this.getRotatedWidth() - this.scaled.height / 2;
+
     for (const pipe of pipes) {
       try {
         // Midpoint Holl Coordinate
@@ -272,43 +306,53 @@ export default class Bird extends ParentClass {
     // Always above the floor
     if (this.doesHitTheFloor()) return;
 
+    // Calculate the max drag & max lift velocities from given percentages
     const mx_down_velocity = lerp(0, this.canvasSize.height, BIRD_MAX_DOWN_VELOCITY);
     const mx_up_velocity = lerp(0, this.canvasSize.height, BIRD_MAX_UP_VELOCITY);
 
-    this.coordinate.y += clamp(mx_up_velocity, mx_down_velocity, this.up_force);
+    // Add the Y velocity into Y coordinate but make sure we did not overspeed
+    this.coordinate.y += clamp(mx_up_velocity, mx_down_velocity, this.velocity.y);
 
-    this.up_force += lerp(0, this.canvasSize.height, BIRD_WEIGHT);
+    // Slowly reduce the Y velocity by given weights
+    this.velocity.y += lerp(0, this.canvasSize.height, BIRD_WEIGHT);
 
-    this.rotation += this.up_force - 10;
+    // Rotate the bird base on its velocity. The faster the more lift it takes
+    this.rotation += this.velocity.y - 10;
     this.rotation = clamp(BIRD_MIN_ROTATION, BIRD_MAX_ROTATION, this.rotation);
 
-    this.backNForth.speed(30);
-
+    // Update our back and forth utilty.
+    // This function will help our bird tk wave its wings
     this.backNForth.Update();
 
+    // Update wing state
     this.wingState = this.backNForth.getStop();
 
+    // Make sure the wing is set to mid flap when the bird is falling
     if (this.rotation > 70) {
-      this.wingState = 1;
-    }
-  }
-
-  changeFlapState(): void {
-    if (this.wingState < 0) {
       this.wingState = 1;
     }
   }
 
   Display(context: CanvasRenderingContext2D): void {
     const flapArr = ['up', 'mid', 'down'] as keyof typeof this.birdImg;
-    const { x, y } = this.coordinate;
     const img: HTMLImageElement = this.birdImg![flapArr[this.wingState]];
+    const { x, y } = this.coordinate;
 
+    // Save our previous created picture
     context.save();
+
+    // Move the imaginary cursor into the bird position
     context.translate(x, y);
+
+    // Rotate the context using the code above as mid point
     context.rotate((this.rotation * Math.PI) / 180);
+
+    /* Code below is just printing the bird. */
+
     context.translate(-this.scaled.width, -this.scaled.height);
     context.drawImage(img, 0, 0, this.scaled.width * 2, this.scaled.height * 2);
+
+    // Restore the previously created picture but keeping the bird
     context.restore();
   }
 }

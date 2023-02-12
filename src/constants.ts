@@ -17,7 +17,7 @@ export const CANVAS_DIMENSION = {
 };
 
 // Sound effect volume. (0 - 1)
-export const SFX_VOLUME = 1;
+export const SFX_VOLUME = 0.3;
 
 /**
  * Bird
@@ -41,7 +41,7 @@ export const BIRD_WEIGHT = 0.00047;
 
 export const BIRD_MAX_UP_VELOCITY = -0.3;
 
-export const BIRD_MAX_DOWN_VELOCITY = 0.1;
+export const BIRD_MAX_DOWN_VELOCITY = 0.0171;
 
 export const BIRD_DEFAULT_COLOR: IBirdColors = 'yellow';
 
@@ -62,7 +62,7 @@ export const BIRD_INITIAL_DIMENSION: IDimension = {
 export const PIPE_DISTANCE = 0.38;
 
 // Holl size of pipe. Based on canvas height. (0 - 1)
-export const PIPE_HOLL_SIZE = 0.17;
+export const PIPE_HOLL_SIZE = 0.18;
 
 // Minimum gap of pipe holl to very top and platform. Based on height. (0 - 1)
 export const PIPE_MIN_GAP = 0.18;

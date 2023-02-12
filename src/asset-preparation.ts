@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import sfDie from './assets/audio/die.ogg';
 import sfHit from './assets/audio/hit.ogg';
 import sfPoint from './assets/audio/point.ogg';

@@ -2,7 +2,6 @@ import BgModel from './model/background';
 import PlatformModel from './model/platform';
 import PipeModel from './model/pipe';
 import BirdModel from './model/bird';
-import { lerp } from './utils';
 import Sfx from './model/sfx';
 import PipeGenerator, { IPipeGeneratorValue } from './model/pipe-generator';
 import { SFX_VOLUME } from './constants';
