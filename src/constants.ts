@@ -4,6 +4,12 @@ import { IBirdColors } from './model/bird';
  * Environment Contants
  */
 
+// Pipe and Platform Speed should be the same
+export const GAME_SPEED = 0.0058;
+
+// Background Speed
+export const BG_SPEED = 0.0002;
+
 // Initial Canvas Size. Changing this may cause problem in some cases.
 export const CANVAS_DIMENSION = {
   width: 500,
@@ -30,7 +36,7 @@ export const BIRD_JUMP_HEIGHT = -0.008;
 export const BIRD_X_POSITION = 0.15;
 
 // Max angle of bird in degree
-export const BIRD_MAX_ROTAION = 90;
+export const BIRD_MAX_ROTATION = 90;
 
 // Minimum angle of bird in degree
 export const BIRD_MIN_ROTATION = -15;
@@ -59,10 +65,10 @@ export const BIRD_INITIAL_DIMENSION: IDimension = {
  */
 
 // Distance of pipe between max width of canvas and the last pipe. (0 - 1)
-export const PIPE_DISTANCE = 0.4;
+export const PIPE_DISTANCE = 0.38;
 
 // Holl size of pipe. Based on canvas height. (0 - 1)
 export const PIPE_HOLL_SIZE = 0.17;
 
 // Minimum gap of pipe holl to very top and platform. Based on height. (0 - 1)
-export const PIPE_MIN_GAP = 0.1;
+export const PIPE_MIN_GAP = 0.07;

@@ -1,3 +1,5 @@
+import ParentClass from '../abstracts/parent-class';
+
 import { asset, lerp, rescaleDim, clamp } from '../utils';
 import birdYellowMidFlap from '../assets/sprites/bird/yellow-mid-flap.png';
 import birdYellowDownFlap from '../assets/sprites/bird/yellow-down-flap.png';
@@ -15,7 +17,7 @@ import Pipe from './pipe';
 import {
   BIRD_JUMP_HEIGHT,
   BIRD_X_POSITION,
-  BIRD_MAX_ROTAION,
+  BIRD_MAX_ROTATION,
   BIRD_MIN_ROTATION,
   BIRD_HEIGHT,
   BIRD_INITIAL_DIMENSION,
@@ -33,18 +35,13 @@ export interface IBirdObject {
 
 export type IBirdColors = 'yellow' | 'red' | 'blue';
 
-export default class Bird {
+export default class Bird extends ParentClass {
   static platformHeight: number = 0;
 
   birdColorObject: { [key: string]: IBirdObject };
   birdImg: undefined | IBirdObject;
-
-  canvasSize: IDimension;
-
   alive: boolean;
-  velocity: IVelocity;
   score: number;
-  coordinate: ICoordinate;
   died: boolean;
 
   /**
@@ -89,27 +86,16 @@ export default class Bird {
   up_force: number;
 
   constructor() {
+    super();
+
     this.targetY = 0;
     this.up_force = 0;
     this.birdState = 'waiting';
     this.died = false;
-    this.coordinate = {
-      x: 0,
-      y: 0
-    };
     this.birdColorObject = {};
     this.alive = true;
 
     this.birdImg = void 0;
-    this.velocity = {
-      x: 0,
-      y: 0
-    };
-
-    this.canvasSize = {
-      width: 0,
-      height: 0
-    };
     this.score = 0;
     this.height = 0;
     this.scaled = {
@@ -143,7 +129,8 @@ export default class Bird {
   }
 
   resize({ width, height }: IDimension): void {
-    this.canvasSize = { width, height };
+    super.resize({ width, height });
+
     this.velocity.y = lerp(0, Bird.platformHeight, 0.5); // To remove
     this.coordinate.y = lerp(0, Bird.platformHeight, 0.5);
     this.coordinate.x = lerp(0, width, BIRD_X_POSITION);
@@ -228,8 +215,8 @@ export default class Bird {
    */
   playDead(): void {
     if (this.died) return;
-    Sfx.die();
     this.died = true;
+    Sfx.die();
   }
 
   /**
@@ -252,7 +239,7 @@ export default class Bird {
     this.up_force += lerp(0, this.canvasSize.height, BIRD_WEIGHT);
     this.rotation += this.up_force - 10;
 
-    this.rotation = clamp(BIRD_MIN_ROTATION, BIRD_MAX_ROTAION, this.rotation);
+    this.rotation = clamp(BIRD_MIN_ROTATION, BIRD_MAX_ROTATION, this.rotation);
 
     if (this.rotation > 70) {
       this.wingState = 1;
@@ -270,13 +257,11 @@ export default class Bird {
     const { x, y } = this.coordinate;
     const img: HTMLImageElement = this.birdImg![flapArr[this.wingState]];
 
-    context.beginPath();
     context.save();
     context.translate(x, y);
     context.rotate((this.rotation * Math.PI) / 180);
     context.translate(-this.scaled.width, -this.scaled.height);
     context.drawImage(img, 0, 0, this.scaled.width * 2, this.scaled.height * 2);
     context.restore();
-    context.closePath();
   }
 }

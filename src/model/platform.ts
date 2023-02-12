@@ -1,22 +1,21 @@
+import ParentClass from '../abstracts/parent-class';
+
 import { asset } from '../utils';
 import platformImage from '../assets/sprites/base.png';
 import { rescaleDim, IRescaleDim, lerp } from '../utils';
 
-export default class Platform {
-  velocity: IVelocity;
-  coordinate: ICoordinate;
-  canvasSize: IDimension;
+// prettier-ignore
+import {
+  GAME_SPEED
+} from '../constants';
+
+export default class Platform extends ParentClass {
   platformSize: IDimension;
   img: undefined | HTMLImageElement;
 
   constructor() {
-    // Percentage
-    this.velocity = { x: 0.001, y: 0 };
-    this.coordinate = { x: 0, y: 0 };
-    this.canvasSize = {
-      width: 0,
-      height: 0
-    };
+    super();
+    this.velocity.x = GAME_SPEED;
     this.platformSize = {
       width: 0,
       height: 0
@@ -29,29 +28,15 @@ export default class Platform {
   }
 
   resize({ width, height }: IDimension): void {
-    this.canvasSize.width = width;
-    this.canvasSize.height = height;
-    const max = Math.max(width, height);
-    const div = 4;
+    super.resize({ width, height });
 
-    // Automatically resize the image based on highest dimension
-    if (width > height) {
-      this.platformSize = rescaleDim(
-        {
-          width: this.img!.width,
-          height: this.img!.height
-        },
-        { width: max / div }
-      );
-    } else {
-      this.platformSize = rescaleDim(
-        {
-          width: this.img!.width,
-          height: this.img!.height
-        },
-        { height: max / div }
-      );
-    }
+    this.platformSize = rescaleDim(
+      {
+        width: this.img!.width,
+        height: this.img!.height
+      },
+      { height: height / 4 }
+    );
 
     this.coordinate.y = height - this.platformSize.height;
   }

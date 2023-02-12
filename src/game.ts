@@ -6,16 +6,19 @@ import { lerp } from './utils';
 import Sfx from './model/sfx';
 import PipeGenerator, { IPipeGeneratorValue } from './model/pipe-generator';
 
+// prettier-ignore
+import {
+  SFX_VOLUME
+} from './constants';
+
 export default class Game {
   background: BgModel;
-  canvas: HTMLCanvasElement;
-  context: CanvasRenderingContext2D;
   platform: PlatformModel;
-  PipeDist: number;
-
-  temp: ICoordinate;
   bird: BirdModel;
   pipeGenerator: PipeGenerator;
+
+  canvas: HTMLCanvasElement;
+  context: CanvasRenderingContext2D;
 
   constructor(canvas: HTMLCanvasElement) {
     this.background = new BgModel();
@@ -23,14 +26,7 @@ export default class Game {
     this.context = this.canvas.getContext('2d')!;
     this.platform = new PlatformModel();
 
-    // Pipe and Platform X Velocity
-    this.platform.velocity.x = 0.0058;
-
-    // Pipe Distance
-    this.PipeDist = 0.4;
     this.pipeGenerator = new PipeGenerator();
-
-    this.temp = { x: 0, y: 0 };
     this.bird = new BirdModel();
   }
 
@@ -39,9 +35,10 @@ export default class Game {
     this.background.init();
     this.platform.init();
     new Sfx().init();
+    Sfx.volume(SFX_VOLUME);
   }
 
-  addPipe({ position, radius }: IPipeGeneratorValue): void {
+  addPipe({ position }: IPipeGeneratorValue): void {
     const pipe = new PipeModel();
 
     pipe.resize({
@@ -49,9 +46,7 @@ export default class Game {
       height: this.canvas.height
     });
 
-    pipe.velocity.x = this.platform.velocity.x;
-
-    pipe.setHollPosition(position, radius);
+    pipe.setHollPosition(position);
 
     pipe.init();
     this.pipeGenerator.pipes.push(pipe);
@@ -66,12 +61,9 @@ export default class Game {
     this.bird.resize({ width, height });
 
     this.pipeGenerator.resize({
-      min: lerp(0, height, 0.01),
       max: height - this.platform.platformSize.height,
       width: width,
-      height: height,
-      distance: this.PipeDist,
-      radius: 0.18
+      height: height
     });
 
     for (const pipe of this.pipeGenerator.pipes) {
@@ -126,12 +118,6 @@ export default class Game {
 
     this.bird.Display(this.context);
 
-    // this.context.beginPath();
-    // this.context.arc(this.temp.x, this.temp.y, 10, 0, Math.PI * 2);
-    // this.context.fillStyle = 'red';
-    // this.context.fill();
-    // this.context.closePath();
-
     const ctx = this.context;
 
     ctx.beginPath();
@@ -143,7 +129,6 @@ export default class Game {
   }
 
   onClick({ x, y }: ICoordinate): void {
-    this.temp = { x, y };
     this.bird.flap();
   }
 }

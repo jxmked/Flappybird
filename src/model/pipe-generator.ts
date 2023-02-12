@@ -1,23 +1,26 @@
 import { lerp, randomClamp } from '../utils';
 import Pipe from './pipe';
 
+// prettier-ignore
+import {
+  PIPE_DISTANCE,
+  PIPE_HOLL_SIZE,
+  PIPE_MIN_GAP
+} from '../constants';
+
 export interface IRange {
   min: number;
   max: number;
 }
 
 export interface IPipeGeneratorOption {
-  min: number;
   max: number;
-  distance: number;
-  radius: number;
   width: number;
   height: number;
 }
 
 export interface IPipeGeneratorValue {
   position: ICoordinate;
-  radius: number;
 }
 
 export default class PipeGenerator {
@@ -25,17 +28,6 @@ export default class PipeGenerator {
    * Minimum and Maximum number to generate locate
    */
   private range: IRange;
-
-  /**
-   * Expected Pipe Distance.
-   * Percentage
-   */
-  private distance: number;
-
-  /**
-   * Holl radius
-   */
-  private radius: number;
 
   /**
    * Width of platform
@@ -52,26 +44,29 @@ export default class PipeGenerator {
    * */
   public pipes: Pipe[];
 
+  /**
+   * Expected Distance between Pipes
+   * */
+  private distance: number;
+
   constructor() {
     this.range = { max: 0, min: 0 };
-    this.distance = 0;
-    this.radius = 0;
     this.width = 0;
     this.height = 0;
     this.pipes = [];
+    this.distance = 0;
   }
 
-  public resize({ min, max, distance, radius, width, height }: IPipeGeneratorOption): void {
-    this.range = { max, min };
-    this.distance = lerp(0, width, distance);
-    this.radius = radius;
+  public resize({ max, width, height }: IPipeGeneratorOption): void {
+    this.range = { max, min: lerp(0, height, PIPE_MIN_GAP) };
+    this.distance = lerp(0, width, PIPE_DISTANCE);
     this.width = width;
     this.height = height;
   }
 
   /**
    * Will return true if the distance of last pipe is equal or greater than
-   * expected distance
+   * expected distance from max width
    */
   public needPipe(): boolean {
     const pipeLen = this.pipes.length;
@@ -93,13 +88,12 @@ export default class PipeGenerator {
    * and with fixed size
    */
   public generate(): IPipeGeneratorValue {
-    const radius = lerp(0, this.height, this.radius);
+    const radius = lerp(0, this.height, PIPE_HOLL_SIZE);
     return {
       position: {
         x: this.width + Pipe.pipeSize.width,
         y: randomClamp(this.range.min + radius, this.range.max - this.range.min - radius)
-      },
-      radius: this.radius
+      }
     };
   }
 }

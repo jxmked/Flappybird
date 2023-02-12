@@ -1,26 +1,25 @@
+import ParentClass from '../abstracts/parent-class';
+
 import { asset } from '../utils';
 import bgImgDay from '../assets/sprites/background/day.png';
 import bgImgNight from '../assets/sprites/background/night.png';
 import { rescaleDim, IRescaleDim, lerp } from '../utils';
 
-export default class Background {
+// prettier-ignore
+import {
+  BG_SPEED
+} from '../constants';
+
+export default class Background extends ParentClass {
   backgroundImage: { [key: string]: HTMLImageElement };
-  velocity: IVelocity;
-  coordinate: ICoordinate;
-  canvasSize: IDimension;
   backgroundSize: IDimension;
   img: undefined | HTMLImageElement;
 
   constructor() {
+    super();
     this.backgroundImage = {};
+    this.velocity.x = BG_SPEED;
 
-    // Percentage
-    this.velocity = { x: 0.0002, y: 0 };
-    this.coordinate = { x: 0, y: 0 };
-    this.canvasSize = {
-      width: 0,
-      height: 0
-    };
     this.backgroundSize = {
       width: 0,
       height: 0
@@ -42,9 +41,8 @@ export default class Background {
   }
 
   resize({ width, height }: IDimension): void {
-    // height = height / 1.1;
-    this.canvasSize.width = width;
-    this.canvasSize.height = height;
+    super.resize({ width, height });
+
     const max = Math.max(width, height);
 
     // Automatically resize the image based on highest dimension

@@ -1,9 +1,19 @@
+import ParentClass from '../abstracts/parent-class';
+
 import { asset } from '../utils';
 import pipeTopGreen from '../assets/sprites/pipe/top-green.png';
 import pipeBottomRed from '../assets/sprites/pipe/bottom-red.png';
 import pipeBottomGreen from '../assets/sprites/pipe/bottom-green.png';
 import pipeTopRed from '../assets/sprites/pipe/top-red.png';
 import { rescaleDim, lerp } from '../utils';
+
+// prettier-ignore
+import {
+  PIPE_DISTANCE,
+  PIPE_HOLL_SIZE,
+  PIPE_MIN_GAP,
+  GAME_SPEED
+} from '../constants';
 
 export interface IPairPipe {
   top: HTMLImageElement;
@@ -15,15 +25,7 @@ export interface IPipePairPosition {
   bottom: ICoordinate;
 }
 
-export default class Pipe {
-  velocity: IVelocity;
-
-  /**
-   * x = X Transition
-   * y = Holl Position
-   */
-  coordinate: ICoordinate;
-  canvasSize: IDimension;
+export default class Pipe extends ParentClass {
   static pipeSize: IDimension = {
     width: 100,
     height: 300
@@ -34,20 +36,8 @@ export default class Pipe {
   pipePosition: IPipePairPosition;
   isPassed: boolean;
 
-  untouchedHollsize: number;
   constructor() {
-    // Percentage
-    this.velocity = { x: 0.002, y: 0 };
-
-    // Holl Position
-    this.coordinate = { x: 0, y: 0 };
-
-    // The original hollsize, (The Percentage)
-    this.untouchedHollsize = 0;
-    this.canvasSize = {
-      width: 0,
-      height: 0
-    };
+    super();
     this.pipeImg = {};
 
     this.hollSize = 0;
@@ -58,6 +48,7 @@ export default class Pipe {
       bottom: { x: 0, y: 0 }
     };
     this.isPassed = false;
+    this.velocity.x = GAME_SPEED;
   }
 
   init(): void {
@@ -75,10 +66,9 @@ export default class Pipe {
     this.use('green');
   }
 
-  setHollPosition(coordinate: ICoordinate, hollSize: number): void {
+  setHollPosition(coordinate: ICoordinate): void {
     // Positioning holl
-    this.hollSize = lerp(0, this.canvasSize.height, hollSize);
-    this.untouchedHollsize = hollSize;
+    this.hollSize = lerp(0, this.canvasSize.height, PIPE_HOLL_SIZE);
 
     /**
      * The Logic is
@@ -94,15 +84,14 @@ export default class Pipe {
     const oldX = (this.coordinate.x / this.canvasSize.width) * 100;
     const oldY = (this.coordinate.y / this.canvasSize.height) * 100;
 
-    this.canvasSize.width = width;
-    this.canvasSize.height = height;
+    super.resize({ width, height });
 
     // Update Pipe Size
     const min = lerp(0, this.canvasSize.width, 0.18);
     Pipe.pipeSize = rescaleDim(Pipe.pipeSize, { width: min });
 
     // Resize holl size
-    this.hollSize = lerp(0, this.canvasSize.height, this.untouchedHollsize);
+    this.hollSize = lerp(0, this.canvasSize.height, PIPE_HOLL_SIZE);
 
     //  Relocate the pipe holl
     // I'm getting a problem when i am using lerp() for this.
