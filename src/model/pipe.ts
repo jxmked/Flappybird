@@ -9,9 +9,7 @@ import { rescaleDim, lerp } from '../utils';
 
 // prettier-ignore
 import {
-  PIPE_DISTANCE,
   PIPE_HOLL_SIZE,
-  PIPE_MIN_GAP,
   GAME_SPEED
 } from '../constants';
 
@@ -25,12 +23,17 @@ export interface IPipePairPosition {
   bottom: ICoordinate;
 }
 
+export interface IPipeImages {
+  red: IPairPipe;
+  green: IPairPipe;
+}
+
 export default class Pipe extends ParentClass {
   static pipeSize: IDimension = {
     width: 100,
     height: 300
   };
-  pipeImg: { [key: string]: IPairPipe };
+  pipeImg: IPipeImages;
   img: undefined | IPairPipe;
   hollSize: number;
   pipePosition: IPipePairPosition;
@@ -38,7 +41,16 @@ export default class Pipe extends ParentClass {
 
   constructor() {
     super();
-    this.pipeImg = {};
+    this.pipeImg = {
+      red: {
+        top: new Image(),
+        bottom: new Image()
+      },
+      green: {
+        top: new Image(),
+        bottom: new Image()
+      }
+    };
 
     this.hollSize = 0;
 
@@ -54,12 +66,12 @@ export default class Pipe extends ParentClass {
   init(): void {
     this.pipeImg = {
       red: {
-        top: asset(pipeTopRed),
-        bottom: asset(pipeBottomRed)
+        top: asset(pipeTopRed as string) as HTMLImageElement,
+        bottom: asset(pipeBottomRed as string) as HTMLImageElement
       },
       green: {
-        top: asset(pipeTopGreen),
-        bottom: asset(pipeBottomGreen)
+        top: asset(pipeTopGreen as string) as HTMLImageElement,
+        bottom: asset(pipeBottomGreen as string) as HTMLImageElement
       }
     };
 
@@ -104,7 +116,7 @@ export default class Pipe extends ParentClass {
   }
 
   use(select: 'green' | 'red'): void {
-    this.img = this.pipeImg[select as keyof typeof this.pipeImg];
+    this.img = this.pipeImg[select];
   }
 
   Update(): void {

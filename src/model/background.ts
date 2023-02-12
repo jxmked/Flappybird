@@ -3,21 +3,29 @@ import ParentClass from '../abstracts/parent-class';
 import { asset } from '../utils';
 import bgImgDay from '../assets/sprites/background/day.png';
 import bgImgNight from '../assets/sprites/background/night.png';
-import { rescaleDim, IRescaleDim, lerp } from '../utils';
+import { rescaleDim, lerp } from '../utils';
 
 // prettier-ignore
 import {
   BG_SPEED
 } from '../constants';
 
+export interface IBackgroundImages {
+  day: HTMLImageElement;
+  night: HTMLImageElement;
+}
+
 export default class Background extends ParentClass {
-  backgroundImage: { [key: string]: HTMLImageElement };
+  backgroundImage: IBackgroundImages;
   backgroundSize: IDimension;
   img: undefined | HTMLImageElement;
 
   constructor() {
     super();
-    this.backgroundImage = {};
+    this.backgroundImage = {
+      day: new Image(),
+      night: new Image()
+    };
     this.velocity.x = BG_SPEED;
 
     this.backgroundSize = {
@@ -29,15 +37,15 @@ export default class Background extends ParentClass {
 
   init() {
     this.backgroundImage = {
-      night: asset(bgImgNight),
-      day: asset(bgImgDay)
+      night: asset(bgImgNight as string) as HTMLImageElement,
+      day: asset(bgImgDay as string) as HTMLImageElement
     };
 
     this.use('night');
   }
 
   use(select: 'day' | 'night'): void {
-    this.img = this.backgroundImage[select as keyof typeof this.backgroundImage];
+    this.img = this.backgroundImage[select];
   }
 
   resize({ width, height }: IDimension): void {

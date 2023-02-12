@@ -9,10 +9,8 @@ import WebSfx from '../lib/web-sfx';
 export default class Sfx {
   private static currentVolume = 1;
 
-  constructor() {}
-
-  init() {
-    WebSfx.init();
+  static async init() {
+    await WebSfx.init();
   }
 
   static volume(num: number): void {
@@ -21,26 +19,26 @@ export default class Sfx {
 
   static die(): void {
     WebSfx.volume(Sfx.currentVolume);
-    WebSfx.play(sfDie);
+    WebSfx.play(sfDie as string);
   }
 
   static point(): void {
     WebSfx.volume(Sfx.currentVolume);
-    WebSfx.play(sfPoint);
+    WebSfx.play(sfPoint as string);
   }
 
   static hit(): void {
     WebSfx.volume(Sfx.currentVolume);
-    WebSfx.play(sfHit);
+    WebSfx.play(sfHit as string);
   }
 
   static swoosh(): void {
     WebSfx.volume(Sfx.currentVolume);
-    WebSfx.play(sfSwoosh);
+    WebSfx.play(sfSwoosh as string);
   }
 
   static wing(): void {
     WebSfx.volume(Sfx.currentVolume);
-    WebSfx.play(sfWing);
+    WebSfx.play(sfWing as string);
   }
 }

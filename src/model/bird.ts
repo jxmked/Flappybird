@@ -33,12 +33,18 @@ export interface IBirdObject {
   down: HTMLImageElement;
 }
 
+export interface IBirdImages {
+  yellow: IBirdObject;
+  red: IBirdObject;
+  blue: IBirdObject;
+}
+
 export type IBirdColors = 'yellow' | 'red' | 'blue';
 
 export default class Bird extends ParentClass {
-  static platformHeight: number = 0;
+  static platformHeight = 0;
 
-  birdColorObject: { [key: string]: IBirdObject };
+  birdColorObject: IBirdImages;
   birdImg: undefined | IBirdObject;
   alive: boolean;
   score: number;
@@ -92,7 +98,23 @@ export default class Bird extends ParentClass {
     this.up_force = 0;
     this.birdState = 'waiting';
     this.died = false;
-    this.birdColorObject = {};
+    this.birdColorObject = {
+      yellow: {
+        up: new Image(),
+        mid: new Image(),
+        down: new Image()
+      },
+      blue: {
+        up: new Image(),
+        mid: new Image(),
+        down: new Image()
+      },
+      red: {
+        up: new Image(),
+        mid: new Image(),
+        down: new Image()
+      }
+    };
     this.alive = true;
 
     this.birdImg = void 0;
@@ -109,19 +131,19 @@ export default class Bird extends ParentClass {
   init(): void {
     this.birdColorObject = {
       yellow: {
-        up: asset(birdYellowUpFlap),
-        mid: asset(birdYellowMidFlap),
-        down: asset(birdYellowDownFlap)
+        up: asset(birdYellowUpFlap as string) as HTMLImageElement,
+        mid: asset(birdYellowMidFlap as string) as HTMLImageElement,
+        down: asset(birdYellowDownFlap as string) as HTMLImageElement
       },
       blue: {
-        up: asset(birdBlueUpFlap),
-        mid: asset(birdBlueMidFlap),
-        down: asset(birdBlueDownFlap)
+        up: asset(birdBlueUpFlap as string) as HTMLImageElement,
+        mid: asset(birdBlueMidFlap as string) as HTMLImageElement,
+        down: asset(birdBlueDownFlap as string) as HTMLImageElement
       },
       red: {
-        up: asset(birdRedUpFlap),
-        mid: asset(birdRedMidFlap),
-        down: asset(birdRedDownFlap)
+        up: asset(birdRedUpFlap as string) as HTMLImageElement,
+        mid: asset(birdRedMidFlap as string) as HTMLImageElement,
+        down: asset(birdRedDownFlap as string) as HTMLImageElement
       }
     };
 

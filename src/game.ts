@@ -34,7 +34,7 @@ export default class Game {
     this.bird.init();
     this.background.init();
     this.platform.init();
-    new Sfx().init();
+    Sfx.init();
     Sfx.volume(SFX_VOLUME);
   }
 

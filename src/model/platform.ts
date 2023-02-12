@@ -2,7 +2,7 @@ import ParentClass from '../abstracts/parent-class';
 
 import { asset } from '../utils';
 import platformImage from '../assets/sprites/base.png';
-import { rescaleDim, IRescaleDim, lerp } from '../utils';
+import { rescaleDim, lerp } from '../utils';
 
 // prettier-ignore
 import {
@@ -24,7 +24,7 @@ export default class Platform extends ParentClass {
   }
 
   init() {
-    this.img = asset(platformImage);
+    this.img = asset(platformImage as string) as HTMLImageElement;
   }
 
   resize({ width, height }: IDimension): void {

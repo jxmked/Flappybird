@@ -9,7 +9,8 @@
     "dev": "webpack --config webpack.config.js --mode development --devtool source-map --watch",
     "start": "npm run dev",
     "prettier-format": "prettier --config .prettierrc \"./src\" \"./types\" --write",
-    "prettier-format:md": "prettier --config .prettierrc \"./*.js\" --write"
+    "prettier-format:md": "prettier --config .prettierrc \"./*.js\" --write",
+    "lint": "eslint ./src/**/*.ts"
   },
   "repository": {
     "type": "git",
@@ -30,9 +31,12 @@
   "homepage": "https://jxmked.github.io/FlappyBird/",
   "devDependencies": {
     "@types/raf": "^3.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
     "browser-sync": "^2.27.11",
     "browser-sync-webpack-plugin": "^2.3.0",
     "css-loader": "^6.7.3",
+    "eslint": "^8.34.0",
     "file-loader": "^6.2.0",
     "ga4-webpack-plugin": "^1.0.1",
     "html-webpack-plugin": "^5.5.0",

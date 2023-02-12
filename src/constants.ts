@@ -19,12 +19,6 @@ export const CANVAS_DIMENSION = {
 // Sound effect volume. (0 - 1)
 export const SFX_VOLUME = 1;
 
-// Acceleration
-export const ACCELERATION = 9.8;
-
-// Air resistance
-export const DRAG = 0.25;
-
 /**
  * Bird
  */

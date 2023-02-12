@@ -5,8 +5,6 @@ import GameObject from './game';
 import { rescaleDim, framer as Framer } from './utils';
 import EventHandler from './events';
 
-//import WebSfx from './lib/web-sfx';
-
 if (process.env.NODE_ENV !== 'development') {
   // Load Service Worker
   if ('serviceWorker' in navigator) {
