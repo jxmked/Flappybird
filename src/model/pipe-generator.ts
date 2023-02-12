@@ -29,11 +29,6 @@ export default class PipeGenerator {
   private width: number;
 
   /**
-   * Height of Canvas
-   * */
-  private height: number;
-
-  /**
    * Pipe Array
    * */
   public pipes: Pipe[];
@@ -46,7 +41,6 @@ export default class PipeGenerator {
   constructor() {
     this.range = { max: 0, min: 0 };
     this.width = 0;
-    this.height = 0;
     this.pipes = [];
     this.distance = 0;
   }
@@ -55,7 +49,6 @@ export default class PipeGenerator {
     this.range = { max, min: lerp(0, height, PIPE_MIN_GAP) };
     this.distance = lerp(0, width, PIPE_DISTANCE);
     this.width = width;
-    this.height = height;
   }
 
   /**
@@ -82,11 +75,10 @@ export default class PipeGenerator {
    * and with fixed size
    */
   public generate(): IPipeGeneratorValue {
-    const radius = lerp(0, this.height, PIPE_HOLL_SIZE);
     return {
       position: {
         x: this.width + Pipe.pipeSize.width,
-        y: randomClamp(this.range.min + radius, this.range.max - this.range.min - radius)
+        y: randomClamp(this.range.min, (this.range.max - this.range.min))
       }
     };
   }
