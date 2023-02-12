@@ -1,6 +1,6 @@
 import ParentClass from '../abstracts/parent-class';
 
-import { asset, lerp, rescaleDim, clamp } from '../utils';
+import { asset, lerp, rescaleDim, clamp, BackNForthCounter } from '../utils';
 import birdYellowMidFlap from '../assets/sprites/bird/yellow-mid-flap.png';
 import birdYellowDownFlap from '../assets/sprites/bird/yellow-down-flap.png';
 import birdRedUpFlap from '../assets/sprites/bird/red-up-flap.png';
@@ -90,6 +90,10 @@ export default class Bird extends ParentClass {
    */
   up_force: number;
 
+  backNForth: BackNForthCounter;
+
+  force: number;
+
   constructor() {
     super();
 
@@ -115,7 +119,7 @@ export default class Bird extends ParentClass {
       }
     };
     this.alive = true;
-
+    this.force = 0;
     this.birdImg = void 0;
     this.score = 0;
     this.height = 0;
@@ -125,6 +129,12 @@ export default class Bird extends ParentClass {
     };
     this.rotation = 0;
     this.wingState = 1;
+    this.backNForth = new BackNForthCounter(0, 100, [
+      [0, 10],
+      [45, 55],
+      [90, 100]
+    ]);
+    this.backNForth.speed(10);
   }
 
   init(): void {
@@ -157,6 +167,7 @@ export default class Bird extends ParentClass {
     this.coordinate.x = lerp(0, width, BIRD_X_POSITION);
     this.height = lerp(0, Bird.platformHeight, BIRD_HEIGHT);
 
+    this.force = lerp(0, height, BIRD_JUMP_HEIGHT);
     this.scaled = rescaleDim(BIRD_INITIAL_DIMENSION, { height: this.height });
   }
 
@@ -165,7 +176,7 @@ export default class Bird extends ParentClass {
       return;
     }
     Sfx.wing();
-    this.up_force = lerp(0, this.canvasSize.height, BIRD_JUMP_HEIGHT);
+    this.up_force = this.force;
   }
 
   doesHitTheFloor(): boolean {
@@ -265,10 +276,17 @@ export default class Bird extends ParentClass {
     const mx_up_velocity = lerp(0, this.canvasSize.height, BIRD_MAX_UP_VELOCITY);
 
     this.coordinate.y += clamp(mx_up_velocity, mx_down_velocity, this.up_force);
-    this.up_force += lerp(0, this.canvasSize.height, BIRD_WEIGHT);
-    this.rotation += this.up_force - 10;
 
+    this.up_force += lerp(0, this.canvasSize.height, BIRD_WEIGHT);
+
+    this.rotation += this.up_force - 10;
     this.rotation = clamp(BIRD_MIN_ROTATION, BIRD_MAX_ROTATION, this.rotation);
+
+    this.backNForth.speed(30);
+
+    this.backNForth.Update();
+
+    this.wingState = this.backNForth.getStop();
 
     if (this.rotation > 70) {
       this.wingState = 1;

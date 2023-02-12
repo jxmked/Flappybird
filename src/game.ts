@@ -5,11 +5,7 @@ import BirdModel from './model/bird';
 import { lerp } from './utils';
 import Sfx from './model/sfx';
 import PipeGenerator, { IPipeGeneratorValue } from './model/pipe-generator';
-
-// prettier-ignore
-import {
-  SFX_VOLUME
-} from './constants';
+import { SFX_VOLUME } from './constants';
 
 export default class Game {
   background: BgModel;

@@ -78,7 +78,7 @@ export default class PipeGenerator {
     return {
       position: {
         x: this.width + Pipe.pipeSize.width,
-        y: randomClamp(this.range.min, (this.range.max - this.range.min))
+        y: randomClamp(this.range.min, this.range.max - this.range.min)
       }
     };
   }

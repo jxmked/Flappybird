@@ -24,10 +24,10 @@ export const SFX_VOLUME = 1;
  */
 
 // Jump Height. Based on canvas height. (Percentage 0 - 1)
-export const BIRD_JUMP_HEIGHT = -0.008;
+export const BIRD_JUMP_HEIGHT = -0.009;
 
 // Fixed X-Axis position of bird. Based on canvas width. (Percentage 0 - 1)
-export const BIRD_X_POSITION = 0.15;
+export const BIRD_X_POSITION = 0.3;
 
 // Max angle of bird in degree
 export const BIRD_MAX_ROTATION = 90;
@@ -35,13 +35,13 @@ export const BIRD_MAX_ROTATION = 90;
 // Minimum angle of bird in degree
 export const BIRD_MIN_ROTATION = -15;
 
-export const BIRD_HEIGHT = 0.1;
+export const BIRD_HEIGHT = 0.101;
 
-export const BIRD_WEIGHT = 0.00042;
+export const BIRD_WEIGHT = 0.00047;
 
 export const BIRD_MAX_UP_VELOCITY = -0.3;
 
-export const BIRD_MAX_DOWN_VELOCITY = 0.12;
+export const BIRD_MAX_DOWN_VELOCITY = 0.1;
 
 export const BIRD_DEFAULT_COLOR: IBirdColors = 'yellow';
 
@@ -50,7 +50,7 @@ export const BIRD_DEFAULT_COLOR: IBirdColors = 'yellow';
  * We are keeping the ratio of the bird to prevent ugly looking squish or squash image of bird
  */
 export const BIRD_INITIAL_DIMENSION: IDimension = {
-  width: 32,
+  width: 34,
   height: 24
 };
 
@@ -62,7 +62,7 @@ export const BIRD_INITIAL_DIMENSION: IDimension = {
 export const PIPE_DISTANCE = 0.38;
 
 // Holl size of pipe. Based on canvas height. (0 - 1)
-export const PIPE_HOLL_SIZE = 0.19;
+export const PIPE_HOLL_SIZE = 0.17;
 
 // Minimum gap of pipe holl to very top and platform. Based on height. (0 - 1)
-export const PIPE_MIN_GAP = 0.18
+export const PIPE_MIN_GAP = 0.18;
