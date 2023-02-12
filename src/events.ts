@@ -35,12 +35,18 @@ export default (Game: Game) => {
     clicked = true;
   };
 
-  const mouseMove = ({ x, y }: ICoordinate, evt: MouseEvent | TouchEvent | KeyboardEvent): void => {
+  const mouseMove = (
+    { x, y }: ICoordinate,
+    evt: MouseEvent | TouchEvent | KeyboardEvent
+  ): void => {
     evt.preventDefault();
     mouse.position = getBoundedPosition({ x, y });
   };
 
-  const mouseUP = ({ x, y }: ICoordinate, evt: MouseEvent | TouchEvent | KeyboardEvent): void => {
+  const mouseUP = (
+    { x, y }: ICoordinate,
+    evt: MouseEvent | TouchEvent | KeyboardEvent
+  ): void => {
     /**
      * Required due to autoplay restriction
      * */
@@ -52,7 +58,10 @@ export default (Game: Game) => {
     clicked = false;
   };
 
-  const mouseDown = ({ x, y }: ICoordinate, evt: MouseEvent | TouchEvent | KeyboardEvent): void => {
+  const mouseDown = (
+    { x, y }: ICoordinate,
+    evt: MouseEvent | TouchEvent | KeyboardEvent
+  ): void => {
     /**
      * Required due to autoplay restriction
      * */
@@ -120,7 +129,15 @@ export default (Game: Game) => {
   document.addEventListener('keydown', (evt: KeyboardEvent) => {
     const { key, keyCode, code } = evt;
 
-    if (key === ' ' || keyCode === 32 || code === 'Space' || key === 'Enter' || keyCode === 13 || code === 'NumpadEnter' || code === 'Enter') {
+    if (
+      key === ' ' ||
+      keyCode === 32 ||
+      code === 'Space' ||
+      key === 'Enter' ||
+      keyCode === 13 ||
+      code === 'NumpadEnter' ||
+      code === 'Enter'
+    ) {
       mouseDown(
         {
           x: Game.canvas.width / 2,
@@ -133,7 +150,15 @@ export default (Game: Game) => {
 
   document.addEventListener('keyup', (evt: KeyboardEvent) => {
     const { key, keyCode, code } = evt;
-    if (key === ' ' || keyCode === 32 || code === 'Space' || key === 'Enter' || keyCode === 13 || code === 'NumpadEnter' || code === 'Enter') {
+    if (
+      key === ' ' ||
+      keyCode === 32 ||
+      code === 'Space' ||
+      key === 'Enter' ||
+      keyCode === 13 ||
+      code === 'NumpadEnter' ||
+      code === 'Enter'
+    ) {
       mouseUP(
         {
           x: Game.canvas.width / 2,

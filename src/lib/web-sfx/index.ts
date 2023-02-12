@@ -79,7 +79,9 @@ export default class WebSfx {
    */
   public static volume(num: number): void {
     if (WebSfx.gainContext === void 0) {
-      console.warn('WebSfx.volume cannot set volume. AudioContext is not started or resumed');
+      console.warn(
+        'WebSfx.volume cannot set volume. AudioContext is not started or resumed'
+      );
       return;
     }
 
@@ -122,7 +124,11 @@ export default class WebSfx {
     /**
      * Do not load all files at once.
      * */
-    for (let i = level * WebSfx.concurrentDownload; i < Math.min(entries.length, WebSfx.concurrentDownload); i++) {
+    for (
+      let i = level * WebSfx.concurrentDownload;
+      i < Math.min(entries.length, WebSfx.concurrentDownload);
+      i++
+    ) {
       // Validating files
       if (!/\.(wav|ogg|mp3)$/i.test(entries[i][1])) {
         throw new TypeError("WebSfx.contructor accepts 'wav|ogg|mp3' type of files");

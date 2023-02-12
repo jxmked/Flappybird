@@ -1,12 +1,6 @@
 import { lerp, randomClamp } from '../utils';
 import Pipe from './pipe';
-
-// prettier-ignore
-import {
-  PIPE_DISTANCE,
-  PIPE_HOLL_SIZE,
-  PIPE_MIN_GAP
-} from '../constants';
+import { PIPE_DISTANCE, PIPE_HOLL_SIZE, PIPE_MIN_GAP } from '../constants';
 
 export interface IRange {
   min: number;

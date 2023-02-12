@@ -6,12 +6,7 @@ import pipeBottomRed from '../assets/sprites/pipe/bottom-red.png';
 import pipeBottomGreen from '../assets/sprites/pipe/bottom-green.png';
 import pipeTopRed from '../assets/sprites/pipe/top-red.png';
 import { rescaleDim, lerp } from '../utils';
-
-// prettier-ignore
-import {
-  PIPE_HOLL_SIZE,
-  GAME_SPEED
-} from '../constants';
+import { PIPE_HOLL_SIZE, GAME_SPEED } from '../constants';
 
 export interface IPairPipe {
   top: HTMLImageElement;
@@ -136,7 +131,13 @@ export default class Pipe extends ParentClass {
       height: this.img!.top.height
     }, { width: width * 2 });
 
-    context.drawImage(this.img!.top, posX - width, -(topImgDim.height - Math.abs(posY - size)), topImgDim.width, topImgDim.height);
+    context.drawImage(
+      this.img!.top,
+      posX - width,
+      -(topImgDim.height - Math.abs(posY - size)),
+      topImgDim.width,
+      topImgDim.height
+    );
 
     // prettier-ignore
     const botImgDim = rescaleDim({
@@ -144,6 +145,12 @@ export default class Pipe extends ParentClass {
       height: this.img!.bottom.height
     }, { width: width * 2 });
 
-    context.drawImage(this.img!.bottom, posX - width, posY + size, botImgDim.width, botImgDim.height);
+    context.drawImage(
+      this.img!.bottom,
+      posX - width,
+      posY + size,
+      botImgDim.width,
+      botImgDim.height
+    );
   }
 }

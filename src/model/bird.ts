@@ -13,7 +13,6 @@ import birdYellowUpFlap from '../assets/sprites/bird/yellow-up-flap.png';
 import Sfx from './sfx';
 import Pipe from './pipe';
 
-// prettier-ignore
 import {
   BIRD_JUMP_HEIGHT,
   BIRD_X_POSITION,
@@ -170,7 +169,10 @@ export default class Bird extends ParentClass {
   }
 
   doesHitTheFloor(): boolean {
-    return this.coordinate.y + this.scaled.height > Math.abs(this.canvasSize.height - Bird.platformHeight);
+    return (
+      this.coordinate.y + this.scaled.height >
+      Math.abs(this.canvasSize.height - Bird.platformHeight)
+    );
   }
 
   isDead(pipes: Pipe[]): boolean {
@@ -207,7 +209,10 @@ export default class Bird extends ParentClass {
           }
 
           // Top Pipe ---------- Bottom Pipe
-          if (Math.abs(hcy - size) >= posY - this.scaled.height || hcy + size <= posY + this.scaled.height) {
+          if (
+            Math.abs(hcy - size) >= posY - this.scaled.height ||
+            hcy + size <= posY + this.scaled.height
+          ) {
             this.alive = false;
             break;
           }
@@ -228,7 +233,9 @@ export default class Bird extends ParentClass {
    */
   getRotatedWidth(): number {
     const rad = (this.rotation * Math.PI) / 180;
-    const res = Math.abs(this.scaled.width * Math.cos(rad)) + Math.abs(this.scaled.height * Math.sin(rad));
+    const res =
+      Math.abs(this.scaled.width * Math.cos(rad)) +
+      Math.abs(this.scaled.height * Math.sin(rad));
     return res > this.scaled.width ? this.scaled.width : res;
   }
 

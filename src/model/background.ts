@@ -4,11 +4,7 @@ import { asset } from '../utils';
 import bgImgDay from '../assets/sprites/background/day.png';
 import bgImgNight from '../assets/sprites/background/night.png';
 import { rescaleDim, lerp } from '../utils';
-
-// prettier-ignore
-import {
-  BG_SPEED
-} from '../constants';
+import { BG_SPEED } from '../constants';
 
 export interface IBackgroundImages {
   day: HTMLImageElement;

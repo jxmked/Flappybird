@@ -3,11 +3,7 @@ import ParentClass from '../abstracts/parent-class';
 import { asset } from '../utils';
 import platformImage from '../assets/sprites/base.png';
 import { rescaleDim, lerp } from '../utils';
-
-// prettier-ignore
-import {
-  GAME_SPEED
-} from '../constants';
+import { GAME_SPEED } from '../constants';
 
 export default class Platform extends ParentClass {
   platformSize: IDimension;

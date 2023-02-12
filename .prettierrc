@@ -2,7 +2,7 @@
   "semi": true,
   "trailingComma": "none",
   "singleQuote": true,
-  "printWidth": 200,
+  "printWidth": 90,
   "tabWidth": 2,
   "quoteProps": "consistent",
   "endOfLine": "crlf"
