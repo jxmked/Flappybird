@@ -50,7 +50,7 @@ const GameUpdate = (): void => {
   Game.Update();
   Game.Display();
 
-  fps.mark();
+  if (process.env.NODE_ENV === 'development') fps.mark();
   raf(GameUpdate);
 };
 
