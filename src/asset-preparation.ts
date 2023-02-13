@@ -59,7 +59,7 @@ export default (callback: Function): void => {
     birdBlueDownFlap,
     birdBlueMidFlap,
     birdBlueUpFlap,
-    /* n9,
+    n9,
     n8,
     n7,
     n6,
@@ -69,7 +69,7 @@ export default (callback: Function): void => {
     n2,
     n1,
     n0,
-    gameInfo,
+    /*  gameInfo,
     gameOver, */
     gamePlatform
   ];

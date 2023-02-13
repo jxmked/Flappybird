@@ -2,6 +2,7 @@ import BgModel from './model/background';
 import PlatformModel from './model/platform';
 import PipeModel from './model/pipe';
 import BirdModel from './model/bird';
+import CountModel from './model/count';
 import Sfx from './model/sfx';
 import PipeGenerator, { IPipeGeneratorValue } from './model/pipe-generator';
 import { SFX_VOLUME } from './constants';
@@ -14,6 +15,7 @@ export default class Game {
 
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
+  count: CountModel;
 
   constructor(canvas: HTMLCanvasElement) {
     this.background = new BgModel();
@@ -23,12 +25,14 @@ export default class Game {
 
     this.pipeGenerator = new PipeGenerator();
     this.bird = new BirdModel();
+    this.count = new CountModel();
   }
 
   init(): void {
     this.bird.init();
     this.background.init();
     this.platform.init();
+    this.count.init();
     Sfx.init();
     Sfx.volume(SFX_VOLUME);
   }
@@ -50,6 +54,7 @@ export default class Game {
   Resize({ width, height }: IDimension): void {
     this.background.resize({ width, height });
     this.platform.resize({ width, height });
+    this.count.resize({ width, height });
 
     // Set Platform size first
     BirdModel.platformHeight = this.platform.platformSize.height;
@@ -113,14 +118,7 @@ export default class Game {
 
     this.bird.Display(this.context);
 
-    const ctx = this.context;
-
-    ctx.beginPath();
-    ctx.globalAlpha = 1; // Required
-    ctx.font = '30px monospace';
-    ctx.fillStyle = '#58d130';
-    ctx.fillText(String(this.bird.score), 500, 500);
-    ctx.closePath();
+    this.count.setNum(this.bird.score);
   }
 
   onClick({ x, y }: ICoordinate): void {

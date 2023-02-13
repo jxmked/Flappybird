@@ -81,6 +81,9 @@ export default class Pipe extends ParentClass {
     this.use(PIPE_COLOR);
   }
 
+  /**
+   * Set holl position
+   * */
   setHollPosition(coordinate: ICoordinate): void {
     // Positioning holl
     this.hollSize = lerp(0, this.canvasSize.height, PIPE_HOLL_SIZE);
@@ -94,6 +97,19 @@ export default class Pipe extends ParentClass {
     this.coordinate = coordinate;
   }
 
+  /**
+   * Resize the pipe based on screen size.
+   *
+   * To keep the to its position, during resizing event,
+   * we convert the current coordinates of holl position
+   * into percentages then save it. After that we can now
+   * set the new size of the screen.
+   *
+   * After everything is set convert the previously saved value
+   * of position of holl to back to the pixel with new dimensions.
+   *
+   * Set update the value of coordinate and we're good to go.
+   * */
   resize({ width, height }: IDimension): void {
     // Save the coordinate of pipe holl before resizing the canvas sizes
     const oldX = (this.coordinate.x / this.canvasSize.width) * 100;
@@ -110,8 +126,8 @@ export default class Pipe extends ParentClass {
 
     // Relocate the pipe holl
     // I'm getting a problem when i am using lerp() for this.
-    this.coordinate.x = (oldX * this.canvasSize.width) / 100;
-    this.coordinate.y = (oldY * this.canvasSize.height) / 100;
+    this.coordinate.x = lerp(0, width, oldX / 100);
+    this.coordinate.y = lerp(0, height, oldY / 100);
 
     // Update velocity. Converting percentages to pixels
     this.velocity.x = lerp(0, width, GAME_SPEED);

@@ -235,7 +235,7 @@ export default class Bird extends ParentClass {
         // Midpoint Holl Coordinate
         const hcx = pipe.coordinate.x;
         const hcy = pipe.coordinate.y;
-        const size = pipe.hollSize / 2; // Radius
+        const radius = pipe.hollSize / 2; // Radius
         const width = Pipe.pipeSize.width / 2; // Half Size
 
         // Skip past pipe
@@ -255,8 +255,8 @@ export default class Bird extends ParentClass {
 
           // Top Pipe ---------- Bottom Pipe
           if (
-            Math.abs(hcy - size) >= posY - this.scaled.height ||
-            hcy + size <= posY + this.scaled.height
+            Math.abs(hcy - radius) >= posY - this.scaled.height ||
+            hcy + radius <= posY + this.scaled.height
           ) {
             this.alive = false;
             break;
@@ -316,8 +316,8 @@ export default class Bird extends ParentClass {
     // Slowly reduce the Y velocity by given weights
     this.velocity.y += lerp(0, this.canvasSize.height, BIRD_WEIGHT);
 
-    // Rotate the bird base on its velocity. The faster the more lift it takes
-    this.rotation += this.velocity.y - 10;
+    // Rotate the bird base on its velocity.
+    this.rotation += this.velocity.y - lerp(0, this.canvasSize.height, 0.0086);
     this.rotation = clamp(BIRD_MIN_ROTATION, BIRD_MAX_ROTATION, this.rotation);
 
     // Update our back and forth utilty.
