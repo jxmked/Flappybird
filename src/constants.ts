@@ -93,3 +93,18 @@ export const PIPE_COLOR = 'green'; // green, red
 
 // Default texture
 export const BG_TEXTURE = 'day'; // day, night
+
+/**
+ * Count
+ * */
+// Initial Dimension
+export const COUNT_DIMENSION: IDimension = {
+  width: 24,
+  height: 36
+};
+
+// Number position
+export const COUNT_COORDINATE: ICoordinate = {
+  x: 0.5,
+  y: 0.18
+};

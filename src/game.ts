@@ -119,6 +119,7 @@ export default class Game {
     this.bird.Display(this.context);
 
     this.count.setNum(this.bird.score);
+    this.count.Display(this.context);
   }
 
   onClick({ x, y }: ICoordinate): void {

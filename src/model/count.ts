@@ -12,24 +12,11 @@ import n1 from '../assets/sprites/number/1.png';
 import n0 from '../assets/sprites/number/0.png';
 
 import { asset, lerp, rescaleDim } from '../utils';
+import { COUNT_DIMENSION, COUNT_COORDINATE } from '../constants';
 
-export interface ICountOptions {
-  coordinate: ICoordinate;
-}
-
-export type INumberString = { [key: string]: HTMLImageElement };
-
-const COUNT_DIMENSION: IDimension = {
-  width: 24,
-  height: 36
-};
-const COUNT_COORDINATE: ICoordinate = {
-  x: 0.5,
-  y: 0.15
-};
+export type INumberString = Record<string, HTMLImageElement>;
 
 export default class Count extends ParentClass {
- 
   currentValue: number;
   numberAsset: INumberString;
   numberDimension: IDimension;
@@ -46,22 +33,20 @@ export default class Count extends ParentClass {
   }
 
   init(): void {
-    this.setInitAsset(0, n0);
-    this.setInitAsset(1, n1);
-    this.setInitAsset(2, n2);
-    this.setInitAsset(3, n3);
-    this.setInitAsset(4, n4);
-    this.setInitAsset(5, n5);
-    this.setInitAsset(6, n6);
-    this.setInitAsset(7, n7);
-    this.setInitAsset(8, n8);
-    this.setInitAsset(9, n9);
+    this.setInitAsset(0, n0 as string);
+    this.setInitAsset(1, n1 as string);
+    this.setInitAsset(2, n2 as string);
+    this.setInitAsset(3, n3 as string);
+    this.setInitAsset(4, n4 as string);
+    this.setInitAsset(5, n5 as string);
+    this.setInitAsset(6, n6 as string);
+    this.setInitAsset(7, n7 as string);
+    this.setInitAsset(8, n8 as string);
+    this.setInitAsset(9, n9 as string);
   }
 
   private setInitAsset(num: number, loc: string): void {
-    this.numberAsset[num as keyof typeof this.numberAsset] = asset(
-      loc
-    ) as HTMLImageElement;
+    this.numberAsset[String(num)] = asset(loc) as HTMLImageElement;
   }
 
   setNum(value: number): void {
@@ -71,16 +56,32 @@ export default class Count extends ParentClass {
   resize({ width, height }: IDimension): void {
     super.resize({ width, height });
     this.numberDimension = rescaleDim(COUNT_DIMENSION, {
-      width: lerp(0, width, 0.05)
+      height: lerp(0, height, 0.065)
     });
 
     this.coordinate.x = lerp(0, this.canvasSize.width, COUNT_COORDINATE.x);
     this.coordinate.y = lerp(0, this.canvasSize.height, COUNT_COORDINATE.y);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   Update(): void {}
 
-  Display(context: CanvasRenderingContext2D): void {}
+  Display(context: CanvasRenderingContext2D): void {
+    const numArr: string[] = String(this.currentValue).split('');
+    const totalWidth = numArr.length * this.numberDimension.width;
+    let lastWidth: number = this.coordinate.x - totalWidth / 2;
+    const topPos = this.coordinate.y - this.numberDimension.height / 2;
 
-  private drawImage(ctx, value: number): void {}
+    numArr.forEach((numString: string) => {
+      context.drawImage(
+        this.numberAsset[numString],
+        lastWidth,
+        topPos,
+        this.numberDimension.width,
+        this.numberDimension.height
+      );
+
+      lastWidth += this.numberDimension.width;
+    });
+  }
 }
