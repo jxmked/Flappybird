@@ -6,7 +6,12 @@ import pipeBottomRed from '../assets/sprites/pipe/bottom-red.png';
 import pipeBottomGreen from '../assets/sprites/pipe/bottom-green.png';
 import pipeTopRed from '../assets/sprites/pipe/top-red.png';
 import { rescaleDim, lerp } from '../utils';
-import { PIPE_HOLL_SIZE, GAME_SPEED } from '../constants';
+import {
+  PIPE_HOLL_SIZE,
+  GAME_SPEED,
+  PIPE_INITIAL_DIMENSION,
+  PIPE_COLOR
+} from '../constants';
 
 export interface IPairPipe {
   top: HTMLImageElement;
@@ -24,9 +29,12 @@ export interface IPipeImages {
 }
 
 export default class Pipe extends ParentClass {
+  /**
+   *
+   * */
   static pipeSize: IDimension = {
-    width: 100,
-    height: 300
+    width: 0,
+    height: 0
   };
   pipeImg: IPipeImages;
   img: undefined | IPairPipe;
@@ -70,7 +78,7 @@ export default class Pipe extends ParentClass {
       }
     };
 
-    this.use('green');
+    this.use(PIPE_COLOR);
   }
 
   setHollPosition(coordinate: ICoordinate): void {
@@ -87,7 +95,7 @@ export default class Pipe extends ParentClass {
   }
 
   resize({ width, height }: IDimension): void {
-    // Save the coordinate of pipe holl
+    // Save the coordinate of pipe holl before resizing the canvas sizes
     const oldX = (this.coordinate.x / this.canvasSize.width) * 100;
     const oldY = (this.coordinate.y / this.canvasSize.height) * 100;
 
@@ -95,27 +103,41 @@ export default class Pipe extends ParentClass {
 
     // Update Pipe Size
     const min = lerp(0, this.canvasSize.width, 0.18);
-    Pipe.pipeSize = rescaleDim(Pipe.pipeSize, { width: min });
+    Pipe.pipeSize = rescaleDim(PIPE_INITIAL_DIMENSION, { width: min });
 
     // Resize holl size
     this.hollSize = lerp(0, this.canvasSize.height, PIPE_HOLL_SIZE);
 
-    //  Relocate the pipe holl
+    // Relocate the pipe holl
     // I'm getting a problem when i am using lerp() for this.
     this.coordinate.x = (oldX * this.canvasSize.width) / 100;
     this.coordinate.y = (oldY * this.canvasSize.height) / 100;
+
+    // Update velocity. Converting percentages to pixels
+    this.velocity.x = lerp(0, width, GAME_SPEED);
   }
 
+  /**
+   * Check if the pipe is out of canvas.
+   * We're going to remove it to keep the game performance
+   * good enough
+   * */
   isOut(): boolean {
     return this.coordinate.x + Pipe.pipeSize.width < 0;
   }
 
+  /**
+   * Pipe color selection
+   * */
   use(select: 'green' | 'red'): void {
     this.img = this.pipeImg[select];
   }
 
+  /**
+   * Pipe Update
+   * */
   Update(): void {
-    this.coordinate.x -= lerp(0, this.canvasSize.width, this.velocity.x);
+    this.coordinate.x -= this.velocity.x;
   }
 
   Display(context: CanvasRenderingContext2D): void {
@@ -123,32 +145,46 @@ export default class Pipe extends ParentClass {
 
     const posX = this.coordinate.x;
     const posY = this.coordinate.y;
-    const size = this.hollSize / 2;
+    const radius = this.hollSize / 2;
 
-    // prettier-ignore
-    const topImgDim = rescaleDim({
-      width: this.img!.top.width,
-      height: this.img!.top.height
-    }, { width: width * 2 });
+    // For Top pipe
+    const topImgDim = rescaleDim(
+      {
+        width: this.img!.top.width,
+        height: this.img!.top.height
+      },
+      { width: width * 2 }
+    );
+
+    // For Bottom Pipe
+    const botImgDim = rescaleDim(
+      {
+        width: this.img!.bottom.width,
+        height: this.img!.bottom.height
+      },
+      { width: width * 2 }
+    );
+
+    /**
+     * To draw off canvas, subtract the height of pipe to holl position.
+     * The result should be the height of pipe that we don't need or out of canvas
+     * Then pass the result to the function height parameter as negative value.
+     *
+     * And thats it for the top pipe
+     * */
 
     context.drawImage(
       this.img!.top,
       posX - width,
-      -(topImgDim.height - Math.abs(posY - size)),
+      -(topImgDim.height - Math.abs(posY - radius)),
       topImgDim.width,
       topImgDim.height
     );
 
-    // prettier-ignore
-    const botImgDim = rescaleDim({
-      width: this.img!.bottom.width,
-      height: this.img!.bottom.height
-    }, { width: width * 2 });
-
     context.drawImage(
       this.img!.bottom,
       posX - width,
-      posY + size,
+      posY + radius,
       botImgDim.width,
       botImgDim.height
     );

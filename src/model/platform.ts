@@ -47,6 +47,9 @@ export default class Platform extends ParentClass {
   }
 
   Display(context: CanvasRenderingContext2D) {
+    /**
+     * Similar to the background but drawing the image into bottom of screen
+     * */
     const { width, height } = this.platformSize;
     const { x, y } = this.coordinate;
     const sequence = Math.ceil(this.canvasSize.width / width) + 1;

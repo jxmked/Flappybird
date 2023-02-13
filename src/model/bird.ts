@@ -347,10 +347,14 @@ export default class Bird extends ParentClass {
     // Rotate the context using the code above as mid point
     context.rotate((this.rotation * Math.PI) / 180);
 
-    /* Code below is just printing the bird. */
-
-    context.translate(-this.scaled.width, -this.scaled.height);
-    context.drawImage(img, 0, 0, this.scaled.width * 2, this.scaled.height * 2);
+    // Start the image at top-left then bottom-right
+    context.drawImage(
+      img,
+      -this.scaled.width,
+      -this.scaled.height,
+      this.scaled.width * 2,
+      this.scaled.height * 2
+    );
 
     // Restore the previously created picture but keeping the bird
     context.restore();

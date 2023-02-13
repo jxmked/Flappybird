@@ -4,6 +4,11 @@ import { IBirdColors } from './model/bird';
  * Environment Contants
  */
 
+/**
+ * Note: Everything related to positioning & velocities
+ * uses percentages ranging 0.0 - 1.0
+ * */
+
 // Pipe and Platform Speed should be the same
 export const GAME_SPEED = 0.0058;
 
@@ -17,16 +22,17 @@ export const CANVAS_DIMENSION = {
 };
 
 // Sound effect volume. (0 - 1)
-export const SFX_VOLUME = 0.3;
+// Will be fed to GainNode in Audio Context
+export const SFX_VOLUME = 1;
 
 /**
  * Bird
  */
 
-// Jump Height. Based on canvas height. (Percentage 0 - 1)
+// Jump Height. Based on canvas height.
 export const BIRD_JUMP_HEIGHT = -0.009;
 
-// Fixed X-Axis position of bird. Based on canvas width. (Percentage 0 - 1)
+// Fixed X-Axis position of bird. Based on canvas width.
 export const BIRD_X_POSITION = 0.3;
 
 // Max angle of bird in degree
@@ -35,15 +41,20 @@ export const BIRD_MAX_ROTATION = 90;
 // Minimum angle of bird in degree
 export const BIRD_MIN_ROTATION = -15;
 
+// Height of bird. Based on canvas Height
 export const BIRD_HEIGHT = 0.101;
 
+// Weight of bird. Drag every update. Based on canvas height
 export const BIRD_WEIGHT = 0.00047;
 
+// Maximum lift velocity. Preventing our bird to overspeed. Based on canvas height
 export const BIRD_MAX_UP_VELOCITY = -0.3;
 
-export const BIRD_MAX_DOWN_VELOCITY = 0.0171;
+// Maximum drag velocity. Preventing our bird to overspeed. Based on canvas height
+export const BIRD_MAX_DOWN_VELOCITY = 0.0141;
 
-export const BIRD_DEFAULT_COLOR: IBirdColors = 'yellow';
+// Default bird color.
+export const BIRD_DEFAULT_COLOR: IBirdColors = 'yellow'; // yellow, blue, red
 
 // Initial Dimension of a bird
 /**
@@ -59,10 +70,26 @@ export const BIRD_INITIAL_DIMENSION: IDimension = {
  */
 
 // Distance of pipe between max width of canvas and the last pipe. (0 - 1)
-export const PIPE_DISTANCE = 0.38;
+export const PIPE_DISTANCE = 0.392;
 
 // Holl size of pipe. Based on canvas height. (0 - 1)
-export const PIPE_HOLL_SIZE = 0.18;
+export const PIPE_HOLL_SIZE = 0.184;
 
 // Minimum gap of pipe holl to very top and platform. Based on height. (0 - 1)
-export const PIPE_MIN_GAP = 0.18;
+export const PIPE_MIN_GAP = 0.194;
+
+// Initial Pipe Dimension
+export const PIPE_INITIAL_DIMENSION: IDimension = {
+  width: 100,
+  height: 300
+};
+
+// Pipe Default color
+export const PIPE_COLOR = 'green'; // green, red
+
+/**
+ * Background
+ * */
+
+// Default texture
+export const BG_TEXTURE = 'day'; // day, night

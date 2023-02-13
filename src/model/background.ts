@@ -4,7 +4,7 @@ import { asset } from '../utils';
 import bgImgDay from '../assets/sprites/background/day.png';
 import bgImgNight from '../assets/sprites/background/night.png';
 import { rescaleDim, lerp } from '../utils';
-import { BG_SPEED } from '../constants';
+import { BG_SPEED, BG_TEXTURE } from '../constants';
 
 export interface IBackgroundImages {
   day: HTMLImageElement;
@@ -12,8 +12,19 @@ export interface IBackgroundImages {
 }
 
 export default class Background extends ParentClass {
+  /**
+   * Background Image selection (Day & Night)
+   * */
   backgroundImage: IBackgroundImages;
+
+  /**
+   * background dimension.
+   * */
   backgroundSize: IDimension;
+
+  /**
+   * Current Image to be use
+   * */
   img: undefined | HTMLImageElement;
 
   constructor() {
@@ -31,42 +42,38 @@ export default class Background extends ParentClass {
     this.img = void 0;
   }
 
+  /**
+   * Initialize Images after all asset has been loaded
+   * */
   init() {
     this.backgroundImage = {
       night: asset(bgImgNight as string) as HTMLImageElement,
       day: asset(bgImgDay as string) as HTMLImageElement
     };
 
-    this.use('night');
+    this.use(BG_TEXTURE);
   }
 
+  /**
+   * Select either day and night
+   * */
   use(select: 'day' | 'night'): void {
     this.img = this.backgroundImage[select];
   }
 
+  /**
+   * Resize Background image while Keeping the same ratio
+   * */
   resize({ width, height }: IDimension): void {
     super.resize({ width, height });
 
-    const max = Math.max(width, height);
-
-    // Automatically resize the image based on highest dimension
-    if (width < height) {
-      this.backgroundSize = rescaleDim(
-        {
-          width: this.img!.width,
-          height: this.img!.height
-        },
-        { height: max }
-      );
-    } else {
-      this.backgroundSize = rescaleDim(
-        {
-          width: this.img!.width,
-          height: this.img!.height
-        },
-        { width: max }
-      );
-    }
+    this.backgroundSize = rescaleDim(
+      {
+        width: this.img!.width,
+        height: this.img!.height
+      },
+      { height }
+    );
   }
 
   Update() {
@@ -85,9 +92,16 @@ export default class Background extends ParentClass {
   Display(context: CanvasRenderingContext2D) {
     const { width, height } = this.backgroundSize;
     const { x, y } = this.coordinate;
+
+    // Get how many sequence we need to fill the screen
     const sequence = Math.ceil(this.canvasSize.width / width) + 1;
+
+    // Keep the images on screen.
+    // X coordinate may gave us -99999999 values
+    // But using modulo we're just getting -width of an image
     const offset = x % width;
 
+    // Draw the background next to each other in given sequence
     for (let i = 0; i < sequence; i++) {
       context.drawImage(this.img!, i * width - offset, y, width, height);
     }
