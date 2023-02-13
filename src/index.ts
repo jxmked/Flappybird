@@ -5,6 +5,7 @@ import GameObject from './game';
 import { rescaleDim, framer as Framer } from './utils';
 import EventHandler from './events';
 
+/**
 if (process.env.NODE_ENV !== 'development') {
   // Load Service Worker
   if ('serviceWorker' in navigator) {
@@ -20,7 +21,7 @@ if (process.env.NODE_ENV !== 'development') {
     });
   }
 }
-
+*/
 const canvas = document.querySelector('#main-canvas')! as HTMLCanvasElement;
 const canvasDimension = {
   width: 500,

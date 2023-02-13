@@ -7,8 +7,7 @@ const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 const GA4WebpackPlugin = require('ga4-webpack-plugin');
 const package = require('./package.json');
 const webpack = require("webpack");
-
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 
 /**
  * First Webpack Config
@@ -53,6 +52,9 @@ const CONFIG = {
   }
 };
 
+/**
+ * Production Plugins
+ * */
 let prodPlugins = [
   new WebpackPwaManifest({
     name: CONFIG.appName,
@@ -76,10 +78,10 @@ let prodPlugins = [
     inject: true, // Insert html tag <link rel="manifest" ... />
     filename: 'site.webmanifest'
   }),
-  new WorkboxPlugin.GenerateSW({
-    clientsClaim: true,
-    skipWaiting: true
-  })
+  new WebpackManifestPlugin({
+    basePath: '',
+    fileName: 'asset-manifest.json'
+  }),
 ];
 
 module.exports = function (env, config) {
