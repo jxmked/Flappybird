@@ -29,7 +29,7 @@ const COUNT_COORDINATE: ICoordinate = {
 };
 
 export default class Count extends ParentClass {
-  coordinate: ICoordinate;
+ 
   currentValue: number;
   numberAsset: INumberString;
   numberDimension: IDimension;
@@ -37,10 +37,6 @@ export default class Count extends ParentClass {
   constructor() {
     super();
 
-    this.coordinate = {
-      x: 0,
-      y: 0
-    };
     this.currentValue = 0;
     this.numberAsset = {};
     this.numberDimension = {
