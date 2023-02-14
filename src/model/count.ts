@@ -35,7 +35,7 @@ export default class Count extends ParentClass {
   }
 
   private setInitAsset(num: number, loc: string): void {
-    this.numberAsset[String(num)] = asset(loc)!;
+    this.numberAsset[String(num)] = asset(loc);
   }
 
   setNum(value: number): void {

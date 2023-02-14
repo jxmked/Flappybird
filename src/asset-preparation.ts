@@ -33,9 +33,7 @@ export default (callback: Function): void => {
       // Flip vertically
       return new Promise<HTMLImageElement>((res: Function, rej: Function) => {
         const tmp = new Image();
-        tmp.addEventListener('load', () => {
-          res(tmp);
-        });
+        tmp.addEventListener('load', () => res(tmp));
         tmp.addEventListener('error', () => rej());
         canvas.width = img.width;
         canvas.height = img.height;
