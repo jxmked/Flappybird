@@ -100,8 +100,9 @@ export default class Game {
 
     this.bird.Update();
     if (this.bird.isDead(this.pipeGenerator.pipes)) {
-      Sfx.hit();
-      this.bird.playDead();
+      Sfx.hit(() =>{
+        this.bird.playDead();
+      });
     }
   }
 

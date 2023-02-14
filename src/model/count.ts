@@ -24,7 +24,7 @@ export default class Count extends ParentClass {
   init(): void {
     this.setInitAsset(0, 'number-lg-0');
     this.setInitAsset(1, 'number-lg-1');
-    this.setInitAsset(2,'number-lg-2');
+    this.setInitAsset(2, 'number-lg-2');
     this.setInitAsset(3, 'number-lg-3');
     this.setInitAsset(4, 'number-lg-4');
     this.setInitAsset(5, 'number-lg-5');

@@ -48,7 +48,7 @@ export default class WebSfx {
    * @param {string} key - string - The key of the audio file to play.
    * @returns Void.
    */
-  public static play(key: string): void {
+  public static play(key: string, endedcb:Function=()=>{}): void {
     if (typeof WebSfx.Cached[key] === void 0) {
       throw new TypeError(`Key ${key} does not load or not exists.`);
     }
@@ -64,6 +64,7 @@ export default class WebSfx {
       const context = WebSfx.audioContext!;
       const bufferSource = context.createBufferSource();
       bufferSource.buffer = WebSfx.Cached[key];
+      bufferSource.addEventListener('ended', () => endedcb());
       bufferSource.connect(WebSfx.gainContext!);
       bufferSource.start();
     } catch (err) {
