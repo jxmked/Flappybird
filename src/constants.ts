@@ -54,7 +54,7 @@ export const BIRD_MAX_UP_VELOCITY = -0.3;
 export const BIRD_MAX_DOWN_VELOCITY = 0.0141;
 
 // Default bird color.
-export const BIRD_DEFAULT_COLOR: IBirdColors = 'yellow'; // yellow, blue, red
+export const BIRD_DEFAULT_COLOR: IBirdColors = 'red'; // yellow, blue, red
 
 // Initial Dimension of a bird
 /**
@@ -85,14 +85,14 @@ export const PIPE_INITIAL_DIMENSION: IDimension = {
 };
 
 // Pipe Default color
-export const PIPE_COLOR = 'green'; // green, red
+export const PIPE_COLOR = 'red'; // green, red
 
 /**
  * Background
  * */
 
 // Default texture
-export const BG_TEXTURE = 'day'; // day, night
+export const BG_TEXTURE = 'night'; // day, night
 
 /**
  * Count

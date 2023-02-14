@@ -48,7 +48,7 @@ export default class WebSfx {
    * @param {string} key - string - The key of the audio file to play.
    * @returns Void.
    */
-  public static play(key: string, endedcb:Function=()=>{}): void {
+  public static play(key: string, endedcb: Function = () => {}): void {
     if (typeof WebSfx.Cached[key] === void 0) {
       throw new TypeError(`Key ${key} does not load or not exists.`);
     }

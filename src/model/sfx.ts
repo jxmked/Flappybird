@@ -27,7 +27,7 @@ export default class Sfx {
     WebSfx.play(sfPoint as string);
   }
 
-  static hit(cb:Function): void {
+  static hit(cb: Function): void {
     WebSfx.volume(Sfx.currentVolume);
     WebSfx.play(sfHit as string, cb);
   }

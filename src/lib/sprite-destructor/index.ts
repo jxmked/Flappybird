@@ -7,34 +7,54 @@ export interface IPromiseImageHandled {
   img: HTMLImageElement;
 }
 
+export type ICallbackModify = (
+  name: string,
+  img: HTMLImageElement
+) => Promise<HTMLImageElement>;
+
 export default class SpriteDestructor {
   // Virtuals
-  static Canvas = document.createElement('canvas');
-  ctx: CanvasRenderingContext2D;
+  private static Canvas = document.createElement('canvas');
+  private ctx: CanvasRenderingContext2D;
 
   /**
    * Cache for later use
    * */
-  static cached: Map<string, HTMLImageElement> = new Map<string, HTMLImageElement>();
+  private static cached: Map<string, HTMLImageElement> = new Map<
+    string,
+    HTMLImageElement
+  >();
 
-  sprite: HTMLImageElement;
-  loading: Promise<IPromiseImageHandled>[];
+  private sprite: HTMLImageElement;
+  private loading: Promise<IPromiseImageHandled>[];
+
+  private cb_modify: ICallbackModify;
 
   constructor(img: HTMLImageElement) {
     this.sprite = img;
     this.ctx = SpriteDestructor.Canvas.getContext('2d')!;
     this.loading = [];
+    this.cb_modify = (name: string, img: HTMLImageElement) => Promise.resolve(img);
   }
 
-  then(callback: Function): void {
+  public then(callback: Function): void {
     Promise.all(this.loading).then((resolved: IPromiseImageHandled[]) => {
       resolved.forEach(({ name, img }) => SpriteDestructor.cached.set(name, img));
       callback();
     });
   }
 
-  static asset(key: string): HTMLImageElement | undefined {
-    return SpriteDestructor.cached.get(key);
+  public static asset(key: string): HTMLImageElement {
+    if (SpriteDestructor.cached.has(key)) return SpriteDestructor.cached.get(key)!;
+
+    throw new TypeError(`Key: ${key} does not defined on SpriteDestructor`);
+  }
+
+  /**
+   * If you need
+   * */
+  public modify(callback: ICallbackModify): void {
+    this.cb_modify = callback;
   }
 
   public cutOut(name: string, sx: number, sy: number, dx: number, dy: number): void {
@@ -53,7 +73,7 @@ export default class SpriteDestructor {
     this.feedImage(name);
   }
 
-  private feedImage(name: string) {
+  private feedImage(name: string): void {
     /**
      * Load the cutout image then push it into promse handler
      * */
@@ -61,7 +81,9 @@ export default class SpriteDestructor {
       new Promise<IPromiseImageHandled>((resolve: Function, reject: Function) => {
         const img = new Image();
         img.src = SpriteDestructor.Canvas.toDataURL();
-        img.addEventListener('load', () => resolve({ name, img }));
+        img.addEventListener('load', async () => {
+          resolve({ name, img: await this.cb_modify(name, img) });
+        });
         img.addEventListener('error', (err) => reject(err));
       })
     );
