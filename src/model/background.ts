@@ -1,8 +1,6 @@
 import ParentClass from '../abstracts/parent-class';
 
-import { asset } from '../utils';
-import bgImgDay from '../assets/sprites/background/day.png';
-import bgImgNight from '../assets/sprites/background/night.png';
+import { asset } from '../lib/sprite-destructor';
 import { rescaleDim, lerp } from '../utils';
 import { BG_SPEED, BG_TEXTURE } from '../constants';
 
@@ -47,8 +45,8 @@ export default class Background extends ParentClass {
    * */
   init() {
     this.backgroundImage = {
-      night: asset(bgImgNight as string) as HTMLImageElement,
-      day: asset(bgImgDay as string) as HTMLImageElement
+      night: asset('theme-night')!,
+      day: asset('theme-day')!
     };
 
     this.use(BG_TEXTURE);

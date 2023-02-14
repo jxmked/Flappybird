@@ -1,10 +1,6 @@
 import ParentClass from '../abstracts/parent-class';
 
-import { asset } from '../utils';
-import pipeTopGreen from '../assets/sprites/pipe/top-green.png';
-import pipeBottomRed from '../assets/sprites/pipe/bottom-red.png';
-import pipeBottomGreen from '../assets/sprites/pipe/bottom-green.png';
-import pipeTopRed from '../assets/sprites/pipe/top-red.png';
+import { asset } from '../lib/sprite-destructor';
 import { rescaleDim, lerp } from '../utils';
 import {
   PIPE_HOLL_SIZE,
@@ -69,12 +65,12 @@ export default class Pipe extends ParentClass {
   init(): void {
     this.pipeImg = {
       red: {
-        top: asset(pipeTopRed as string) as HTMLImageElement,
-        bottom: asset(pipeBottomRed as string) as HTMLImageElement
+        top: asset('pipe-red-top')!,
+        bottom: asset('pipe-red-bottom')!
       },
       green: {
-        top: asset(pipeTopGreen as string) as HTMLImageElement,
-        bottom: asset(pipeBottomGreen as string) as HTMLImageElement
+        top: asset('pipe-green-top')!,
+        bottom: asset('pipe-green-bottom')!
       }
     };
 

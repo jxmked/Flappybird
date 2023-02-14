@@ -1,7 +1,7 @@
 import sfDie from '../assets/audio/die.ogg';
 import sfHit from '../assets/audio/hit.ogg';
 import sfPoint from '../assets/audio/point.ogg';
-import sfSwoosh from '../assets/audio/swoosh.ogg';
+import sfSwoosh from '../assets/audio/swooshing.ogg';
 import sfWing from '../assets/audio/wing.ogg';
 
 import WebSfx from '../lib/web-sfx';

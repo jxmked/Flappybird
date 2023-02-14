@@ -1,7 +1,6 @@
 import ParentClass from '../abstracts/parent-class';
 
-import { asset } from '../utils';
-import platformImage from '../assets/sprites/base.png';
+import { asset } from '../lib/sprite-destructor';
 import { rescaleDim, lerp } from '../utils';
 import { GAME_SPEED } from '../constants';
 
@@ -20,7 +19,7 @@ export default class Platform extends ParentClass {
   }
 
   init() {
-    this.img = asset(platformImage as string) as HTMLImageElement;
+    this.img = asset('platform')!;
   }
 
   resize({ width, height }: IDimension): void {

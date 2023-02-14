@@ -1,15 +1,7 @@
 import ParentClass from '../abstracts/parent-class';
 
-import { asset, lerp, rescaleDim, clamp, BackNForthCounter } from '../utils';
-import birdYellowMidFlap from '../assets/sprites/bird/yellow-mid-flap.png';
-import birdYellowDownFlap from '../assets/sprites/bird/yellow-down-flap.png';
-import birdRedUpFlap from '../assets/sprites/bird/red-up-flap.png';
-import birdRedMidFlap from '../assets/sprites/bird/red-mid-flap.png';
-import birdRedDownFlap from '../assets/sprites/bird/red-down-flap.png';
-import birdBlueUpFlap from '../assets/sprites/bird/blue-up-flap.png';
-import birdBlueMidFlap from '../assets/sprites/bird/blue-mid-flap.png';
-import birdBlueDownFlap from '../assets/sprites/bird/blue-down-flap.png';
-import birdYellowUpFlap from '../assets/sprites/bird/yellow-up-flap.png';
+import { lerp, rescaleDim, clamp, BackNForthCounter } from '../utils';
+import { asset } from '../lib/sprite-destructor';
 import Sfx from './sfx';
 import Pipe from './pipe';
 
@@ -156,19 +148,19 @@ export default class Bird extends ParentClass {
   init(): void {
     this.birdColorObject = {
       yellow: {
-        up: asset(birdYellowUpFlap as string) as HTMLImageElement,
-        mid: asset(birdYellowMidFlap as string) as HTMLImageElement,
-        down: asset(birdYellowDownFlap as string) as HTMLImageElement
+        up: asset('bird-yellow-up')!,
+        mid: asset('bird-yellow-mid')!,
+        down: asset('bird-yellow-down')!
       },
       blue: {
-        up: asset(birdBlueUpFlap as string) as HTMLImageElement,
-        mid: asset(birdBlueMidFlap as string) as HTMLImageElement,
-        down: asset(birdBlueDownFlap as string) as HTMLImageElement
+        up: asset('bird-blue-up')!,
+        mid: asset('bird-blue-mid')!,
+        down: asset('bird-blue-down')!
       },
       red: {
-        up: asset(birdRedUpFlap as string) as HTMLImageElement,
-        mid: asset(birdRedMidFlap as string) as HTMLImageElement,
-        down: asset(birdRedDownFlap as string) as HTMLImageElement
+        up: asset('bird-red-up')!,
+        mid: asset('bird-red-mid')!,
+        down: asset('bird-red-down')!
       }
     };
 

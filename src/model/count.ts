@@ -1,17 +1,6 @@
 import ParentClass from '../abstracts/parent-class';
-
-import n9 from '../assets/sprites/number/9.png';
-import n8 from '../assets/sprites/number/8.png';
-import n7 from '../assets/sprites/number/7.png';
-import n6 from '../assets/sprites/number/6.png';
-import n5 from '../assets/sprites/number/5.png';
-import n4 from '../assets/sprites/number/4.png';
-import n3 from '../assets/sprites/number/3.png';
-import n2 from '../assets/sprites/number/2.png';
-import n1 from '../assets/sprites/number/1.png';
-import n0 from '../assets/sprites/number/0.png';
-
-import { asset, lerp, rescaleDim } from '../utils';
+import { lerp, rescaleDim } from '../utils';
+import { asset } from '../lib/sprite-destructor';
 import { COUNT_DIMENSION, COUNT_COORDINATE } from '../constants';
 
 export type INumberString = Record<string, HTMLImageElement>;
@@ -33,20 +22,20 @@ export default class Count extends ParentClass {
   }
 
   init(): void {
-    this.setInitAsset(0, n0 as string);
-    this.setInitAsset(1, n1 as string);
-    this.setInitAsset(2, n2 as string);
-    this.setInitAsset(3, n3 as string);
-    this.setInitAsset(4, n4 as string);
-    this.setInitAsset(5, n5 as string);
-    this.setInitAsset(6, n6 as string);
-    this.setInitAsset(7, n7 as string);
-    this.setInitAsset(8, n8 as string);
-    this.setInitAsset(9, n9 as string);
+    this.setInitAsset(0, 'number-lg-0');
+    this.setInitAsset(1, 'number-lg-1');
+    this.setInitAsset(2,'number-lg-2');
+    this.setInitAsset(3, 'number-lg-3');
+    this.setInitAsset(4, 'number-lg-4');
+    this.setInitAsset(5, 'number-lg-5');
+    this.setInitAsset(6, 'number-lg-6');
+    this.setInitAsset(7, 'number-lg-7');
+    this.setInitAsset(8, 'number-lg-8');
+    this.setInitAsset(9, 'number-lg-9');
   }
 
   private setInitAsset(num: number, loc: string): void {
-    this.numberAsset[String(num)] = asset(loc) as HTMLImageElement;
+    this.numberAsset[String(num)] = asset(loc)!;
   }
 
   setNum(value: number): void {

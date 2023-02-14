@@ -124,7 +124,6 @@ export default class Game {
     this.count.setNum(this.bird.score);
     this.count.Display(this.context);
   }
-
   onClick({ x, y }: ICoordinate): void {
     this.bird.flap();
   }
