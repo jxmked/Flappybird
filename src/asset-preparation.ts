@@ -34,9 +34,11 @@ import n0 from './assets/sprites/number/0.png';
 import gameInfo from './assets/sprites/message.png';
 import gameOver from './assets/sprites/gameover.png';
 import gamePlatform from './assets/sprites/base.png';
+import atlas from './assets/atlas.png';
 
 // For Images
 import { AssetLoader } from './utils';
+import SpriteDestructor from './lib/sprite-destructor';
 
 // For Sound Effects. Interactive Audio
 import WebSfx from './lib/web-sfx';
@@ -71,7 +73,8 @@ export default (callback: Function): void => {
     n0,
     /*  gameInfo,
     gameOver, */
-    gamePlatform
+    gamePlatform,
+    atlas
   ];
 
   // Do not load images and sfx at the same time
@@ -85,7 +88,33 @@ export default (callback: Function): void => {
         point: sfPoint
       },
       () => {
-        callback();
+        const img = new Image();
+        img.src = atlas;
+        img.onload = () => {
+          const sd = new SpriteDestructor(img);
+          sd.cutOut('theme-day', 0, 0, 288, 512);
+          sd.cutOut('theme-night', 292, 0, 288, 512);
+          sd.cutOut('pipe-red-bottom', 0, 646, 52, 320);
+          sd.cutOut('pipe-red-top', 56, 646, 52, 320);
+          sd.cutOut('pipe-green-bottom', 168, 646, 52, 320);
+          sd.cutOut('pipe-green-top', 112, 646, 52, 320);
+          sd.cutOut('score-board', 4, 516, 232, 123);
+          sd.cutOut('coin-dull-metal', 224, 906, 44, 44);
+          sd.cutOut('coin-dull-bronze', 224, 954, 44, 44);
+          sd.cutOut('coin-shine-silver', 242, 516, 44, 44);
+          sd.cutOut('coin-shine-gold', 242, 564, 44, 44);
+          sd.cutOut('number-sm-0', 276, 646, 12, 14);
+          sd.cutOut('number-sm-1', 282, 664, 6, 14);
+          sd.cutOut('number-sm-2', 276, 698, 12, 14);
+          sd.cutOut('number-sm-3', 276, 716, 12, 14);
+          sd.cutOut('number-sm-4', 276, 750, 12, 14);
+          sd.cutOut('number-sm-5', 276, 768, 12, 14);
+          sd.cutOut('number-sm-6', 276, 802, 12, 14);
+          sd.cutOut('number-sm-7', 276, 820, 12, 14);
+          sd.cutOut('number.sm-8', 276, 854, 12, 14);
+          sd.cutOut('number-sm-9', 276, 872, 12, 14);
+          sd.then(callback);
+        };
       }
     );
   });
