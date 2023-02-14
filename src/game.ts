@@ -107,6 +107,9 @@ export default class Game {
 
   Display(): void {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    // Remove smoothing effect of an image
+    this.context.imageSmoothingEnabled = false;
+    this.context.imageSmoothingQuality = 'high';
 
     this.background.Display(this.context);
 
