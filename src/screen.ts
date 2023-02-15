@@ -60,6 +60,10 @@ export default class Screen extends ParentClass {
     this.BInstruction.init();
   }
 
+  tap() {
+    this.BInstruction.tap();
+  }
+
   resize({ width, height }: IDimension): void {
     super.resize({ width, height });
     this.BInstruction.resize({ height, width });

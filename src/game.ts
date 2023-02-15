@@ -87,11 +87,11 @@ export default class Game {
       this.bird.Update();
       return;
     }
-    
+
     this.background.Update();
     this.platform.Update();
     this.mainScreen.Update();
-    
+
     /**
      * Pipe regeneration
      */
@@ -137,6 +137,7 @@ export default class Game {
     this.mainScreen.Display(this.context);
   }
   onClick({ x, y }: ICoordinate): void {
+    this.mainScreen.tap();
     this.bird.flap();
   }
 }

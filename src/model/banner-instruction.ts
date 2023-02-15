@@ -1,6 +1,7 @@
 import ParentClass from '../abstracts/parent-class';
 import { asset } from '../lib/sprite-destructor';
 import { lerp, rescaleDim, BackNForthCounter } from '../utils';
+import { FadeOut } from '../lib/animation';
 
 export interface IImagePositions {
   instructImage: ICoordinate;
@@ -29,7 +30,7 @@ const BANNER_INSTRUCTION: IBannerInstructionConst = {
 
 export interface ITextureProperties {
   size: number; // Can modify
-  
+
   // System Variables
   position: ICoordinate;
   image: HTMLImageElement | undefined;
@@ -41,9 +42,10 @@ export default class BannerInstruction extends ParentClass {
   private getReadyImage: ITextureProperties;
   private isVisisble: boolean;
   private opacity: number;
-  
-  private ctime:number;
-  
+  private fadeOut: FadeOut;
+  private isComplete: boolean;
+  private doesTap: boolean;
+
   constructor() {
     super();
     this.instructImage = {
@@ -70,13 +72,23 @@ export default class BannerInstruction extends ParentClass {
         height: 0
       }
     };
-    this.ctime = 0;
+    this.fadeOut = new FadeOut();
     this.opacity = 1;
+    this.isVisisble = true;
+    this.isComplete = false;
+    this.doesTap = false;
   }
 
   init(): void {
     this.instructImage.image = asset('banner-instruction');
     this.getReadyImage.image = asset('banner-game-ready');
+  }
+
+  tap() {
+    if (this.isComplete) return;
+    this.fadeOut.start();
+    this.isComplete = true;
+    this.doesTap = true;
   }
 
   resize({ width, height }: IDimension): void {
@@ -105,7 +117,7 @@ export default class BannerInstruction extends ParentClass {
       lerp(0, width, instructImagePos.x) - this.instructImage.scaled.width / 2;
     this.instructImage.position.y =
       lerp(0, height, instructImagePos.y) - this.instructImage.scaled.height / 2;
-    
+
     this.getReadyImage.position.x =
       lerp(0, width, getReadyImagePos.x) - this.getReadyImage.scaled.width / 2;
     this.getReadyImage.position.y =
@@ -113,24 +125,26 @@ export default class BannerInstruction extends ParentClass {
   }
 
   Update(): void {
-    
+    if (!this.doesTap) {
+      this.opacity = 1;
+      return;
+    }
+    this.opacity = this.fadeOut.value;
   }
 
   Display(context: CanvasRenderingContext2D): void {
-    if(this.opacity <= 0) return;
-    
+    if (this.opacity <= 0) return;
+
     context.globalAlpha = this.opacity;
-    
-   context.drawImage(
-     this.getReadyImage.image!,
-     this.getReadyImage.position.x,
-     this.getReadyImage.position.y,
-     this.getReadyImage.scaled.width,
-     this.getReadyImage.scaled.height
-   )
-    
-    
-    
+
+    context.drawImage(
+      this.getReadyImage.image!,
+      this.getReadyImage.position.x,
+      this.getReadyImage.position.y,
+      this.getReadyImage.scaled.width,
+      this.getReadyImage.scaled.height
+    );
+
     context.drawImage(
       this.instructImage.image!,
       this.instructImage.position.x,
