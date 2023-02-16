@@ -49,7 +49,7 @@ export default class BannerInstruction extends ParentClass {
   constructor() {
     super();
     this.instructImage = {
-      size: 0.45,
+      size: 0.4,
       position: {
         x: 0,
         y: 0

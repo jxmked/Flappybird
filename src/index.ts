@@ -4,6 +4,7 @@ import prepareAssets from './asset-preparation';
 import GameObject from './game';
 import { rescaleDim, framer as Framer } from './utils';
 import EventHandler from './events';
+import { CANVAS_DIMENSION } from './constants';
 
 /**
 if (process.env.NODE_ENV !== 'development') {
@@ -23,10 +24,6 @@ if (process.env.NODE_ENV !== 'development') {
 }
 */
 const canvas = document.querySelector('#main-canvas')! as HTMLCanvasElement;
-const canvasDimension = {
-  width: 500,
-  height: 779
-};
 let isLoaded = false;
 
 /**
@@ -57,7 +54,7 @@ const GameUpdate = (): void => {
 
 const ScreenResize = () => {
   const { innerHeight } = window;
-  const sizeResult = rescaleDim(canvasDimension, { height: innerHeight });
+  const sizeResult = rescaleDim(CANVAS_DIMENSION, { height: innerHeight });
 
   // Adjust the canvas DOM size
   canvas.style.maxWidth = String(sizeResult.width) + 'px';

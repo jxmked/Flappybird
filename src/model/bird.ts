@@ -1,6 +1,6 @@
 import ParentClass from '../abstracts/parent-class';
 
-import { lerp, rescaleDim, clamp, BackNForthCounter } from '../utils';
+import { lerp, rescaleDim, clamp, sine as sineWave, flipRange } from '../utils';
 import { asset } from '../lib/sprite-destructor';
 import Sfx from './sfx';
 import Pipe from './pipe';
@@ -89,11 +89,6 @@ export default class Bird extends ParentClass {
   rotation: number;
 
   /**
-   * A state changer for wings
-   * */
-  backNForth: BackNForthCounter;
-
-  /**
    * Calculated Fixed Force to up
    * */
   force: number;
@@ -130,7 +125,6 @@ export default class Bird extends ParentClass {
     };
     this.rotation = 0;
     this.wingState = 1;
-    this.backNForth = new BackNForthCounter(0, 100, [0, 45, 100]);
   }
 
   /**
@@ -178,6 +172,28 @@ export default class Bird extends ParentClass {
 
     this.force = lerp(0, height, BIRD_JUMP_HEIGHT);
     this.scaled = rescaleDim(BIRD_INITIAL_DIMENSION, { height: this.height });
+  }
+
+  /**
+   * Do wave like thing using Sine wave
+   *
+   * @param ICoordinate
+   * @param waveSpeed - frequency hz
+   * @param amplitude - amplitude
+   * */
+  doWave({ x, y }: ICoordinate, frequency: number, amplitude: number): void {
+    this.flapWing(3);
+    y += sineWave(frequency, amplitude);
+    this.coordinate = { x, y };
+  }
+
+  flapWing(speed: number): void {
+    this.wingState = Math.round(1 + sineWave(speed, 1));
+
+    // Make sure the wing is set to mid flap when the bird is falling
+    if (this.rotation > 70) {
+      this.wingState = 1;
+    }
   }
 
   /**
@@ -289,22 +305,6 @@ export default class Bird extends ParentClass {
     this.birdImg = this.birdColorObject[color as keyof typeof this.birdColorObject];
   }
 
-  flapWing(speed: number): void {
-    this.backNForth.speed(speed);
-
-    // Update our back and forth utilty.
-    // This function will help our bird tk wave its wings
-    this.backNForth.Update();
-
-    // Update wing state
-    this.wingState = this.backNForth.getStop();
-
-    // Make sure the wing is set to mid flap when the bird is falling
-    if (this.rotation > 70) {
-      this.wingState = 1;
-    }
-  }
-
   Update(): void {
     // Always above the floor
     if (this.doesHitTheFloor()) return;
@@ -323,7 +323,13 @@ export default class Bird extends ParentClass {
     this.rotation += this.velocity.y - lerp(0, this.canvasSize.height, 0.0086);
     this.rotation = clamp(BIRD_MIN_ROTATION, BIRD_MAX_ROTATION, this.rotation);
 
-    this.flapWing(30);
+    /**
+     * Lets convert the rotation into percent but
+     * the percent is in range of 4 - 8.2
+     * */
+    const rmx = Math.abs(BIRD_MIN_ROTATION) + BIRD_MAX_ROTATION;
+    const f = 4 + ((this.rotation + Math.abs(BIRD_MIN_ROTATION)) / rmx) * 3.2;
+    this.flapWing(flipRange(4, 8.2, f));
   }
 
   Display(context: CanvasRenderingContext2D): void {

@@ -22,20 +22,17 @@ export default class Game {
   isPlaying: boolean;
 
   mainScreen: Screens;
-  waveBird: number;
 
   constructor(canvas: HTMLCanvasElement) {
     this.background = new BgModel();
     this.canvas = canvas;
     this.context = this.canvas.getContext('2d')!;
     this.platform = new PlatformModel();
-
     this.pipeGenerator = new PipeGenerator();
     this.bird = new BirdModel();
     this.count = new CountModel();
     this.isPlaying = false;
     this.mainScreen = new Screens();
-    this.waveBird = 0;
   }
 
   init(): void {
@@ -81,10 +78,6 @@ export default class Game {
       pipe.resize({ width, height });
     }
 
-    if (!this.isPlaying) {
-      this.bird.coordinate.y = lerp(0, height, 0.48);
-    }
-
     this.canvas.width = width;
     this.canvas.height = height;
   }
@@ -99,29 +92,32 @@ export default class Game {
     this.platform.Update();
     this.mainScreen.Update();
 
-    if (this.isPlaying) {
-      /**
-       * Pipe regeneration
-       */
-      if (this.pipeGenerator.needPipe()) {
-        const pipeAttr = this.pipeGenerator.generate();
-        this.addPipe(pipeAttr);
-      }
-
-      for (let index = 0; index < this.pipeGenerator.pipes.length; index++) {
-        this.pipeGenerator.pipes[index].Update();
-
-        if (this.pipeGenerator.pipes[index].isOut()) {
-          this.pipeGenerator.pipes.splice(index, 1);
-        }
-      }
-    } else {
-      this.waveBird += 0.1;
-
-      this.bird.coordinate.y += Math.cos(this.waveBird) + Math.sin(this.waveBird);
-
-      this.bird.flapWing(10);
+    if (!this.isPlaying) {
+      this.bird.doWave(
+        {
+          x: this.bird.coordinate.x,
+          y: lerp(0, this.canvas.height, 0.48)
+        },
+        1,
+        6
+      );
       return;
+    }
+
+    /**
+     * Pipe regeneration
+     */
+    if (this.pipeGenerator.needPipe()) {
+      const pipeAttr = this.pipeGenerator.generate();
+      this.addPipe(pipeAttr);
+    }
+
+    for (let index = 0; index < this.pipeGenerator.pipes.length; index++) {
+      this.pipeGenerator.pipes[index].Update();
+
+      if (this.pipeGenerator.pipes[index].isOut()) {
+        this.pipeGenerator.pipes.splice(index, 1);
+      }
     }
 
     this.bird.Update();
