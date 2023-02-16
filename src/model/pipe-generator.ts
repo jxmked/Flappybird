@@ -38,11 +38,17 @@ export default class PipeGenerator {
    * */
   private distance: number;
 
+  /**
+   * Initial X position of new pipe
+   * */
+  private initialXPos: number;
+
   constructor() {
     this.range = { max: 0, min: 0 };
     this.width = 0;
     this.pipes = [];
     this.distance = 0;
+    this.initialXPos = 0;
   }
 
   public resize({ max, width, height }: IPipeGeneratorOption): void {
@@ -59,11 +65,13 @@ export default class PipeGenerator {
     const pipeLen = this.pipes.length;
 
     if (pipeLen === 0) {
+      this.initialXPos = (this.width + Pipe.pipeSize.width) * 2;
       return true;
     }
 
     // Get the last pipe and check if the distance of it is equal or greater than max width
     if (this.distance <= this.width - this.pipes[pipeLen - 1].coordinate.x) {
+      this.initialXPos = this.width + Pipe.pipeSize.width;
       return true;
     }
 
@@ -77,7 +85,7 @@ export default class PipeGenerator {
   public generate(): IPipeGeneratorValue {
     return {
       position: {
-        x: this.width + Pipe.pipeSize.width,
+        x: this.initialXPos,
         y: randomClamp(this.range.min, this.range.max - this.range.min)
       }
     };
