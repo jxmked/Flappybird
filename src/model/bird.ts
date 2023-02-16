@@ -130,12 +130,7 @@ export default class Bird extends ParentClass {
     };
     this.rotation = 0;
     this.wingState = 1;
-    this.backNForth = new BackNForthCounter(0, 100, [
-      [0, 10],
-      [45, 55],
-      [90, 100]
-    ]);
-    this.backNForth.speed(30);
+    this.backNForth = new BackNForthCounter(0, 100, [0, 45, 100]);
   }
 
   /**
@@ -294,6 +289,22 @@ export default class Bird extends ParentClass {
     this.birdImg = this.birdColorObject[color as keyof typeof this.birdColorObject];
   }
 
+  flapWing(speed: number): void {
+    this.backNForth.speed(speed);
+
+    // Update our back and forth utilty.
+    // This function will help our bird tk wave its wings
+    this.backNForth.Update();
+
+    // Update wing state
+    this.wingState = this.backNForth.getStop();
+
+    // Make sure the wing is set to mid flap when the bird is falling
+    if (this.rotation > 70) {
+      this.wingState = 1;
+    }
+  }
+
   Update(): void {
     // Always above the floor
     if (this.doesHitTheFloor()) return;
@@ -312,17 +323,7 @@ export default class Bird extends ParentClass {
     this.rotation += this.velocity.y - lerp(0, this.canvasSize.height, 0.0086);
     this.rotation = clamp(BIRD_MIN_ROTATION, BIRD_MAX_ROTATION, this.rotation);
 
-    // Update our back and forth utilty.
-    // This function will help our bird tk wave its wings
-    this.backNForth.Update();
-
-    // Update wing state
-    this.wingState = this.backNForth.getStop();
-
-    // Make sure the wing is set to mid flap when the bird is falling
-    if (this.rotation > 70) {
-      this.wingState = 1;
-    }
+    this.flapWing(30);
   }
 
   Display(context: CanvasRenderingContext2D): void {

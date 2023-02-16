@@ -7,6 +7,7 @@ import Screens from './screen';
 import Sfx from './model/sfx';
 import PipeGenerator, { IPipeGeneratorValue } from './model/pipe-generator';
 import { SFX_VOLUME } from './constants';
+import { lerp } from './utils';
 
 export default class Game {
   background: BgModel;
@@ -21,6 +22,7 @@ export default class Game {
   isPlaying: boolean;
 
   mainScreen: Screens;
+  waveBird: number;
 
   constructor(canvas: HTMLCanvasElement) {
     this.background = new BgModel();
@@ -33,6 +35,7 @@ export default class Game {
     this.count = new CountModel();
     this.isPlaying = false;
     this.mainScreen = new Screens();
+    this.waveBird = 0;
   }
 
   init(): void {
@@ -78,6 +81,10 @@ export default class Game {
       pipe.resize({ width, height });
     }
 
+    if (!this.isPlaying) {
+      this.bird.coordinate.y = lerp(0, height, 0.48);
+    }
+
     this.canvas.width = width;
     this.canvas.height = height;
   }
@@ -92,23 +99,33 @@ export default class Game {
     this.platform.Update();
     this.mainScreen.Update();
 
-    /**
-     * Pipe regeneration
-     */
-    if (this.pipeGenerator.needPipe()) {
-      const pipeAttr = this.pipeGenerator.generate();
-      this.addPipe(pipeAttr);
-    }
-
-    for (let index = 0; index < this.pipeGenerator.pipes.length; index++) {
-      this.pipeGenerator.pipes[index].Update();
-
-      if (this.pipeGenerator.pipes[index].isOut()) {
-        this.pipeGenerator.pipes.splice(index, 1);
+    if (this.isPlaying) {
+      /**
+       * Pipe regeneration
+       */
+      if (this.pipeGenerator.needPipe()) {
+        const pipeAttr = this.pipeGenerator.generate();
+        this.addPipe(pipeAttr);
       }
+
+      for (let index = 0; index < this.pipeGenerator.pipes.length; index++) {
+        this.pipeGenerator.pipes[index].Update();
+
+        if (this.pipeGenerator.pipes[index].isOut()) {
+          this.pipeGenerator.pipes.splice(index, 1);
+        }
+      }
+    } else {
+      this.waveBird += 0.1;
+
+      this.bird.coordinate.y += Math.cos(this.waveBird) + Math.sin(this.waveBird);
+
+      this.bird.flapWing(10);
+      return;
     }
 
     this.bird.Update();
+
     if (this.bird.isDead(this.pipeGenerator.pipes)) {
       Sfx.hit(() => {
         this.bird.playDead();
@@ -138,6 +155,7 @@ export default class Game {
   }
   onClick({ x, y }: ICoordinate): void {
     this.mainScreen.tap();
+    this.isPlaying = true;
     this.bird.flap();
   }
 }
