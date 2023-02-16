@@ -55,7 +55,7 @@ const GameUpdate = (): void => {
 
 const ScreenResize = () => {
   const { innerHeight } = window;
-  const sizeResult = rescaleDim(CANVAS_DIMENSION, { height: innerHeight });
+  const sizeResult = rescaleDim(CANVAS_DIMENSION, { height: innerHeight - 50 });
 
   // Adjust the canvas DOM size
   canvas.style.maxWidth = String(sizeResult.width) + 'px';
@@ -91,6 +91,7 @@ window.addEventListener('DOMContentLoaded', () => {
       // Listen to events: Mouse, Touch, Keyboard
       EventHandler(Game);
       loadingScreen.style.display = 'none';
+      document.body.style.backgroundColor = 'rgba(28, 28, 30, 1)';
     }, 1500);
   });
 });

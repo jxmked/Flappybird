@@ -172,7 +172,6 @@ export default class Bird extends ParentClass {
 
     this.force = lerp(0, height, BIRD_JUMP_HEIGHT);
     this.scaled = rescaleDim(BIRD_INITIAL_DIMENSION, { height: this.height });
-    console.log(this.scaled);
   }
 
   /**

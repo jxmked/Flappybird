@@ -13,6 +13,7 @@ body {
   align-items: center;
   overflow: hidden;
   background-color: #fff;
+  transition: background-color 0.5s ease-in-out;
 
   > #main-canvas {
     margin: auto;
