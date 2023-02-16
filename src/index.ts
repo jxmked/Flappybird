@@ -24,6 +24,7 @@ if (process.env.NODE_ENV !== 'development') {
 }
 */
 const canvas = document.querySelector('#main-canvas')! as HTMLCanvasElement;
+const loadingScreen = document.querySelector('#loading-modal')! as HTMLDivElement;
 let isLoaded = false;
 
 /**
@@ -86,8 +87,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
     raf(GameUpdate);
 
-    // Listen to events: Mouse, Touch, Keyboard
-    EventHandler(Game);
+    window.setTimeout(() => {
+      // Listen to events: Mouse, Touch, Keyboard
+      EventHandler(Game);
+      loadingScreen.style.display = 'none';
+    }, 1500);
   });
 });
 
