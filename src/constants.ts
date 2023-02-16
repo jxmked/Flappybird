@@ -42,7 +42,7 @@ export const BIRD_MAX_ROTATION = 90;
 export const BIRD_MIN_ROTATION = -15;
 
 // Height of bird. Based on canvas Height
-export const BIRD_HEIGHT = 0.101;
+export const BIRD_HEIGHT = 0.024;
 
 // Weight of bird. Drag every update. Based on canvas height
 export const BIRD_WEIGHT = 0.00047;

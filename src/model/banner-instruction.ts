@@ -1,6 +1,6 @@
 import ParentClass from '../abstracts/parent-class';
 import { asset } from '../lib/sprite-destructor';
-import { lerp, rescaleDim, BackNForthCounter } from '../utils';
+import { lerp, rescaleDim } from '../utils';
 import { FadeOut } from '../lib/animation';
 
 export interface IImagePositions {

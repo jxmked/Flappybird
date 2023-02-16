@@ -9,6 +9,12 @@ import PipeGenerator, { IPipeGeneratorValue } from './model/pipe-generator';
 import { SFX_VOLUME } from './constants';
 import { lerp } from './utils';
 
+/**
+ * Actual Screens
+ * */
+
+import Intro from './screens/intro';
+
 export default class Game {
   background: BgModel;
   platform: PlatformModel;
@@ -23,6 +29,10 @@ export default class Game {
 
   mainScreen: Screens;
 
+  isIntro: boolean;
+
+  mainIntro: Intro;
+
   constructor(canvas: HTMLCanvasElement) {
     this.background = new BgModel();
     this.canvas = canvas;
@@ -33,6 +43,9 @@ export default class Game {
     this.count = new CountModel();
     this.isPlaying = false;
     this.mainScreen = new Screens();
+
+    this.isIntro = true;
+    this.mainIntro = new Intro();
   }
 
   init(): void {
@@ -149,9 +162,14 @@ export default class Game {
     this.count.Display(this.context);
     this.mainScreen.Display(this.context);
   }
+
   onClick({ x, y }: ICoordinate): void {
     this.mainScreen.tap();
     this.isPlaying = true;
     this.bird.flap();
   }
+
+  mouseDown({ x, y }: ICoordinate): void {}
+
+  mouseUp({ x, y }: ICoordinate): void {}
 }

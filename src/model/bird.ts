@@ -168,10 +168,11 @@ export default class Bird extends ParentClass {
 
     this.coordinate.y = lerp(0, Bird.platformHeight, 0.5);
     this.coordinate.x = lerp(0, width, BIRD_X_POSITION);
-    this.height = lerp(0, Bird.platformHeight, BIRD_HEIGHT);
+    this.height = lerp(0, height, BIRD_HEIGHT);
 
     this.force = lerp(0, height, BIRD_JUMP_HEIGHT);
     this.scaled = rescaleDim(BIRD_INITIAL_DIMENSION, { height: this.height });
+    console.log(this.scaled);
   }
 
   /**
