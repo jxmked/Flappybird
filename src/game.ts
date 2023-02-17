@@ -32,6 +32,8 @@ export default class Game extends ParentClass {
 
   doesFadeOut: boolean;
 
+  bgPause: boolean;
+
   constructor(canvas: HTMLCanvasElement) {
     super();
 
@@ -43,6 +45,7 @@ export default class Game extends ParentClass {
     this.screenIntro = new Intro();
     this.gamePlay = new GamePlay(this);
 
+    this.bgPause = false;
     this.opacity = 1;
 
     this.fadeOut = new FadeOut({
@@ -71,6 +74,12 @@ export default class Game extends ParentClass {
     this.screenIntro.rateButton.active = true;
   }
 
+  reset(): void {
+    this.background.reset();
+    this.platform.reset();
+    this.Resize(this.canvasSize);
+  }
+
   Resize({ width, height }: IDimension): void {
     super.resize({ width, height });
     this.background.resize(this.canvasSize);
@@ -91,9 +100,6 @@ export default class Game extends ParentClass {
   }
 
   Update(): void {
-    this.background.Update();
-    this.platform.Update();
-
     if (this.doesFadeOut && this.fadeOut.status.complete) {
       this.state = 'game';
     }
@@ -102,6 +108,10 @@ export default class Game extends ParentClass {
       this.opacity = this.fadeOut.value;
     }
 
+    if (!this.bgPause) {
+      this.background.Update();
+      this.platform.Update();
+    }
     switch (this.state) {
       case 'intro':
         this.screenIntro.Update();
@@ -111,8 +121,6 @@ export default class Game extends ParentClass {
         this.gamePlay.Update();
         break;
     }
-
-    this.screenIntro.Update();
   }
 
   Display(): void {
@@ -145,7 +153,7 @@ export default class Game extends ParentClass {
         break;
     }
 
-    this.context.globalAlpha = flipRange(0, 1, this.opacity);
+    /* this.context.globalAlpha = flipRange(0, 1, this.opacity);
 
     if (this.isTransitioning) {
       this.context.fillStyle = 'black';
@@ -153,7 +161,7 @@ export default class Game extends ParentClass {
       this.context.fill();
     }
 
-    this.context.globalAlpha = 1;
+    this.context.globalAlpha = 1; */
   }
 
   setEvent(): void {

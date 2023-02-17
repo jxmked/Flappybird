@@ -19,7 +19,12 @@ export default class Platform extends ParentClass {
   }
 
   init() {
-    this.img = asset('platform')!;
+    this.img = asset('platform');
+  }
+
+  reset(): void {
+    this.coordinate.x = 0;
+    this.coordinate.y = 0;
   }
 
   resize({ width, height }: IDimension): void {
