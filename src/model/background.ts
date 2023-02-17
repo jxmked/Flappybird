@@ -43,7 +43,7 @@ export default class Background extends ParentClass {
   /**
    * Initialize Images after all asset has been loaded
    * */
-  init() {
+  init(): void {
     this.backgroundImage = {
       night: asset('theme-night')!,
       day: asset('theme-day')!
@@ -51,7 +51,11 @@ export default class Background extends ParentClass {
 
     this.use(BG_TEXTURE);
   }
-
+  
+  public reset(): void {
+    this.coordinate = { x: 0, y: 0 }
+  }
+  
   /**
    * Select either day and night
    * */
@@ -74,7 +78,7 @@ export default class Background extends ParentClass {
     );
   }
 
-  Update() {
+  Update(): void  {
     /**
      * We use linear interpolation instead of by pixel to move the object.
      * It is to keep the speed same in different Screen Sizes & Screen DPI.
@@ -87,7 +91,7 @@ export default class Background extends ParentClass {
     this.coordinate.y += this.velocity.y;
   }
 
-  Display(context: CanvasRenderingContext2D) {
+  Display(context: CanvasRenderingContext2D): void {
     const { width, height } = this.backgroundSize;
     const { x, y } = this.coordinate;
 

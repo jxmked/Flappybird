@@ -1,89 +1,106 @@
 import BgModel from './model/background';
 import PlatformModel from './model/platform';
 import BirdModel from './model/bird';
-import CountModel from './model/count';
-import Screens from './screen';
 import Sfx from './model/sfx';
 import PipeGenerator from './model/pipe-generator';
 import { SFX_VOLUME } from './constants';
-import { lerp } from './utils';
 
-/**
- * Actual Screens
- * */
+
+
+
+import ParentClass from './abstracts/parent-class';
+import { flipRange } from './utils';
+import { FadeOut } from './lib/animation';
 
 import Intro from './screens/intro';
 
-export default class Game {
+
+
+
+
+
+export default class Game  extends ParentClass{
   background: BgModel;
   platform: PlatformModel;
-  bird: BirdModel;
-  pipeGenerator: PipeGenerator;
-
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
-  count: CountModel;
+  pipeGenerator: PipeGenerator;
 
-  isPlaying: boolean;
+  state: string;
+  screenIntro: Intro;
 
-  mainScreen: Screens;
+  fadeOut: FadeOut;
 
-  
-  currentScreen: string;
+  isTransitioning: boolean;
+  transitionState: string;
+
+  opacity: number;
+
+  doesFadeOut: boolean;
 
   constructor(canvas: HTMLCanvasElement) {
-    this.currentScreen = 'intro';
-
+    super()
+    
     this.background = new BgModel();
     this.canvas = canvas;
     this.context = this.canvas.getContext('2d')!;
     this.platform = new PlatformModel();
     this.pipeGenerator = new PipeGenerator();
-    this.bird = new BirdModel();
-    this.count = new CountModel();
-    this.isPlaying = false;
-    this.mainScreen = new Screens();
+    this.screenIntro = new Intro();
+    
+    this.opacity = 1;
+    
+    this.fadeOut = new FadeOut({
+      duration: 500
+    });
+    this.doesFadeOut = false;
+
+    this.state = 'intro';
+    this.transitionState = 'none';
+    this.isTransitioning = false;
   }
 
   init(): void {
-    this.mainScreen.init();
-    this.bird.init();
     this.background.init();
     this.platform.init();
-    this.count.init();
+    
     Sfx.init();
     Sfx.volume(SFX_VOLUME);
+    
+    this.screenIntro.init();
+
+    this.setEvent();
+   
+    this.screenIntro.playButton.active = true;
+    this.screenIntro.rankingButton.active = true;
+    this.screenIntro.rateButton.active = true;
+
+    
   }
 
   Resize({ width, height }: IDimension): void {
-    this.background.resize({ width, height });
-    this.platform.resize({ width, height });
-    this.count.resize({ width, height });
-    this.mainScreen.resize({ width, height });
-    // Set Platform size first
+    super.resize({width, height})
+    this.background.resize(this.canvasSize);
+    this.platform.resize(this.canvasSize);
+    
     BirdModel.platformHeight = this.platform.platformSize.height;
-    this.bird.resize({ width, height });
-
+    
+    
     this.pipeGenerator.resize({
       max: height - this.platform.platformSize.height,
       width: width,
       height: height
     });
-
+    this.screenIntro.resize(this.canvasSize)
     this.canvas.width = width;
     this.canvas.height = height;
   }
 
   Update(): void {
-    if (!this.bird.alive) {
-      this.bird.Update();
-      return;
-    }
 
     this.background.Update();
     this.platform.Update();
-    this.mainScreen.Update();
-
+    
     /*
     if (!this.isPlaying) {
       this.bird.doWave(
@@ -106,6 +123,20 @@ export default class Game {
         this.bird.playDead();
       });
     }  */
+    
+    
+    
+    
+    
+    if (this.doesFadeOut && this.fadeOut.status.complete) {
+      this.state = 'game';
+    }
+
+    if (this.isTransitioning && this.doesFadeOut) {
+      this.opacity = this.fadeOut.value;
+    }
+
+    this.screenIntro.Update();
   }
 
   Display(): void {
@@ -127,18 +158,49 @@ export default class Game {
 
     this.count.setNum(this.bird.score);
     this.count.Display(this.context); */
-    this.mainScreen.Display(this.context);
+
+    switch(this.state) {
+      case 'intro':
+        this.screenIntro.Display(this.context);
+        break;
+
+    }
+
+    this.context.globalAlpha = flipRange(0, 1, this.opacity);
+
+    if (this.isTransitioning) {
+      this.context.fillStyle = 'black';
+      this.context.fillRect(0, 0, this.canvasSize.width, this.canvasSize.height);
+      this.context.fill();
+    }
+
+    this.context.globalAlpha = 1;
+  }
+  
+  setEvent(): void {
+    this.screenIntro.playButton.onClick(() => {
+      this.isTransitioning = true;
+
+      // Deactivate buttons
+      this.screenIntro.playButton.active = false;
+      this.screenIntro.rankingButton.active = false;
+      this.screenIntro.rateButton.active = false;
+
+      this.fadeOut.start();
+      this.isTransitioning = true;
+      this.doesFadeOut = true;
+    });
   }
 
   onClick({ x, y }: ICoordinate): void {
-    this.bird.flap();
+    
   }
 
   mouseDown({ x, y }: ICoordinate): void {
-    this.mainScreen.screenIntro.mouseDown({ x, y });
+    this.screenIntro.mouseDown({ x, y });
   }
 
   mouseUp({ x, y }: ICoordinate): void {
-    this.mainScreen.screenIntro.mouseUp({ x, y });
+    this.screenIntro.mouseUp({ x, y });
   }
 }

@@ -1,5 +1,5 @@
 import ParentClass from './abstracts/parent-class';
-import { lerp, rescaleDim, flipRange } from './utils';
+import { flipRange } from './utils';
 import { FadeOut } from './lib/animation';
 
 import Intro from './screens/intro';
@@ -64,7 +64,6 @@ export default class Screen extends ParentClass {
   Update(): void {
     if (this.doesFadeOut && this.fadeOut.status.complete) {
       this.state = 'game';
-      console.log('complete');
     }
 
     if (this.isTransitioning && this.doesFadeOut) {

@@ -40,7 +40,6 @@ export interface ITextureProperties {
 export default class BannerInstruction extends ParentClass {
   private instructImage: ITextureProperties;
   private getReadyImage: ITextureProperties;
-  private isVisisble: boolean;
   private opacity: number;
   private fadeOut: FadeOut;
   private isComplete: boolean;
@@ -74,7 +73,6 @@ export default class BannerInstruction extends ParentClass {
     };
     this.fadeOut = new FadeOut();
     this.opacity = 1;
-    this.isVisisble = true;
     this.isComplete = false;
     this.doesTap = false;
   }

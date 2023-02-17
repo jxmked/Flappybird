@@ -6,6 +6,7 @@
  * */
 
 import BirdModel from '../model/bird';
+import PipeGenerator from '../model/pipe-generator';
 
 export default class GetReady {
   constructor() {}

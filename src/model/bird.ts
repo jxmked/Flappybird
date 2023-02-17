@@ -152,6 +152,14 @@ export default class Bird extends ParentClass {
 
     this.use(BIRD_DEFAULT_COLOR);
   }
+  
+  public reset(): void {
+    this.alive =true;
+    this.score = 0;
+    this.rotation = 0;
+    this.causeOfDeath = 'none';
+    this.resize(this.canvasSize);
+  }
 
   /**
    * Resizing canvas is pretty tricky but

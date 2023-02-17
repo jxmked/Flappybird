@@ -59,6 +59,12 @@ export default class PipeGenerator {
       height: 0
     };
   }
+  
+  public reset(): void {
+    if(this.pipes.length > 0) {
+      this.pipes.slice(0, this.pipes.length - 1)
+    }
+  }
 
   public resize({ max, width, height }: IPipeGeneratorOption): void {
     this.range = { max, min: lerp(0, height, PIPE_MIN_GAP) };
