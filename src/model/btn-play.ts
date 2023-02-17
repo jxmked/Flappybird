@@ -1,42 +1,48 @@
 import Parent from '../abstracts/button-event-handler';
 import { asset } from '../lib/sprite-destructor';
+import Sfx from './sfx';
 
 export default class PlayButton extends Parent {
+  protected callback: Function;
+
   constructor() {
     super();
-    this.initialWidth = 0.36;
+    this.initialWidth = 0.38;
     this.coordinate = {
-      x: 0.3,
-      y: 0.708
+      x: 0.259,
+      y: 0.702
     };
     this.active = true;
+    this.callback = () => {};
   }
 
-  init(): void {
+  public click(): void {
+    Sfx.swoosh();
+    this.callback();
+  }
+
+  public onClick(callback: Function): void {
+    this.callback = callback;
+  }
+
+  public init(): void {
     this.img = asset('btn-play');
   }
 
-  Update(): void {
-    if (this.isHover) {
+  public Update(): void {
+    this.reset();
+
+    if (this.isHovered) {
       this.move({
         x: 0,
         y: 0.007
-      });
-    } else {
-      this.move({
-        x: 0,
-        y: 0
       });
     }
 
     super.Update();
   }
 
-  click(): void {
-    console.log('click');
-  }
-
-  Display(context: CanvasRenderingContext2D): void {
+  public Display(context: CanvasRenderingContext2D): void {
     const xLoc = this.calcCoord.x;
     const yLoc = this.calcCoord.y;
     const xRad = this.dimension.width / 2;

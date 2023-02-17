@@ -33,7 +33,11 @@ export default class Game {
 
   mainIntro: Intro;
 
+  currentScreen: string;
+
   constructor(canvas: HTMLCanvasElement) {
+    this.currentScreen = 'intro';
+
     this.background = new BgModel();
     this.canvas = canvas;
     this.context = this.canvas.getContext('2d')!;
@@ -99,7 +103,7 @@ export default class Game {
 
   Update(): void {
     if (!this.bird.alive) {
-      this.bird.Update();
+      //   this.bird.Update();
       return;
     }
 
@@ -107,7 +111,7 @@ export default class Game {
     this.platform.Update();
     this.mainScreen.Update();
     this.mainIntro.Update();
-    if (!this.isPlaying) {
+    /*   if (!this.isPlaying) {
       this.bird.doWave(
         {
           x: this.bird.coordinate.x,
@@ -117,12 +121,12 @@ export default class Game {
         6
       );
       return;
-    }
+    } 
 
     /**
      * Pipe regeneration
      */
-    if (this.pipeGenerator.needPipe()) {
+    /*  if (this.pipeGenerator.needPipe()) {
       const pipeAttr = this.pipeGenerator.generate();
       this.addPipe(pipeAttr);
     }
@@ -141,7 +145,7 @@ export default class Game {
       Sfx.hit(() => {
         this.bird.playDead();
       });
-    }
+    } */
   }
 
   Display(): void {
@@ -152,24 +156,24 @@ export default class Game {
 
     this.background.Display(this.context);
 
-    for (const pipe of this.pipeGenerator.pipes) {
+    /*  for (const pipe of this.pipeGenerator.pipes) {
       pipe.Display(this.context);
-    }
+    } */
 
     this.platform.Display(this.context);
 
-    this.bird.Display(this.context);
+    /*   this.bird.Display(this.context);
 
     this.count.setNum(this.bird.score);
     this.count.Display(this.context);
-    this.mainScreen.Display(this.context);
+    this.mainScreen.Display(this.context); */
     this.mainIntro.Display(this.context);
   }
 
   onClick({ x, y }: ICoordinate): void {
     this.mainScreen.tap();
     this.isPlaying = true;
-    this.bird.flap();
+    // this.bird.flap();
   }
 
   mouseDown({ x, y }: ICoordinate): void {

@@ -27,34 +27,34 @@ export class FadeOut {
     Object.assign(this.options, options ?? {});
   }
 
-  reset(): void {
+  public reset(): void {
     this.isComplete = true;
     this.isRunning = false;
   }
 
-  start(): void {
+  public start(): void {
     if (this.isRunning) return;
     this.isRunning = true;
     this.startTime = this.time;
     this.isComplete = false;
   }
 
-  stop(): void {
+  public stop(): void {
     this.isRunning = false;
     this.isComplete = true;
   }
 
-  get time(): number {
+  public get time(): number {
     return performance.now();
   }
 
-  get status(): IFadeOutStatus {
+  public get status(): IFadeOutStatus {
     return {
       running: this.isRunning
     };
   }
 
-  get value(): number {
+  public get value(): number {
     if (this.isComplete && !this.isRunning) return 0;
 
     const value = (this.time - this.startTime) / this.options.duration;

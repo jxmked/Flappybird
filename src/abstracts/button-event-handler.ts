@@ -27,7 +27,6 @@ export default abstract class ButtonEventHandler {
   protected initialWidth: number; // lerp - %
   protected dimension: IDimension;
   protected calcCoord: ICoordinate;
-
   protected canvasSize: IDimension;
 
   // Track where the mouse down triggered
@@ -66,7 +65,7 @@ export default abstract class ButtonEventHandler {
     this.initialWidth = 0;
   }
 
-  public get isHover(): boolean {
+  public get isHovered(): boolean {
     return this.hoverState;
   }
 
@@ -99,6 +98,15 @@ export default abstract class ButtonEventHandler {
     }
   }
 
+  protected reset(): void {
+    this.move({ x: 0, y: 0 });
+  }
+
+  protected move({ x, y }: ICoordinate): void {
+    this.additionalTranslate.x = lerp(0, this.canvasSize.width, x);
+    this.additionalTranslate.y = lerp(0, this.canvasSize.height, y);
+  }
+
   private isInRange({ x, y }: ICoordinate): boolean {
     const xLoc = this.calcCoord.x;
     const yLoc = this.calcCoord.y;
@@ -127,9 +135,6 @@ export default abstract class ButtonEventHandler {
   private onMouseup(coord: ICoordinate): void {
     if (!this.active) return;
     this.hoverState = false;
-    console.log(coord);
-    console.log(this.touchStart);
-    console.log(this.isInRange(coord), this.isInRange(this.touchStart));
     // Only click if mouse down start inside of the button
     // and up inside of the button
     if (this.isInRange(coord) && this.isInRange(this.touchStart)) {
@@ -137,12 +142,13 @@ export default abstract class ButtonEventHandler {
     }
   }
 
-  protected move({ x, y }: ICoordinate): void {
-    this.additionalTranslate.x = lerp(0, this.canvasSize.width, x);
-    this.additionalTranslate.y = lerp(0, this.canvasSize.height, y);
-  }
-
   public abstract init(): void;
+
+  /**
+   * Will be trigger if the mouse down starts inside of the button
+   * and ended inside of the button. But I think when it comes to
+   * touch event, sliding the finger out of button
+   * */
   public abstract click(): void;
   public abstract Display(context: CanvasRenderingContext2D): void;
 }
