@@ -31,7 +31,7 @@ export default class Introduction extends ParentClass {
     this.rankingButton = new RankingButton();
     this.rateButton = new RateButton();
     this.flappyBirdBanner = void 0;
-    this.copyright = void 0
+    this.copyright = void 0;
   }
 
   public init(): void {
@@ -40,7 +40,7 @@ export default class Introduction extends ParentClass {
     this.rankingButton.init();
     this.rateButton.init();
     this.flappyBirdBanner = asset('banner-flappybird');
-    this.copyright = asset("copyright")
+    this.copyright = asset('copyright');
   }
 
   public resize({ width, height }: IDimension): void {
@@ -89,22 +89,24 @@ export default class Introduction extends ParentClass {
       fbbScaled.height
     );
     // ----------------------------------
-    
+
     // Copyright
-    const crScaled = rescaleDim({
-      width: this.copyright!.width,
-      height: this.copyright!.height
-    }, { width: lerp(0, this.canvasSize.width, 0.44) });
-    
+    const crScaled = rescaleDim(
+      {
+        width: this.copyright!.width,
+        height: this.copyright!.height
+      },
+      { width: lerp(0, this.canvasSize.width, 0.44) }
+    );
+
     context.drawImage(
       this.copyright!,
-      lerp(0, this.canvasSize.width, 0.5) - crScaled.width / 2, 
+      lerp(0, this.canvasSize.width, 0.5) - crScaled.width / 2,
       lerp(0, this.canvasSize.height, 0.806) - crScaled.height / 2,
       crScaled.width,
       crScaled.height
-    )
+    );
     // ----------------------------------
-    
   }
 
   public mouseDown({ x, y }: ICoordinate): void {

@@ -51,11 +51,11 @@ export default class Background extends ParentClass {
 
     this.use(BG_TEXTURE);
   }
-  
+
   public reset(): void {
-    this.coordinate = { x: 0, y: 0 }
+    this.coordinate = { x: 0, y: 0 };
   }
-  
+
   /**
    * Select either day and night
    * */
@@ -78,7 +78,7 @@ export default class Background extends ParentClass {
     );
   }
 
-  Update(): void  {
+  Update(): void {
     /**
      * We use linear interpolation instead of by pixel to move the object.
      * It is to keep the speed same in different Screen Sizes & Screen DPI.

@@ -59,10 +59,10 @@ export default class PipeGenerator {
       height: 0
     };
   }
-  
+
   public reset(): void {
-    if(this.pipes.length > 0) {
-      this.pipes.slice(0, this.pipes.length - 1)
+    if (this.pipes.length > 0) {
+      this.pipes.slice(0, this.pipes.length - 1);
     }
   }
 
