@@ -71,14 +71,6 @@ export default class Bird extends ParentClass {
   wingState: number;
 
   /**
-   * height to match with.
-   *
-   * We rely on height instead of width because of
-   * top and bottom pipe gap
-   * */
-  height: number;
-
-  /**
    * Scaled width and height
    * */
   scaled: IDimension;
@@ -92,6 +84,11 @@ export default class Bird extends ParentClass {
    * Calculated Fixed Force to up
    * */
   force: number;
+
+  /**
+   * Cause of death
+   * */
+  causeOfDeath: string;
 
   constructor() {
     super();
@@ -118,13 +115,13 @@ export default class Bird extends ParentClass {
     this.force = 0;
     this.birdImg = void 0;
     this.score = 0;
-    this.height = 0;
     this.scaled = {
       width: 0,
       height: 0
     };
     this.rotation = 0;
     this.wingState = 1;
+    this.causeOfDeath = 'none';
   }
 
   /**
@@ -168,10 +165,11 @@ export default class Bird extends ParentClass {
 
     this.coordinate.y = lerp(0, Bird.platformHeight, 0.5);
     this.coordinate.x = lerp(0, width, BIRD_X_POSITION);
-    this.height = lerp(0, height, BIRD_HEIGHT);
 
     this.force = lerp(0, height, BIRD_JUMP_HEIGHT);
-    this.scaled = rescaleDim(BIRD_INITIAL_DIMENSION, { height: this.height });
+    this.scaled = rescaleDim(BIRD_INITIAL_DIMENSION, {
+      height: lerp(0, height, BIRD_HEIGHT)
+    });
   }
 
   /**
@@ -187,6 +185,11 @@ export default class Bird extends ParentClass {
     this.coordinate = { x, y };
   }
 
+  /**
+   * Flap wing using sine wave
+   *
+   * @param speed - flap speed
+   * */
   flapWing(speed: number): void {
     this.wingState = Math.round(1 + sineWave(speed, 1));
 
@@ -226,6 +229,7 @@ export default class Bird extends ParentClass {
   isDead(pipes: Pipe[]): boolean {
     if (this.doesHitTheFloor()) {
       this.alive = false;
+      this.causeOfDeath = 'fall';
       return !this.alive;
     }
 
@@ -262,6 +266,7 @@ export default class Bird extends ParentClass {
             hcy + radius <= posY + this.scaled.height
           ) {
             this.alive = false;
+            this.causeOfDeath = 'collide';
             break;
           }
         }
@@ -293,7 +298,7 @@ export default class Bird extends ParentClass {
   playDead(): void {
     if (this.died) return;
     this.died = true;
-    Sfx.die();
+    if (this.causeOfDeath === 'collide') Sfx.die();
   }
 
   /**

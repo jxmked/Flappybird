@@ -5,6 +5,8 @@
 import Game from './game';
 import WebSfx from './lib/web-sfx';
 
+export type IEventParam = MouseEvent | TouchEvent | KeyboardEvent;
+
 export default (Game: Game) => {
   interface IMouse {
     down: boolean;
@@ -35,18 +37,12 @@ export default (Game: Game) => {
     clicked = true;
   };
 
-  const mouseMove = (
-    { x, y }: ICoordinate,
-    evt: MouseEvent | TouchEvent | KeyboardEvent
-  ): void => {
+  const mouseMove = ({ x, y }: ICoordinate, evt: IEventParam): void => {
     evt.preventDefault();
     mouse.position = getBoundedPosition({ x, y });
   };
 
-  const mouseUP = (
-    { x, y }: ICoordinate,
-    evt: MouseEvent | TouchEvent | KeyboardEvent
-  ): void => {
+  const mouseUP = ({ x, y }: ICoordinate, evt: IEventParam): void => {
     /**
      * Required due to autoplay restriction
      * */
@@ -54,21 +50,21 @@ export default (Game: Game) => {
 
     evt.preventDefault();
     mouse.position = getBoundedPosition({ x, y });
+    Game.mouseUp(mouse.position);
     mouse.down = false;
     clicked = false;
   };
 
-  const mouseDown = (
-    { x, y }: ICoordinate,
-    evt: MouseEvent | TouchEvent | KeyboardEvent
-  ): void => {
+  const mouseDown = ({ x, y }: ICoordinate, evt: IEventParam): void => {
     /**
+     * Trigger multiple times
      * Required due to autoplay restriction
      * */
     WebSfx.init();
 
     evt.preventDefault();
     mouse.position = getBoundedPosition({ x, y });
+    Game.mouseDown(mouse.position);
     mouse.down = true;
 
     if (mouse.down) {

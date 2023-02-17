@@ -1,4 +1,4 @@
-class ParentObject {
+export default abstract class ParentObject {
   canvasSize: IDimension;
   velocity: IVelocity;
   coordinate: ICoordinate;
@@ -23,10 +23,8 @@ class ParentObject {
   resize({ width, height }: IDimension): void {
     this.canvasSize = { width, height };
   }
-}
 
-export default abstract class ParentClass extends ParentObject {
+  abstract init(): void;
   abstract Update(): void;
   abstract Display(context: CanvasRenderingContext2D): void;
-  abstract init(): void;
 }

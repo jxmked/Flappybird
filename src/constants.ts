@@ -17,8 +17,8 @@ export const BG_SPEED = 0.0002;
 
 // Initial Canvas Size. Changing this may cause problem in some cases.
 export const CANVAS_DIMENSION = {
-  width: 500,
-  height: 779
+  width: 288,
+  height: 512
 };
 
 // Sound effect volume. (0 - 1)

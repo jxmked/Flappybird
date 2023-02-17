@@ -50,12 +50,12 @@ const GameUpdate = (): void => {
   Game.Display();
 
   if (process.env.NODE_ENV === 'development') fps.mark();
+
   raf(GameUpdate);
 };
 
 const ScreenResize = () => {
-  const { innerHeight } = window;
-  const sizeResult = rescaleDim(CANVAS_DIMENSION, { height: innerHeight - 50 });
+  const sizeResult = rescaleDim(CANVAS_DIMENSION, { height: window.innerHeight - 50 });
 
   // Adjust the canvas DOM size
   canvas.style.maxWidth = String(sizeResult.width) + 'px';
@@ -86,6 +86,13 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     raf(GameUpdate);
+
+    if (process.env.NODE_ENV === 'development') {
+      EventHandler(Game);
+      loadingScreen.style.display = 'none';
+      document.body.style.backgroundColor = 'rgba(28, 28, 30, 1)';
+      return;
+    }
 
     window.setTimeout(() => {
       // Listen to events: Mouse, Touch, Keyboard
