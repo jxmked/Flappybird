@@ -10,7 +10,7 @@ export default class PlayButton extends Parent {
     this.initialWidth = 0.38;
     this.coordinate = {
       x: 0.259,
-      y: 0.702
+      y: 0.6998
     };
     this.active = true;
     this.callback = () => {};
@@ -35,7 +35,7 @@ export default class PlayButton extends Parent {
     if (this.isHovered) {
       this.move({
         x: 0,
-        y: 0.007
+        y: 0.004
       });
     }
 

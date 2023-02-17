@@ -1,79 +1,92 @@
 import ParentClass from './abstracts/parent-class';
-import { asset } from './lib/sprite-destructor';
-import { lerp, rescaleDim } from './utils';
-import Sfx from './model/sfx';
+import { lerp, rescaleDim, flipRange } from './utils';
+import { FadeOut } from './lib/animation';
 
-/**
- * Banners
- * */
-import BInstruction from './model/banner-instruction';
-
-export interface IImageSizes {
-  numberIcons: number;
-}
+import Intro from './screens/intro';
 
 export default class Screen extends ParentClass {
-  images: Map<string, HTMLImageElement>;
-  imageSizes: IImageSizes;
-
   state: string;
+  screenIntro: Intro;
 
-  BInstruction: BInstruction;
+  fadeOut: FadeOut;
+
+  isTransitioning: boolean;
+  transitionState: string;
+
+  opacity: number;
+  
+  doesFadeOut: boolean;
+  
   constructor() {
     super();
-    this.images = new Map<string, HTMLImageElement>();
-    this.imageSizes = {
-      numberIcons: 0.002
-    };
-    this.state = 'waiting';
-    this.BInstruction = new BInstruction();
+    this.state = 'intro';
+    this.transitionState = 'none';
+    this.isTransitioning = false;
+    this.screenIntro = new Intro();
+    this.opacity = 1;
+    this.fadeOut = new FadeOut({
+      duration: 500
+    });
+    this.doesFadeOut = false;
+
+    // Activate buttons
+    this.screenIntro.playButton.active = true;
+    this.screenIntro.rankingButton.active = true;
+    this.screenIntro.rateButton.active = true;
+  }
+
+  setEvent(): void {
+    this.screenIntro.playButton.onClick(() => {
+      this.isTransitioning = true;
+
+      // Deactivate buttons
+      /*  this.screenIntro.playButton.active = false;
+      this.screenIntro.rankingButton.active = false;
+      this.screenIntro.rateButton.active = false; */
+
+      this.fadeOut.start();
+      this.isTransitioning = true;
+      this.doesFadeOut = true
+    });
   }
 
   init(): void {
-    [
-      'coin-shine-gold',
-      'coin-shine-silver',
-      'coin-dull-bronze',
-      'coin-dull-metal',
-      'number-md-0',
-      'number-md-1',
-      'number-md-2',
-      'number-md-3',
-      'number-md-4',
-      'number-md-5',
-      'number-md-6',
-      'number-md-7',
-      'number-md-8',
-      'number-md-9',
-      'toast-new',
-      'btn-rate',
-      'btn-play',
-      'spark-sm',
-      'spark-md',
-      'spark-lg',
-      'banner-game-ready',
-      'banner-game-over',
-      'banner-flappybird'
-    ].forEach((value: string) => {
-      this.images.set(value, asset(value));
-    });
-    this.BInstruction.init();
-  }
+    this.screenIntro.init();
 
-  tap() {
-    this.BInstruction.tap();
+    this.setEvent();
   }
 
   resize({ width, height }: IDimension): void {
     super.resize({ width, height });
-    this.BInstruction.resize({ height, width });
+    this.screenIntro.resize({ width, height });
   }
 
   Update(): void {
-    this.BInstruction.Update();
+    if (this.doesFadeOut && this.fadeOut.status.complete) {
+
+      this.state = 'game';
+      console.log("complete")
+    }
+    
+    
+    if(this.isTransitioning && this.doesFadeOut) {
+      this.opacity = this.fadeOut.value;
+    }
+
+    this.screenIntro.Update();
   }
 
   Display(context: CanvasRenderingContext2D): void {
-    this.BInstruction.Display(context);
+    this.screenIntro.Display(context);
+    
+    context.globalAlpha = flipRange(0, 1, this.opacity);
+    
+    if (this.isTransitioning) {
+      context.fillStyle = 'black';
+      context.fillRect(0, 0, this.canvasSize.width, this.canvasSize.height);
+      context.fill();
+    }
+    
+    context.globalAlpha = 1;
   }
 }

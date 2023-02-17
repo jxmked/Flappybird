@@ -1,11 +1,10 @@
 import BgModel from './model/background';
 import PlatformModel from './model/platform';
-import PipeModel from './model/pipe';
 import BirdModel from './model/bird';
 import CountModel from './model/count';
 import Screens from './screen';
 import Sfx from './model/sfx';
-import PipeGenerator, { IPipeGeneratorValue } from './model/pipe-generator';
+import PipeGenerator from './model/pipe-generator';
 import { SFX_VOLUME } from './constants';
 import { lerp } from './utils';
 
@@ -63,20 +62,6 @@ export default class Game {
     Sfx.volume(SFX_VOLUME);
   }
 
-  addPipe({ position }: IPipeGeneratorValue): void {
-    const pipe = new PipeModel();
-
-    pipe.resize({
-      width: this.canvas.width,
-      height: this.canvas.height
-    });
-
-    pipe.setHollPosition(position);
-
-    pipe.init();
-    this.pipeGenerator.pipes.push(pipe);
-  }
-
   Resize({ width, height }: IDimension): void {
     this.background.resize({ width, height });
     this.platform.resize({ width, height });
@@ -93,17 +78,13 @@ export default class Game {
       height: height
     });
 
-    for (const pipe of this.pipeGenerator.pipes) {
-      pipe.resize({ width, height });
-    }
-
     this.canvas.width = width;
     this.canvas.height = height;
   }
 
   Update(): void {
     if (!this.bird.alive) {
-      //   this.bird.Update();
+      this.bird.Update();
       return;
     }
 
@@ -111,7 +92,7 @@ export default class Game {
     this.platform.Update();
     this.mainScreen.Update();
     this.mainIntro.Update();
-    /*   if (!this.isPlaying) {
+    if (!this.isPlaying) {
       this.bird.doWave(
         {
           x: this.bird.coordinate.x,
@@ -121,31 +102,17 @@ export default class Game {
         6
       );
       return;
-    } 
-
-    /**
-     * Pipe regeneration
-     */
-    /*  if (this.pipeGenerator.needPipe()) {
-      const pipeAttr = this.pipeGenerator.generate();
-      this.addPipe(pipeAttr);
     }
-
-    for (let index = 0; index < this.pipeGenerator.pipes.length; index++) {
-      this.pipeGenerator.pipes[index].Update();
-
-      if (this.pipeGenerator.pipes[index].isOut()) {
-        this.pipeGenerator.pipes.splice(index, 1);
-      }
-    }
-
+    
+    this.pipeGenerator.Update()
+    
     this.bird.Update();
 
     if (this.bird.isDead(this.pipeGenerator.pipes)) {
       Sfx.hit(() => {
         this.bird.playDead();
       });
-    } */
+    } 
   }
 
   Display(): void {
@@ -156,31 +123,30 @@ export default class Game {
 
     this.background.Display(this.context);
 
-    /*  for (const pipe of this.pipeGenerator.pipes) {
+    for (const pipe of this.pipeGenerator.pipes) {
       pipe.Display(this.context);
-    } */
+    } 
 
     this.platform.Display(this.context);
 
-    /*   this.bird.Display(this.context);
+    this.bird.Display(this.context);
 
     this.count.setNum(this.bird.score);
     this.count.Display(this.context);
-    this.mainScreen.Display(this.context); */
-    this.mainIntro.Display(this.context);
+    //this.mainScreen.Display(this.context);
+    //this.mainIntro.Display(this.context);
   }
 
   onClick({ x, y }: ICoordinate): void {
-    this.mainScreen.tap();
     this.isPlaying = true;
-    // this.bird.flap();
+    this.bird.flap();
   }
 
   mouseDown({ x, y }: ICoordinate): void {
-    this.mainIntro.mouseDown({ x, y });
+    //this.mainScreen.screenIntro.mouseDown({ x, y });
   }
 
   mouseUp({ x, y }: ICoordinate): void {
-    this.mainIntro.mouseUp({ x, y });
+    //this.mainScreen.screenIntro.mouseUp({ x, y });
   }
 }

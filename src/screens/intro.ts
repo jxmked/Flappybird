@@ -79,15 +79,10 @@ export default class Introduction extends ParentClass {
       { width: lerp(0, this.canvasSize.width, 0.67) }
     );
 
-    const fbbPos = {
-      x: lerp(0, this.canvasSize.width, 0.5),
-      y: lerp(0, this.canvasSize.height, 0.28)
-    };
-
     context.drawImage(
       this.flappyBirdBanner!,
-      fbbPos.x - fbbScaled.width / 2,
-      fbbPos.y - fbbScaled.height / 2,
+      lerp(0, this.canvasSize.width, 0.5) - fbbScaled.width / 2,
+      lerp(0, this.canvasSize.height, 0.28) - fbbScaled.height / 2,
       fbbScaled.width,
       fbbScaled.height
     );

@@ -1,5 +1,6 @@
 import PlayButton from './btn-play'; // Instead of duplicating
 import { asset } from '../lib/sprite-destructor';
+import { openInNewTab } from '../utils';
 
 /**
  * Instead of creating everything from scratch
@@ -21,6 +22,8 @@ export default class RankingButton extends PlayButton {
   click(): void {
     // Do rate
     // Open new Tab the goto to Github Repository
-    console.log('rate');
+
+    // Hard Coded
+    openInNewTab('https://github.com/jxmked/Flappybird');
   }
 }

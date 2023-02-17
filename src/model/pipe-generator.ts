@@ -42,19 +42,33 @@ export default class PipeGenerator {
    * Initial X position of new pipe
    * */
   private initialXPos: number;
-
+  
+  /**
+   * Canvas Size
+   * */
+  canvasSize: IDimension;
+  
   constructor() {
     this.range = { max: 0, min: 0 };
     this.width = 0;
     this.pipes = [];
     this.distance = 0;
     this.initialXPos = 0;
+    this.canvasSize = {
+      width: 0, height: 0
+    }
   }
 
   public resize({ max, width, height }: IPipeGeneratorOption): void {
     this.range = { max, min: lerp(0, height, PIPE_MIN_GAP) };
     this.distance = lerp(0, width, PIPE_DISTANCE);
     this.width = width;
+    this.canvasSize = {width, height};
+    
+    for (const pipe of this.pipes) {
+      pipe.resize({ width, height });
+    }
+
   }
 
   /**
@@ -89,5 +103,27 @@ export default class PipeGenerator {
         y: randomClamp(this.range.min, this.range.max - this.range.min)
       }
     };
+  }
+  
+  
+  public Update(): void {
+    if(this.needPipe()) {
+      const pipe = new Pipe();
+  
+      pipe.resize(this.canvasSize);
+  
+      pipe.setHollPosition(this.generate().position);
+  
+      pipe.init();
+      
+      this.pipes.push(pipe);
+    }
+    
+    for (let index = 0; index < this.pipes.length; index++) {
+      this.pipes[index].Update();
+      if (this.pipes[index].isOut()) {
+        this.pipes.splice(index, 1);
+      }
+    }
   }
 }

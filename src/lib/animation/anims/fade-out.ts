@@ -8,6 +8,7 @@ export interface IConstructorFadeOutOptions extends Partial<IFadeOutOptions> {}
 
 export interface IFadeOutStatus {
   running: boolean;
+  complete: boolean;
 }
 
 export class FadeOut {
@@ -44,13 +45,14 @@ export class FadeOut {
     this.isComplete = true;
   }
 
-  public get time(): number {
+  private get time(): number {
     return performance.now();
   }
 
   public get status(): IFadeOutStatus {
     return {
-      running: this.isRunning
+      running: this.isRunning,
+      complete: this.isComplete
     };
   }
 
