@@ -28,10 +28,7 @@ export default class Game {
 
   mainScreen: Screens;
 
-  isIntro: boolean;
-
-  mainIntro: Intro;
-
+  
   currentScreen: string;
 
   constructor(canvas: HTMLCanvasElement) {
@@ -46,14 +43,10 @@ export default class Game {
     this.count = new CountModel();
     this.isPlaying = false;
     this.mainScreen = new Screens();
-
-    this.isIntro = true;
-    this.mainIntro = new Intro();
   }
 
   init(): void {
     this.mainScreen.init();
-    this.mainIntro.init();
     this.bird.init();
     this.background.init();
     this.platform.init();
@@ -67,7 +60,6 @@ export default class Game {
     this.platform.resize({ width, height });
     this.count.resize({ width, height });
     this.mainScreen.resize({ width, height });
-    this.mainIntro.resize({ width, height });
     // Set Platform size first
     BirdModel.platformHeight = this.platform.platformSize.height;
     this.bird.resize({ width, height });
@@ -91,7 +83,8 @@ export default class Game {
     this.background.Update();
     this.platform.Update();
     this.mainScreen.Update();
-    this.mainIntro.Update();
+
+    /*
     if (!this.isPlaying) {
       this.bird.doWave(
         {
@@ -112,7 +105,7 @@ export default class Game {
       Sfx.hit(() => {
         this.bird.playDead();
       });
-    } 
+    }  */
   }
 
   Display(): void {
@@ -128,25 +121,24 @@ export default class Game {
     } 
 
     this.platform.Display(this.context);
-
+    
+    /*
     this.bird.Display(this.context);
 
     this.count.setNum(this.bird.score);
-    this.count.Display(this.context);
-    //this.mainScreen.Display(this.context);
-    //this.mainIntro.Display(this.context);
+    this.count.Display(this.context); */
+    this.mainScreen.Display(this.context);
   }
 
   onClick({ x, y }: ICoordinate): void {
-    this.isPlaying = true;
     this.bird.flap();
   }
 
   mouseDown({ x, y }: ICoordinate): void {
-    //this.mainScreen.screenIntro.mouseDown({ x, y });
+    this.mainScreen.screenIntro.mouseDown({ x, y });
   }
 
   mouseUp({ x, y }: ICoordinate): void {
-    //this.mainScreen.screenIntro.mouseUp({ x, y });
+    this.mainScreen.screenIntro.mouseUp({ x, y });
   }
 }

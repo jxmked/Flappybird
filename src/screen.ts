@@ -14,9 +14,9 @@ export default class Screen extends ParentClass {
   transitionState: string;
 
   opacity: number;
-  
+
   doesFadeOut: boolean;
-  
+
   constructor() {
     super();
     this.state = 'intro';
@@ -46,7 +46,7 @@ export default class Screen extends ParentClass {
 
       this.fadeOut.start();
       this.isTransitioning = true;
-      this.doesFadeOut = true
+      this.doesFadeOut = true;
     });
   }
 
@@ -63,13 +63,11 @@ export default class Screen extends ParentClass {
 
   Update(): void {
     if (this.doesFadeOut && this.fadeOut.status.complete) {
-
       this.state = 'game';
-      console.log("complete")
+      console.log('complete');
     }
-    
-    
-    if(this.isTransitioning && this.doesFadeOut) {
+
+    if (this.isTransitioning && this.doesFadeOut) {
       this.opacity = this.fadeOut.value;
     }
 
@@ -78,15 +76,15 @@ export default class Screen extends ParentClass {
 
   Display(context: CanvasRenderingContext2D): void {
     this.screenIntro.Display(context);
-    
+
     context.globalAlpha = flipRange(0, 1, this.opacity);
-    
+
     if (this.isTransitioning) {
       context.fillStyle = 'black';
       context.fillRect(0, 0, this.canvasSize.width, this.canvasSize.height);
       context.fill();
     }
-    
+
     context.globalAlpha = 1;
   }
 }
