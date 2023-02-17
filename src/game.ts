@@ -78,7 +78,7 @@ export default class Game {
     this.platform.resize({ width, height });
     this.count.resize({ width, height });
     this.mainScreen.resize({ width, height });
-    this.mainIntro.resize({width, height})
+    this.mainIntro.resize({ width, height });
     // Set Platform size first
     BirdModel.platformHeight = this.platform.platformSize.height;
     this.bird.resize({ width, height });
@@ -163,7 +163,7 @@ export default class Game {
     this.count.setNum(this.bird.score);
     this.count.Display(this.context);
     this.mainScreen.Display(this.context);
-    this.mainIntro.Display(this.context)
+    this.mainIntro.Display(this.context);
   }
 
   onClick({ x, y }: ICoordinate): void {
@@ -172,7 +172,11 @@ export default class Game {
     this.bird.flap();
   }
 
-  mouseDown({ x, y }: ICoordinate): void {}
+  mouseDown({ x, y }: ICoordinate): void {
+    this.mainIntro.mouseDown({ x, y });
+  }
 
-  mouseUp({ x, y }: ICoordinate): void {}
+  mouseUp({ x, y }: ICoordinate): void {
+    this.mainIntro.mouseUp({ x, y });
+  }
 }
