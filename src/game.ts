@@ -7,10 +7,12 @@ import { SFX_VOLUME } from './constants';
 
 import ParentClass from './abstracts/parent-class';
 import { flipRange } from './utils';
-import { FadeOut } from './lib/animation';
 
 import Intro from './screens/intro';
 import GamePlay from './screens/gameplay';
+import ScreenChanger from './lib/screen-changer';
+
+import FadeOutIn from './lib/animation/anims/fade-out-in';
 
 export default class Game extends ParentClass {
   background: BgModel;
@@ -18,24 +20,23 @@ export default class Game extends ParentClass {
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
   pipeGenerator: PipeGenerator;
-
-  state: string;
   screenIntro: Intro;
   gamePlay: GamePlay;
-
-  fadeOut: FadeOut;
+  state: string;
 
   isTransitioning: boolean;
-  transitionState: string;
 
   opacity: number;
 
-  doesFadeOut: boolean;
-
   bgPause: boolean;
+
+  screenChanger: ScreenChanger;
+
+  transition: FadeOutIn;
 
   constructor(canvas: HTMLCanvasElement) {
     super();
+    this.screenChanger = new ScreenChanger();
 
     this.background = new BgModel();
     this.canvas = canvas;
@@ -44,18 +45,12 @@ export default class Game extends ParentClass {
     this.pipeGenerator = new PipeGenerator();
     this.screenIntro = new Intro();
     this.gamePlay = new GamePlay(this);
-
+    this.state = 'intro';
     this.bgPause = false;
     this.opacity = 1;
 
-    this.fadeOut = new FadeOut({
-      duration: 500
-    });
-    this.doesFadeOut = false;
-
-    this.state = 'intro';
-    this.transitionState = 'none';
     this.isTransitioning = false;
+    this.transition = new FadeOutIn({ duration: 1000 });
   }
 
   init(): void {
@@ -72,6 +67,10 @@ export default class Game extends ParentClass {
     this.screenIntro.playButton.active = true;
     this.screenIntro.rankingButton.active = true;
     this.screenIntro.rateButton.active = true;
+
+    // Register screens
+    this.screenChanger.register('intro', this.screenIntro);
+    this.screenChanger.register('game', this.gamePlay);
   }
 
   reset(): void {
@@ -100,27 +99,21 @@ export default class Game extends ParentClass {
   }
 
   Update(): void {
-    if (this.doesFadeOut && this.fadeOut.status.complete) {
-      this.state = 'game';
-    }
+    this.screenChanger.setState(this.state);
 
-    if (this.isTransitioning && this.doesFadeOut) {
-      this.opacity = this.fadeOut.value;
+    if (this.isTransitioning) {
+      this.opacity = this.transition.value;
+      if (this.opacity <= 0.001) {
+        this.state = 'game';
+      }
     }
 
     if (!this.bgPause) {
       this.background.Update();
       this.platform.Update();
     }
-    switch (this.state) {
-      case 'intro':
-        this.screenIntro.Update();
-        break;
 
-      case 'game':
-        this.gamePlay.Update();
-        break;
-    }
+    this.screenChanger.Update();
   }
 
   Display(): void {
@@ -128,7 +121,7 @@ export default class Game extends ParentClass {
     // Remove smoothing effect of an image
     this.context.imageSmoothingEnabled = false;
     this.context.imageSmoothingQuality = 'high';
-
+    this.screenChanger.setState(this.state);
     this.background.Display(this.context);
 
     for (const pipe of this.pipeGenerator.pipes) {
@@ -137,31 +130,16 @@ export default class Game extends ParentClass {
 
     this.platform.Display(this.context);
 
-    /*
-    this.bird.Display(this.context);
+    this.screenChanger.Display(this.context);
 
-    this.count.setNum(this.bird.score);
-    this.count.Display(this.context); */
-
-    switch (this.state) {
-      case 'intro':
-        this.screenIntro.Display(this.context);
-        break;
-
-      case 'game':
-        this.gamePlay.Display(this.context);
-        break;
-    }
-
-    /* this.context.globalAlpha = flipRange(0, 1, this.opacity);
-
+    this.context.globalAlpha = flipRange(0, 1, this.opacity);
     if (this.isTransitioning) {
       this.context.fillStyle = 'black';
       this.context.fillRect(0, 0, this.canvasSize.width, this.canvasSize.height);
       this.context.fill();
     }
 
-    this.context.globalAlpha = 1; */
+    this.context.globalAlpha = 1;
   }
 
   setEvent(): void {
@@ -173,9 +151,8 @@ export default class Game extends ParentClass {
       this.screenIntro.rankingButton.active = false;
       this.screenIntro.rateButton.active = false;
 
-      this.fadeOut.start();
+      this.transition.start();
       this.isTransitioning = true;
-      this.doesFadeOut = true;
     });
   }
 
@@ -187,9 +164,11 @@ export default class Game extends ParentClass {
 
   mouseDown({ x, y }: ICoordinate): void {
     this.screenIntro.mouseDown({ x, y });
+    this.gamePlay.mouseDown({ x, y });
   }
 
   mouseUp({ x, y }: ICoordinate): void {
     this.screenIntro.mouseUp({ x, y });
+    this.gamePlay.mouseUp({x, y})
   }
 }

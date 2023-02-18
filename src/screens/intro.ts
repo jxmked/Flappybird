@@ -15,8 +15,9 @@ import BirdModel from '../model/bird';
 import PlayButton from '../model/btn-play';
 import RankingButton from '../model/btn-ranking';
 import RateButton from '../model/btn-rate';
+import { IScreenChangerObject } from '../lib/screen-changer';
 
-export default class Introduction extends ParentClass {
+export default class Introduction extends ParentClass implements IScreenChangerObject {
   public playButton: PlayButton;
   public rankingButton: RankingButton;
   public rateButton: RateButton;
