@@ -148,11 +148,11 @@ export default class Pipe extends ParentClass {
   /**
    * Pipe Update
    * */
-  public  Update(): void {
+  public Update(): void {
     this.coordinate.x -= this.velocity.x;
   }
 
-  public  Display(context: CanvasRenderingContext2D): void {
+  public Display(context: CanvasRenderingContext2D): void {
     const width = Pipe.pipeSize.width / 2;
 
     const posX = this.coordinate.x;

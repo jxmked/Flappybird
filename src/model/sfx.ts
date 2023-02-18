@@ -32,7 +32,7 @@ export default class Sfx {
     WebSfx.play(sfHit as string, cb);
   }
 
-  public  static swoosh(): void {
+  public static swoosh(): void {
     WebSfx.volume(Sfx.currentVolume);
     WebSfx.play(sfSwoosh as string);
   }

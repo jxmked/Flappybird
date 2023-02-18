@@ -6,8 +6,8 @@ import RankingButton from './btn-ranking';
 
 export default class ScoreBoard extends ParentObject {
   private images: Map<string, HTMLImageElement>;
-  public  playButton: PlayButton;
-  public  rankingButton: RankingButton;
+  public playButton: PlayButton;
+  public rankingButton: RankingButton;
 
   constructor() {
     super();

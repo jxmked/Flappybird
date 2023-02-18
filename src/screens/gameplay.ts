@@ -117,11 +117,11 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     if (this.state === 'playing' || this.state === 'waiting') {
       this.bannerInstruction.Display(context);
 
-      if(this.gameState !== 'died') {
+      if (this.gameState !== 'died') {
         this.count.setNum(this.bird.score);
         this.count.Display(context);
       }
-      
+
       this.bird.Display(context);
 
       if (this.gameState === 'died') {
