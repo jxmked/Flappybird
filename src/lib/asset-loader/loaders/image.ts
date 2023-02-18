@@ -2,13 +2,13 @@ import { IPromiseResolve } from '../interfaces';
 import { AbstractLoader } from '../abstraction';
 
 export default class ImageLoader extends AbstractLoader {
-  static regexp: RegExp = /\.(jpe?g|png|svg|bmp|webp|webm|gif)/i;
+  public static regexp: RegExp = /\.(jpe?g|png|svg|bmp|webp|webm|gif)/i;
 
-  test(): boolean {
+  public test(): boolean {
     return ImageLoader.regexp.test(this.source);
   }
 
-  load(): Promise<IPromiseResolve> {
+  public load(): Promise<IPromiseResolve> {
     // Load Event Count
     this.ready = 1;
 

@@ -36,59 +36,65 @@ export default class Bird extends ParentClass {
   /**
    * Platform Height
    * */
-  static platformHeight = 0;
+  public static platformHeight = 0;
 
   /**
    * Bird color selections
    * */
-  birdColorObject: IBirdImages;
+  private birdColorObject: IBirdImages;
 
   /**
    * Bird Images
    * */
-  birdImg: undefined | IBirdObject;
+  private birdImg: undefined | IBirdObject;
 
   /**
    * Bird state
    * */
-  alive: boolean;
+  public alive: boolean;
 
   /**
    * Score
    * */
-  score: number;
+  public score: number;
 
   /**
    * Will be use to play sound once dies
    * */
-  died: boolean;
+  private died: boolean;
 
   /**
    * 0 - Up
    * 1 - Mid
    * 2 - Down
    * */
-  wingState: number;
+  private wingState: number;
 
   /**
    * Scaled width and height
    * */
-  scaled: IDimension;
+  private scaled: IDimension;
 
   /**
    * Bird Rotation (Degree)
    * */
-  rotation: number;
+  private rotation: number;
 
   /**
    * Calculated Fixed Force to up
    * */
-  force: number;
+  private force: number;
 
   /**
    * Cause of death
    * */
-  causeOfDeath: string;
+  private causeOfDeath: string;
+
+  /**
+   * Does touch the floor?
+   * State
+   */
+  public doesLanded: boolean;
 
   constructor() {
     super();
@@ -122,6 +128,7 @@ export default class Bird extends ParentClass {
     this.rotation = 0;
     this.wingState = 1;
     this.causeOfDeath = 'none';
+    this.doesLanded = false;
   }
 
   /**
@@ -131,7 +138,7 @@ export default class Bird extends ParentClass {
    * We call this init() method after the all required
    * asset has been loaded.
    * */
-  init(): void {
+  public init(): void {
     this.birdColorObject = {
       yellow: {
         up: asset('bird-yellow-up')!,
@@ -157,6 +164,7 @@ export default class Bird extends ParentClass {
     this.alive = true;
     this.score = 0;
     this.rotation = 0;
+    this.doesLanded =false;
     this.causeOfDeath = 'none';
     this.resize(this.canvasSize);
   }
@@ -168,7 +176,7 @@ export default class Bird extends ParentClass {
    * does keep the position.
    *
    * */
-  resize({ width, height }: IDimension): void {
+  public resize({ width, height }: IDimension): void {
     super.resize({ width, height });
 
     this.coordinate.y = lerp(0, Bird.platformHeight, 0.5);
@@ -187,7 +195,7 @@ export default class Bird extends ParentClass {
    * @param waveSpeed - frequency hz
    * @param amplitude - amplitude
    * */
-  doWave({ x, y }: ICoordinate, frequency: number, amplitude: number): void {
+  public doWave({ x, y }: ICoordinate, frequency: number, amplitude: number): void {
     this.flapWing(3);
     y += sineWave(frequency, amplitude);
     this.coordinate = { x, y };
@@ -198,7 +206,7 @@ export default class Bird extends ParentClass {
    *
    * @param speed - flap speed
    * */
-  flapWing(speed: number): void {
+  private flapWing(speed: number): void {
     this.wingState = Math.round(1 + sineWave(speed, 1));
 
     // Make sure the wing is set to mid flap when the bird is falling
@@ -210,7 +218,7 @@ export default class Bird extends ParentClass {
   /**
    * Add lift to bird that slowly decrease by weight
    * */
-  flap(): void {
+  public flap(): void {
     // Prevent flapping when the height of bird is
     // at the very top of canvas or the bird is not alive
     if (this.coordinate.y < 0 || !this.alive) {
@@ -224,7 +232,7 @@ export default class Bird extends ParentClass {
   /**
    * Check if the bird touches the platform
    * */
-  doesHitTheFloor(): boolean {
+  private doesHitTheFloor(): boolean {
     return (
       this.coordinate.y + this.scaled.height >
       Math.abs(this.canvasSize.height - Bird.platformHeight)
@@ -234,7 +242,7 @@ export default class Bird extends ParentClass {
   /**
    * Check if the bird collided with the pipes
    * */
-  isDead(pipes: Pipe[]): boolean {
+  public isDead(pipes: Pipe[]): boolean {
     if (this.doesHitTheFloor()) {
       this.alive = false;
       this.causeOfDeath = 'fall';
@@ -292,7 +300,7 @@ export default class Bird extends ParentClass {
    *
    * @returns new width based on rotation
    */
-  getRotatedWidth(): number {
+  private getRotatedWidth(): number {
     const rad = (this.rotation * Math.PI) / 180;
     const res =
       Math.abs(this.scaled.width * Math.cos(rad)) +
@@ -303,7 +311,7 @@ export default class Bird extends ParentClass {
   /**
    * Play Die sound once once the bird died
    */
-  playDead(): void {
+  public playDead(): void {
     if (this.died) return;
     this.died = true;
     if (this.causeOfDeath === 'collide') Sfx.die();
@@ -314,13 +322,16 @@ export default class Bird extends ParentClass {
    *
    * @param color string color of bird. (red | yellow | blue)
    */
-  use(color: IBirdColors): void {
+  public use(color: IBirdColors): void {
     this.birdImg = this.birdColorObject[color as keyof typeof this.birdColorObject];
   }
 
-  Update(): void {
+  public Update(): void {
     // Always above the floor
-    if (this.doesHitTheFloor()) return;
+    if (this.doesHitTheFloor()) {
+      this.doesLanded = true;
+      return;
+    }
 
     // Calculate the max drag & max lift velocities from given percentages
     const mx_down_velocity = lerp(0, this.canvasSize.height, BIRD_MAX_DOWN_VELOCITY);
@@ -345,7 +356,7 @@ export default class Bird extends ParentClass {
     this.flapWing(flipRange(4, 8.2, f));
   }
 
-  Display(context: CanvasRenderingContext2D): void {
+  public Display(context: CanvasRenderingContext2D): void {
     const flapArr = ['up', 'mid', 'down'] as keyof typeof this.birdImg;
     const img: HTMLImageElement = this.birdImg![flapArr[this.wingState]];
     const { x, y } = this.coordinate;

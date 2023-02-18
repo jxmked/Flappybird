@@ -9,7 +9,7 @@ class ParentLoader {
     this.ready = 0;
   }
 
-  eventTracking<T>(resolve: Function, object: T): void {
+  protected eventTracking<T>(resolve: Function, object: T): void {
     this.ready--;
 
     if (this.ready < 1) {
@@ -20,7 +20,7 @@ class ParentLoader {
     }
   }
 
-  get source(): string {
+  public get source(): string {
     return this.__source;
   }
 }
@@ -29,8 +29,8 @@ class ParentLoader {
  * Making Parent Class to be extendable only
  * */
 abstract class Loader extends ParentLoader {
-  static regexp: RegExp;
-  abstract test(): boolean;
+  public static regexp: RegExp;
+  public abstract test(): boolean;
   public abstract load(): Promise<IPromiseResolve>;
 }
 

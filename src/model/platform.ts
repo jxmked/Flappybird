@@ -5,8 +5,8 @@ import { rescaleDim, lerp } from '../utils';
 import { GAME_SPEED } from '../constants';
 
 export default class Platform extends ParentClass {
-  platformSize: IDimension;
-  img: undefined | HTMLImageElement;
+  public platformSize: IDimension;
+  private img: undefined | HTMLImageElement;
 
   constructor() {
     super();
@@ -18,16 +18,16 @@ export default class Platform extends ParentClass {
     this.img = void 0;
   }
 
-  init() {
+  public init() {
     this.img = asset('platform');
   }
 
-  reset(): void {
+  public reset(): void {
     this.coordinate = { x: 0, y: 0 };
     this.resize(this.canvasSize);
   }
 
-  resize({ width, height }: IDimension): void {
+  public resize({ width, height }: IDimension): void {
     super.resize({ width, height });
 
     this.platformSize = rescaleDim(
@@ -41,7 +41,7 @@ export default class Platform extends ParentClass {
     this.coordinate.y = height - this.platformSize.height;
   }
 
-  Update() {
+  public Update() {
     /**
      * We use linear interpolation instead of by pixel to move the object.
      * It is to keep the speed same in different Screen Sizes & Screen DPI
@@ -50,7 +50,7 @@ export default class Platform extends ParentClass {
     this.coordinate.y += this.velocity.y;
   }
 
-  Display(context: CanvasRenderingContext2D) {
+  public Display(context: CanvasRenderingContext2D) {
     /**
      * Similar to the background but drawing the image into bottom of screen
      * */

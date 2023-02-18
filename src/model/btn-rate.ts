@@ -15,11 +15,11 @@ export default class RateNutton extends PlayButton {
     this.coordinate.y = 0.53;
   }
 
-  init(): void {
+  public init(): void {
     this.img = asset('btn-rate');
   }
 
-  click(): void {
+  public click(): void {
     // Do rate
     // Open new Tab the goto to Github Repository
 

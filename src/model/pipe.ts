@@ -28,15 +28,15 @@ export default class Pipe extends ParentClass {
   /**
    *
    * */
-  static pipeSize: IDimension = {
+  public static pipeSize: IDimension = {
     width: 0,
     height: 0
   };
-  pipeImg: IPipeImages;
-  img: undefined | IPairPipe;
-  hollSize: number;
-  pipePosition: IPipePairPosition;
-  isPassed: boolean;
+  private pipeImg: IPipeImages;
+  private img: undefined | IPairPipe;
+  public hollSize: number;
+  public pipePosition: IPipePairPosition;
+  public isPassed: boolean;
 
   constructor() {
     super();
@@ -62,7 +62,7 @@ export default class Pipe extends ParentClass {
     this.velocity.x = GAME_SPEED;
   }
 
-  init(): void {
+  public init(): void {
     this.pipeImg = {
       red: {
         top: asset('pipe-red-top')!,
@@ -80,7 +80,7 @@ export default class Pipe extends ParentClass {
   /**
    * Set holl position
    * */
-  setHollPosition(coordinate: ICoordinate): void {
+  public setHollPosition(coordinate: ICoordinate): void {
     // Positioning holl
     this.hollSize = lerp(0, this.canvasSize.height, PIPE_HOLL_SIZE);
 
@@ -106,7 +106,7 @@ export default class Pipe extends ParentClass {
    *
    * Set update the value of coordinate and we're good to go.
    * */
-  resize({ width, height }: IDimension): void {
+  public resize({ width, height }: IDimension): void {
     // Save the coordinate of pipe holl before resizing the canvas sizes
     const oldX = (this.coordinate.x / this.canvasSize.width) * 100;
     const oldY = (this.coordinate.y / this.canvasSize.height) * 100;
@@ -134,25 +134,25 @@ export default class Pipe extends ParentClass {
    * We're going to remove it to keep the game performance
    * good enough
    * */
-  isOut(): boolean {
+  public isOut(): boolean {
     return this.coordinate.x + Pipe.pipeSize.width < 0;
   }
 
   /**
    * Pipe color selection
    * */
-  use(select: 'green' | 'red'): void {
+  public use(select: 'green' | 'red'): void {
     this.img = this.pipeImg[select];
   }
 
   /**
    * Pipe Update
    * */
-  Update(): void {
+  public  Update(): void {
     this.coordinate.x -= this.velocity.x;
   }
 
-  Display(context: CanvasRenderingContext2D): void {
+  public  Display(context: CanvasRenderingContext2D): void {
     const width = Pipe.pipeSize.width / 2;
 
     const posX = this.coordinate.x;

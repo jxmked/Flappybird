@@ -13,7 +13,7 @@ export default class RankingButton extends PlayButton {
     this.coordinate.x = 0.741;
   }
 
-  init(): void {
+  public init(): void {
     this.img = asset('btn-ranking');
   }
 }

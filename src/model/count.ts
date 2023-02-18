@@ -6,9 +6,9 @@ import { COUNT_DIMENSION, COUNT_COORDINATE } from '../constants';
 export type INumberString = Record<string, HTMLImageElement>;
 
 export default class Count extends ParentClass {
-  currentValue: number;
-  numberAsset: INumberString;
-  numberDimension: IDimension;
+  private currentValue: number;
+  private numberAsset: INumberString;
+  private numberDimension: IDimension;
 
   constructor() {
     super();
@@ -21,7 +21,7 @@ export default class Count extends ParentClass {
     };
   }
 
-  init(): void {
+  public init(): void {
     this.setInitAsset(0, 'number-lg-0');
     this.setInitAsset(1, 'number-lg-1');
     this.setInitAsset(2, 'number-lg-2');
@@ -38,11 +38,11 @@ export default class Count extends ParentClass {
     this.numberAsset[String(num)] = asset(loc);
   }
 
-  setNum(value: number): void {
+  public setNum(value: number): void {
     this.currentValue = value;
   }
 
-  resize({ width, height }: IDimension): void {
+  public resize({ width, height }: IDimension): void {
     super.resize({ width, height });
     this.numberDimension = rescaleDim(COUNT_DIMENSION, {
       height: lerp(0, height, 0.065)
@@ -53,9 +53,9 @@ export default class Count extends ParentClass {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  Update(): void {}
+  public Update(): void {}
 
-  Display(context: CanvasRenderingContext2D): void {
+  public Display(context: CanvasRenderingContext2D): void {
     const numArr: string[] = String(this.currentValue).split('');
     const totalWidth = numArr.length * this.numberDimension.width;
     let lastWidth: number = this.coordinate.x - totalWidth / 2;

@@ -5,9 +5,9 @@ import PlayButton from './btn-play';
 import RankingButton from './btn-ranking';
 
 export default class ScoreBoard extends ParentObject {
-  images: Map<string, HTMLImageElement>;
-  playButton: PlayButton;
-  rankingButton: RankingButton;
+  private images: Map<string, HTMLImageElement>;
+  public  playButton: PlayButton;
+  public  rankingButton: RankingButton;
 
   constructor() {
     super();
@@ -15,7 +15,8 @@ export default class ScoreBoard extends ParentObject {
     this.playButton = new PlayButton();
     this.rankingButton = new RankingButton();
   }
-  init(): void {
+
+  public init(): void {
     this.images.set('banner-gameover', asset('banner-game-over'));
     this.images.set('score-board', asset('score-board'));
     this.images.set('coin-10', asset('coin-dull-bronze'));
@@ -35,19 +36,19 @@ export default class ScoreBoard extends ParentObject {
     this.playButton.init();
   }
 
-  resize({ width, height }: IDimension): void {
+  public resize({ width, height }: IDimension): void {
     super.resize({ width, height });
 
     this.rankingButton.resize(this.canvasSize);
     this.playButton.resize(this.canvasSize);
   }
 
-  Update(): void {
+  public Update(): void {
     this.rankingButton.Update();
     this.playButton.Update();
   }
 
-  Display(context: CanvasRenderingContext2D): void {
+  public Display(context: CanvasRenderingContext2D): void {
     const bgoScaled = rescaleDim(
       {
         width: this.images.get('banner-gameover')!.width,

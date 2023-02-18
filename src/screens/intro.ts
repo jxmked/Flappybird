@@ -25,6 +25,7 @@ export default class Introduction extends ParentClass implements IScreenChangerO
   private bird: BirdModel;
   private flappyBirdBanner: HTMLImageElement | undefined;
   private copyright: HTMLImageElement | undefined;
+
   constructor() {
     super();
     this.bird = new BirdModel();

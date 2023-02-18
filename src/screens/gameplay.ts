@@ -17,17 +17,17 @@ import ScoreBoard from '../model/score-board';
 import FadeOutIn from '../lib/animation/anims/fade-out-in';
 
 export default class GetReady extends ParentClass implements IScreenChangerObject {
-  bird: BirdModel;
-  pipeGenerator: PipeGenerator;
-  state: string;
-  gameState: string;
-  count: CounterModel;
-  game: MainGameController;
-  bannerInstruction: BannerInstruction;
-  scoreBoard: ScoreBoard;
-  transition: FadeOutIn;
+  private bird: BirdModel;
+  private pipeGenerator: PipeGenerator;
+  private state: string;
+  private gameState: string;
+  private count: CounterModel;
+  private game: MainGameController;
+  private bannerInstruction: BannerInstruction;
+  private scoreBoard: ScoreBoard;
+  private transition: FadeOutIn;
 
-  highscore: number;
+  private highscore: number;
 
   constructor(game: MainGameController) {
     super();
@@ -43,7 +43,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.highscore = 0;
   }
 
-  init(): void {
+  public init(): void {
     this.bird.init();
     this.count.init();
     this.bannerInstruction.init();
@@ -51,7 +51,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.setButtonEvent();
   }
 
-  reset(): void {
+  public reset(): void {
     this.gameState = 'none';
     this.state = 'waiting';
     this.resize(this.canvasSize);
@@ -63,7 +63,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.bird.reset();
   }
 
-  resize({ width, height }: IDimension): void {
+  public resize({ width, height }: IDimension): void {
     super.resize({ width, height });
 
     this.bird.resize(this.canvasSize);
@@ -72,7 +72,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.scoreBoard.resize(this.canvasSize);
   }
 
-  Update(): void {
+  public Update(): void {
     if (this.bird.alive) {
       this.scoreBoard.playButton.active = false;
       this.scoreBoard.rankingButton.active = false;
@@ -113,10 +113,10 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     }
   }
 
-  Display(context: CanvasRenderingContext2D): void {
+  public Display(context: CanvasRenderingContext2D): void {
     if (this.state === 'playing' || this.state === 'waiting') {
       this.bannerInstruction.Display(context);
-      
+
       if(this.gameState !== 'died') {
         this.count.setNum(this.bird.score);
         this.count.Display(context);

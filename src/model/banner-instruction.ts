@@ -77,25 +77,25 @@ export default class BannerInstruction extends ParentClass {
     this.doesTap = false;
   }
 
-  init(): void {
+  public init(): void {
     this.instructImage.image = asset('banner-instruction');
     this.getReadyImage.image = asset('banner-game-ready');
   }
 
-  reset(): void {
+  public reset(): void {
     this.opacity = 1;
     this.isComplete = false;
     this.doesTap = false;
   }
 
-  tap() {
+  public tap() {
     if (this.isComplete) return;
     this.fadeOut.start();
     this.isComplete = true;
     this.doesTap = true;
   }
 
-  resize({ width, height }: IDimension): void {
+  public resize({ width, height }: IDimension): void {
     super.resize({ width, height });
 
     this.instructImage.scaled = rescaleDim(
@@ -128,7 +128,7 @@ export default class BannerInstruction extends ParentClass {
       lerp(0, height, getReadyImagePos.y) - this.getReadyImage.scaled.height / 2;
   }
 
-  Update(): void {
+  public Update(): void {
     if (!this.doesTap) {
       this.opacity = 1;
       return;
@@ -136,7 +136,7 @@ export default class BannerInstruction extends ParentClass {
     this.opacity = this.fadeOut.value;
   }
 
-  Display(context: CanvasRenderingContext2D): void {
+  public Display(context: CanvasRenderingContext2D): void {
     if (this.opacity <= 0) return;
 
     context.globalAlpha = this.opacity;
