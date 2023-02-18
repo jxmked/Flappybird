@@ -2,7 +2,6 @@ import Fading from '../abstracts/fading';
 import { swing } from '../easing';
 
 export default class FadeOutIn extends Fading {
-
   public get value(): number {
     if (this.isComplete && !this.isRunning) return 1;
 

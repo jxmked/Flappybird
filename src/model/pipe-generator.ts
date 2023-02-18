@@ -46,7 +46,7 @@ export default class PipeGenerator {
   /**
    * Canvas Size
    * */
-  canvasSize: IDimension;
+  private canvasSize: IDimension;
 
   constructor() {
     this.range = { max: 0, min: 0 };
@@ -61,9 +61,12 @@ export default class PipeGenerator {
   }
 
   public reset(): void {
-    if (this.pipes.length > 0) {
-      this.pipes.slice(0, this.pipes.length - 1);
-    }
+    this.pipes.splice(0, this.pipes.length);
+    this.resize({
+      max: this.range.max,
+      width: this.canvasSize.width,
+      height: this.canvasSize.height
+    });
   }
 
   public resize({ max, width, height }: IPipeGeneratorOption): void {
@@ -73,7 +76,7 @@ export default class PipeGenerator {
     this.canvasSize = { width, height };
 
     for (const pipe of this.pipes) {
-      pipe.resize({ width, height });
+      pipe.resize(this.canvasSize);
     }
   }
 

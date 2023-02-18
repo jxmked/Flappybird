@@ -144,6 +144,7 @@ export default class Game extends ParentClass {
 
   setEvent(): void {
     this.screenIntro.playButton.onClick(() => {
+      if (this.state !== 'intro') return;
       this.isTransitioning = true;
 
       // Deactivate buttons
@@ -169,6 +170,6 @@ export default class Game extends ParentClass {
 
   mouseUp({ x, y }: ICoordinate): void {
     this.screenIntro.mouseUp({ x, y });
-    this.gamePlay.mouseUp({x, y})
+    this.gamePlay.mouseUp({ x, y });
   }
 }

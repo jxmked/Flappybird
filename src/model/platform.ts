@@ -23,8 +23,8 @@ export default class Platform extends ParentClass {
   }
 
   reset(): void {
-    this.coordinate.x = 0;
-    this.coordinate.y = 0;
+    this.coordinate = { x: 0, y: 0 };
+    this.resize(this.canvasSize);
   }
 
   resize({ width, height }: IDimension): void {

@@ -1,33 +1,33 @@
-import ParentObject from "../abstracts/parent-class";
-import { asset } from "../lib/sprite-destructor";
-import { lerp, rescaleDim } from "../utils";
-import PlayButton from "./btn-play";
-import RankingButton from "./btn-ranking";
+import ParentObject from '../abstracts/parent-class';
+import { asset } from '../lib/sprite-destructor';
+import { lerp, rescaleDim } from '../utils';
+import PlayButton from './btn-play';
+import RankingButton from './btn-ranking';
 
 export default class ScoreBoard extends ParentObject {
   images: Map<string, HTMLImageElement>;
-  playButton:PlayButton;
-  rankingButton:RankingButton;
+  playButton: PlayButton;
+  rankingButton: RankingButton;
 
   constructor() {
-    super()
+    super();
     this.images = new Map<string, HTMLImageElement>();
     this.playButton = new PlayButton();
     this.rankingButton = new RankingButton();
   }
   init(): void {
-    this.images.set('banner-gameover', asset('banner-game-over'))
-    this.images.set("score-board", asset("score-board"));
-    this.images.set("coin-10", asset('coin-dull-bronze'));
+    this.images.set('banner-gameover', asset('banner-game-over'));
+    this.images.set('score-board', asset('score-board'));
+    this.images.set('coin-10', asset('coin-dull-bronze'));
     this.images.set('coin-20', asset('coin-dull-metal'));
     this.images.set('coin-30', asset('coin-shine-gold'));
     this.images.set('coin-40', asset('coin-shine-silver'));
     this.images.set('new-icon', asset('toast-new'));
     this.images.set('spark-sm', asset('spark-sm'));
-    this.images.set('park-md', asset('spark-md'))
+    this.images.set('park-md', asset('spark-md'));
     this.images.set('spark-lg', asset('spark-lg'));
 
-    for(let i = 0; i < 10; ++i) {
+    for (let i = 0; i < 10; ++i) {
       this.images.set(`number-${i}`, asset(`number-md-${i}`));
     }
 
@@ -36,36 +36,52 @@ export default class ScoreBoard extends ParentObject {
   }
 
   resize({ width, height }: IDimension): void {
-    super.resize({width, height});
+    super.resize({ width, height });
 
-    this.rankingButton.resize(this.canvasSize)
-    this.playButton.resize(this.canvasSize)
+    this.rankingButton.resize(this.canvasSize);
+    this.playButton.resize(this.canvasSize);
   }
 
   Update(): void {
     this.rankingButton.Update();
     this.playButton.Update();
-    // throw new Error("Method not implemented.");
   }
 
   Display(context: CanvasRenderingContext2D): void {
-    
-    const bgoScaled = rescaleDim({
-      width: this.images.get('banner-gameover')!.width,
-      height: this.images.get('banner-gameover')!.height
-    }, { width: lerp(0, this.canvasSize.width, 0.7)})
+    const bgoScaled = rescaleDim(
+      {
+        width: this.images.get('banner-gameover')!.width,
+        height: this.images.get('banner-gameover')!.height
+      },
+      { width: lerp(0, this.canvasSize.width, 0.7) }
+    );
 
     context.drawImage(
       this.images.get('banner-gameover')!,
-      lerp(0, this.canvasSize.width, 0.5) - (bgoScaled.width / 2),
-      lerp(0, this.canvasSize.height, 0.3) - (bgoScaled.height / 2),
+      lerp(0, this.canvasSize.width, 0.5) - bgoScaled.width / 2,
+      lerp(0, this.canvasSize.height, 0.3) - bgoScaled.height / 2,
       bgoScaled.width,
       bgoScaled.height
-    )
+    );
 
-    this.rankingButton.Display(context)
-    this.playButton.Display(context)
-    
+    const sbScaled = rescaleDim(
+      {
+        width: this.images.get('score-board')!.width,
+        height: this.images.get('score-board')!.height
+      },
+      { width: lerp(0, this.canvasSize.width, 0.85) }
+    );
+
+    context.drawImage(
+      this.images.get('score-board')!,
+      lerp(0, this.canvasSize.width, 0.5) - sbScaled.width / 2,
+      lerp(0, this.canvasSize.height, 0.48) - sbScaled.height / 2,
+      sbScaled.width,
+      sbScaled.height
+    );
+
+    this.rankingButton.Display(context);
+    this.playButton.Display(context);
   }
 
   public mouseDown({ x, y }: ICoordinate): void {
@@ -77,5 +93,4 @@ export default class ScoreBoard extends ParentObject {
     this.playButton.mouseEvent('up', { x, y });
     this.rankingButton.mouseEvent('up', { x, y });
   }
-
 }

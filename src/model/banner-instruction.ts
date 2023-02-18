@@ -82,6 +82,12 @@ export default class BannerInstruction extends ParentClass {
     this.getReadyImage.image = asset('banner-game-ready');
   }
 
+  reset(): void {
+    this.opacity = 1;
+    this.isComplete = false;
+    this.doesTap = false;
+  }
+
   tap() {
     if (this.isComplete) return;
     this.fadeOut.start();

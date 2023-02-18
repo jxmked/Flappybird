@@ -54,6 +54,7 @@ export default class Background extends ParentClass {
 
   public reset(): void {
     this.coordinate = { x: 0, y: 0 };
+    this.resize(this.canvasSize);
   }
 
   /**
