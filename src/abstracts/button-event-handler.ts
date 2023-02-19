@@ -15,7 +15,7 @@
  * We don't have drag and drop here so its fun
  * */
 
-import { rescaleDim, lerp } from '../utils';
+import { lerp, rescaleDim } from '../utils';
 
 export type IMouseState = 'down' | 'up';
 

@@ -1,8 +1,9 @@
-import ParentObject from '../abstracts/parent-class';
-import { asset } from '../lib/sprite-destructor';
 import { lerp, rescaleDim } from '../utils';
+
+import ParentObject from '../abstracts/parent-class';
 import PlayButton from './btn-play';
 import RankingButton from './btn-ranking';
+import { asset } from '../lib/sprite-destructor';
 
 export default class ScoreBoard extends ParentObject {
   private images: Map<string, HTMLImageElement>;
@@ -60,7 +61,7 @@ export default class ScoreBoard extends ParentObject {
     context.drawImage(
       this.images.get('banner-gameover')!,
       lerp(0, this.canvasSize.width, 0.5) - bgoScaled.width / 2,
-      lerp(0, this.canvasSize.height, 0.3) - bgoScaled.height / 2,
+      lerp(0, this.canvasSize.height, 0.225) - bgoScaled.height / 2,
       bgoScaled.width,
       bgoScaled.height
     );
@@ -76,7 +77,7 @@ export default class ScoreBoard extends ParentObject {
     context.drawImage(
       this.images.get('score-board')!,
       lerp(0, this.canvasSize.width, 0.5) - sbScaled.width / 2,
-      lerp(0, this.canvasSize.height, 0.48) - sbScaled.height / 2,
+      lerp(0, this.canvasSize.height, 0.438) - sbScaled.height / 2,
       sbScaled.width,
       sbScaled.height
     );

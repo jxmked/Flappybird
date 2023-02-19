@@ -1,8 +1,7 @@
+import { FadeOut } from './lib/animation';
+import Intro from './screens/intro';
 import ParentClass from './abstracts/parent-class';
 import { flipRange } from './utils';
-import { FadeOut } from './lib/animation';
-
-import Intro from './screens/intro';
 
 export default class Screen extends ParentClass {
   state: string;

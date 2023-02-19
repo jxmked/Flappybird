@@ -1,7 +1,8 @@
-import ParentClass from '../abstracts/parent-class';
+import { COUNT_COORDINATE, COUNT_DIMENSION } from '../constants';
 import { lerp, rescaleDim } from '../utils';
+
+import ParentClass from '../abstracts/parent-class';
 import { asset } from '../lib/sprite-destructor';
-import { COUNT_DIMENSION, COUNT_COORDINATE } from '../constants';
 
 export type INumberString = Record<string, HTMLImageElement>;
 

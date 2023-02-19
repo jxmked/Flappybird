@@ -1,7 +1,8 @@
+import { lerp, rescaleDim } from '../utils';
+
+import { FadeOut } from '../lib/animation';
 import ParentClass from '../abstracts/parent-class';
 import { asset } from '../lib/sprite-destructor';
-import { lerp, rescaleDim } from '../utils';
-import { FadeOut } from '../lib/animation';
 
 export interface IImagePositions {
   instructImage: ICoordinate;
@@ -23,7 +24,7 @@ const BANNER_INSTRUCTION: IBannerInstructionConst = {
     },
     getReadyImage: {
       x: 0.5,
-      y: 0.335
+      y: 0.328
     }
   }
 };

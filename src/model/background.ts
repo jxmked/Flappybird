@@ -1,8 +1,8 @@
-import ParentClass from '../abstracts/parent-class';
-
-import { asset } from '../lib/sprite-destructor';
-import { rescaleDim, lerp } from '../utils';
 import { BG_SPEED, BG_TEXTURE } from '../constants';
+import { lerp, rescaleDim } from '../utils';
+
+import ParentClass from '../abstracts/parent-class';
+import { asset } from '../lib/sprite-destructor';
 
 export interface IBackgroundImages {
   day: HTMLImageElement;

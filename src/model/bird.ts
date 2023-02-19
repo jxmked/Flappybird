@@ -1,22 +1,21 @@
-import ParentClass from '../abstracts/parent-class';
-
-import { lerp, rescaleDim, clamp, sine as sineWave, flipRange } from '../utils';
-import { asset } from '../lib/sprite-destructor';
-import Sfx from './sfx';
-import Pipe from './pipe';
-
 import {
-  BIRD_JUMP_HEIGHT,
-  BIRD_X_POSITION,
-  BIRD_MAX_ROTATION,
-  BIRD_MIN_ROTATION,
+  BIRD_DEFAULT_COLOR,
   BIRD_HEIGHT,
   BIRD_INITIAL_DIMENSION,
-  BIRD_WEIGHT,
-  BIRD_MAX_UP_VELOCITY,
+  BIRD_JUMP_HEIGHT,
   BIRD_MAX_DOWN_VELOCITY,
-  BIRD_DEFAULT_COLOR
+  BIRD_MAX_ROTATION,
+  BIRD_MAX_UP_VELOCITY,
+  BIRD_MIN_ROTATION,
+  BIRD_WEIGHT,
+  BIRD_X_POSITION
 } from '../constants';
+import { clamp, flipRange, lerp, rescaleDim, sine as sineWave } from '../utils';
+
+import ParentClass from '../abstracts/parent-class';
+import Pipe from './pipe';
+import Sfx from './sfx';
+import { asset } from '../lib/sprite-destructor';
 
 export interface IBirdObject {
   up: HTMLImageElement;

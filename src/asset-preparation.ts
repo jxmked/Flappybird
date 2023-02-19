@@ -1,18 +1,14 @@
+import { AssetLoader, asset } from './utils';
+
+import SpriteDestructor from './lib/sprite-destructor';
+import WebSfx from './lib/web-sfx';
+import atlas from './assets/atlas.png';
+import mainIcon from './assets/icon.png';
 import sfDie from './assets/audio/die.ogg';
 import sfHit from './assets/audio/hit.ogg';
 import sfPoint from './assets/audio/point.ogg';
 import sfSwoosh from './assets/audio/swooshing.ogg';
 import sfWing from './assets/audio/wing.ogg';
-
-import mainIcon from './assets/icon.png';
-import atlas from './assets/atlas.png';
-
-// For Images
-import { AssetLoader, asset } from './utils';
-import SpriteDestructor from './lib/sprite-destructor';
-
-// For Sound Effects. Interactive Audio
-import WebSfx from './lib/web-sfx';
 
 export default (callback: Function): void => {
   let isLoaded: boolean = false;

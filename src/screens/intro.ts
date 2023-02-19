@@ -8,14 +8,15 @@
  * connected to Google Play Games or Apple Game Center
  * */
 
-import { asset } from '../lib/sprite-destructor';
 import { lerp, rescaleDim } from '../utils';
-import ParentClass from '../abstracts/parent-class';
+
 import BirdModel from '../model/bird';
+import { IScreenChangerObject } from '../lib/screen-changer';
+import ParentClass from '../abstracts/parent-class';
 import PlayButton from '../model/btn-play';
 import RankingButton from '../model/btn-ranking';
 import RateButton from '../model/btn-rate';
-import { IScreenChangerObject } from '../lib/screen-changer';
+import { asset } from '../lib/sprite-destructor';
 
 export default class Introduction extends ParentClass implements IScreenChangerObject {
   public playButton: PlayButton;

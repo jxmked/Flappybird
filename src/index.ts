@@ -1,10 +1,12 @@
 import './styles/main.scss';
-import raf from 'raf';
-import prepareAssets from './asset-preparation';
-import GameObject from './game';
-import { rescaleDim, framer as Framer } from './utils';
-import EventHandler from './events';
+
+import { framer as Framer, rescaleDim } from './utils';
+
 import { CANVAS_DIMENSION } from './constants';
+import EventHandler from './events';
+import GameObject from './game';
+import prepareAssets from './asset-preparation';
+import raf from 'raf';
 
 /**
 if (process.env.NODE_ENV !== 'development') {

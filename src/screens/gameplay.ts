@@ -4,17 +4,19 @@
  * No Pipes
  * Wait for the tap event
  * */
-import ParentClass from '../abstracts/parent-class';
-import BirdModel from '../model/bird';
-import PipeGenerator from '../model/pipe-generator';
-import CounterModel from '../model/count';
+
 import { flipRange, lerp } from '../utils';
-import MainGameController from '../game';
-import Sfx from '../model/sfx';
-import { IScreenChangerObject } from '../lib/screen-changer';
+
 import BannerInstruction from '../model/banner-instruction';
-import ScoreBoard from '../model/score-board';
+import BirdModel from '../model/bird';
+import CounterModel from '../model/count';
 import { FadeOutIn } from '../lib/animation';
+import { IScreenChangerObject } from '../lib/screen-changer';
+import MainGameController from '../game';
+import ParentClass from '../abstracts/parent-class';
+import PipeGenerator from '../model/pipe-generator';
+import ScoreBoard from '../model/score-board';
+import Sfx from '../model/sfx';
 
 export default class GetReady extends ParentClass implements IScreenChangerObject {
   private bird: BirdModel;

@@ -1,6 +1,6 @@
 import Parent from '../abstracts/button-event-handler';
-import { asset } from '../lib/sprite-destructor';
 import Sfx from './sfx';
+import { asset } from '../lib/sprite-destructor';
 
 export default class PlayButton extends Parent {
   protected callback: Function;

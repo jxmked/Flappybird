@@ -1,10 +1,9 @@
+import WebSfx from '../lib/web-sfx';
 import sfDie from '../assets/audio/die.ogg';
 import sfHit from '../assets/audio/hit.ogg';
 import sfPoint from '../assets/audio/point.ogg';
 import sfSwoosh from '../assets/audio/swooshing.ogg';
 import sfWing from '../assets/audio/wing.ogg';
-
-import WebSfx from '../lib/web-sfx';
 
 export default class Sfx {
   private static currentVolume = 1;

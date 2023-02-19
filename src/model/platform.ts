@@ -1,8 +1,8 @@
-import ParentClass from '../abstracts/parent-class';
+import { lerp, rescaleDim } from '../utils';
 
-import { asset } from '../lib/sprite-destructor';
-import { rescaleDim, lerp } from '../utils';
 import { GAME_SPEED } from '../constants';
+import ParentClass from '../abstracts/parent-class';
+import { asset } from '../lib/sprite-destructor';
 
 export default class Platform extends ParentClass {
   public platformSize: IDimension;

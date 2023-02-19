@@ -1,13 +1,13 @@
-import ParentClass from '../abstracts/parent-class';
-
-import { asset } from '../lib/sprite-destructor';
-import { rescaleDim, lerp } from '../utils';
 import {
-  PIPE_HOLL_SIZE,
   GAME_SPEED,
-  PIPE_INITIAL_DIMENSION,
-  PIPE_COLOR
+  PIPE_COLOR,
+  PIPE_HOLL_SIZE,
+  PIPE_INITIAL_DIMENSION
 } from '../constants';
+import { lerp, rescaleDim } from '../utils';
+
+import ParentClass from '../abstracts/parent-class';
+import { asset } from '../lib/sprite-destructor';
 
 export interface IPairPipe {
   top: HTMLImageElement;

@@ -1,6 +1,7 @@
-import { lerp, randomClamp } from '../utils';
-import Pipe from './pipe';
 import { PIPE_DISTANCE, PIPE_MIN_GAP } from '../constants';
+import { lerp, randomClamp } from '../utils';
+
+import Pipe from './pipe';
 
 export interface IRange {
   min: number;

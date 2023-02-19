@@ -1,18 +1,15 @@
 import BgModel from './model/background';
-import PlatformModel from './model/platform';
 import BirdModel from './model/bird';
-import Sfx from './model/sfx';
-import PipeGenerator from './model/pipe-generator';
-import { SFX_VOLUME } from './constants';
-
-import ParentClass from './abstracts/parent-class';
-import { flipRange } from './utils';
-
-import Intro from './screens/intro';
-import GamePlay from './screens/gameplay';
-import ScreenChanger from './lib/screen-changer';
-
 import { FadeOutIn } from './lib/animation';
+import GamePlay from './screens/gameplay';
+import Intro from './screens/intro';
+import ParentClass from './abstracts/parent-class';
+import PipeGenerator from './model/pipe-generator';
+import PlatformModel from './model/platform';
+import { SFX_VOLUME } from './constants';
+import ScreenChanger from './lib/screen-changer';
+import Sfx from './model/sfx';
+import { flipRange } from './utils';
 
 export default class Game extends ParentClass {
   background: BgModel;

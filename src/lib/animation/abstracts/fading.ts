@@ -20,7 +20,7 @@ export default abstract class Fading {
     this.isRunning = false;
     this.isComplete = true;
     this.options = {
-      duration: 500 // sec
+      duration: 500 // ms
     };
 
     Object.assign(this.options, options ?? {});
