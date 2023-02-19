@@ -82,16 +82,11 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
 
   public Update(): void {
     if (this.bird.alive) {
-      this.scoreBoard.playButton.active = false;
-      this.scoreBoard.rankingButton.active = false;
       this.scoreBoard.Update();
     }
 
     if (!this.bird.alive) {
-      this.scoreBoard.playButton.active = true;
-      this.scoreBoard.rankingButton.active = true;
       this.scoreBoard.Update();
-
       this.game.bgPause = true;
       this.bird.Update();
       return;
@@ -153,12 +148,12 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
   }
 
   setButtonEvent(): void {
-    this.scoreBoard.playButton.onClick(() => {
+    this.scoreBoard.onRestart(() => {
       if (this.transition.status.running) return;
       this.transition.start();
     });
 
-    // this.scoreBoard.rankingButton.onClick(() => {
+    // this.scoreBoard.onShowRanks(() => {
     //   console.log("ranking button")
     // })
   }

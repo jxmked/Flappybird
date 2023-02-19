@@ -13,8 +13,8 @@ export interface IImageState {
 
 export default class ScoreBoard extends ParentObject {
   private images: Map<string, HTMLImageElement>;
-  public playButton: PlayButton;
-  public rankingButton: RankingButton;
+  private playButton: PlayButton;
+  private rankingButton: RankingButton;
   private show: IImageState;
 
   constructor() {
@@ -47,6 +47,9 @@ export default class ScoreBoard extends ParentObject {
 
     this.rankingButton.init();
     this.playButton.init();
+
+    this.playButton.active = false;
+    this.rankingButton.active = false;
   }
 
   public resize({ width, height }: IDimension): void {
@@ -114,6 +117,8 @@ export default class ScoreBoard extends ParentObject {
 
   public showButtons(): void {
     this.show.buttons = true;
+    this.playButton.active = true;
+    this.rankingButton.active = true;
   }
 
   /**
@@ -123,6 +128,20 @@ export default class ScoreBoard extends ParentObject {
     this.show.banner = false;
     this.show.scoreBoard = false;
     this.show.buttons = false;
+    this.playButton.active = false;
+    this.rankingButton.active = false;
+  }
+
+  public onRestart(cb: Function): void {
+    this.playButton.onClick(cb);
+  }
+
+  public onShowRanks(cb: Function): void {
+    /**
+     * I don't know what to do on ranking?
+     *
+     * Should i create API for this?
+     * */
   }
 
   public mouseDown({ x, y }: ICoordinate): void {
