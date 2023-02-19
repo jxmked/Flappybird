@@ -14,7 +14,7 @@ import Sfx from '../model/sfx';
 import { IScreenChangerObject } from '../lib/screen-changer';
 import BannerInstruction from '../model/banner-instruction';
 import ScoreBoard from '../model/score-board';
-import FadeOutIn from '../lib/animation/anims/fade-out-in';
+import { FadeOutIn } from '../lib/animation';
 
 export default class GetReady extends ParentClass implements IScreenChangerObject {
   private bird: BirdModel;
@@ -26,8 +26,10 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
   private bannerInstruction: BannerInstruction;
   private scoreBoard: ScoreBoard;
   private transition: FadeOutIn;
+  private hideBird: boolean;
 
   private highscore: number;
+  private showScoreBoard: boolean;
 
   constructor(game: MainGameController) {
     super();
@@ -39,8 +41,10 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.bannerInstruction = new BannerInstruction();
     this.gameState = 'none';
     this.scoreBoard = new ScoreBoard();
-    this.transition = new FadeOutIn({ duration: 1000 });
+    this.transition = new FadeOutIn({ duration: 500 });
     this.highscore = 0;
+    this.hideBird = false;
+    this.showScoreBoard = false;
   }
 
   public init(): void {
@@ -60,6 +64,8 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.pipeGenerator.reset();
     this.bannerInstruction.reset();
     this.game.bgPause = false;
+    this.hideBird = false;
+    this.showScoreBoard = false;
     this.bird.reset();
   }
 
@@ -108,6 +114,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     if (this.bird.isDead(this.pipeGenerator.pipes)) {
       this.gameState = 'died';
       Sfx.hit(() => {
+        this.showScoreBoard = true;
         this.bird.playDead();
       });
     }
@@ -117,24 +124,23 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     if (this.state === 'playing' || this.state === 'waiting') {
       this.bannerInstruction.Display(context);
 
-      if (this.gameState !== 'died') {
+      if (this.gameState !== 'died' || !this.showScoreBoard) {
         this.count.setNum(this.bird.score);
         this.count.Display(context);
       }
 
-      this.bird.Display(context);
+      if (!this.hideBird) this.bird.Display(context);
 
-      if (this.gameState === 'died') {
+      if (this.gameState === 'died' && this.showScoreBoard) {
         this.scoreBoard.Display(context);
       }
     }
 
     context.globalAlpha = flipRange(0, 1, this.transition.value);
 
-    // check if the opacity reaches close to 0
+    // check if the opacity reaches close to 1
     if (context.globalAlpha >= 0.99) {
       this.reset();
-      console.log(context.globalAlpha);
     }
 
     context.fillStyle = 'black';

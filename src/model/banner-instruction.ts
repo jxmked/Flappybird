@@ -19,11 +19,11 @@ const BANNER_INSTRUCTION: IBannerInstructionConst = {
   positions: {
     instructImage: {
       x: 0.5,
-      y: 0.57
+      y: 0.515
     },
     getReadyImage: {
       x: 0.5,
-      y: 0.34
+      y: 0.335
     }
   }
 };

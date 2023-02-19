@@ -12,7 +12,7 @@ import Intro from './screens/intro';
 import GamePlay from './screens/gameplay';
 import ScreenChanger from './lib/screen-changer';
 
-import FadeOutIn from './lib/animation/anims/fade-out-in';
+import { FadeOutIn } from './lib/animation';
 
 export default class Game extends ParentClass {
   background: BgModel;
@@ -50,7 +50,7 @@ export default class Game extends ParentClass {
     this.opacity = 1;
 
     this.isTransitioning = false;
-    this.transition = new FadeOutIn({ duration: 1000 });
+    this.transition = new FadeOutIn({ duration: 500 });
   }
 
   init(): void {

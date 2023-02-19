@@ -166,6 +166,7 @@ export default class Bird extends ParentClass {
     this.rotation = 0;
     this.doesLanded = false;
     this.causeOfDeath = 'none';
+    this.died = false;
     this.resize(this.canvasSize);
   }
 
