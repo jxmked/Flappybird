@@ -5,16 +5,28 @@ import PlayButton from './btn-play';
 import RankingButton from './btn-ranking';
 import { asset } from '../lib/sprite-destructor';
 
+export interface IImageState {
+  banner: boolean;
+  scoreBoard: boolean;
+  buttons: boolean;
+}
+
 export default class ScoreBoard extends ParentObject {
   private images: Map<string, HTMLImageElement>;
   public playButton: PlayButton;
   public rankingButton: RankingButton;
+  private show: IImageState;
 
   constructor() {
     super();
     this.images = new Map<string, HTMLImageElement>();
     this.playButton = new PlayButton();
     this.rankingButton = new RankingButton();
+    this.show = {
+      banner: false,
+      scoreBoard: false,
+      buttons: false
+    };
   }
 
   public init(): void {
@@ -50,40 +62,67 @@ export default class ScoreBoard extends ParentObject {
   }
 
   public Display(context: CanvasRenderingContext2D): void {
-    const bgoScaled = rescaleDim(
-      {
-        width: this.images.get('banner-gameover')!.width,
-        height: this.images.get('banner-gameover')!.height
-      },
-      { width: lerp(0, this.canvasSize.width, 0.7) }
-    );
+    if (this.show.banner) {
+      const bgoScaled = rescaleDim(
+        {
+          width: this.images.get('banner-gameover')!.width,
+          height: this.images.get('banner-gameover')!.height
+        },
+        { width: lerp(0, this.canvasSize.width, 0.7) }
+      );
 
-    context.drawImage(
-      this.images.get('banner-gameover')!,
-      lerp(0, this.canvasSize.width, 0.5) - bgoScaled.width / 2,
-      lerp(0, this.canvasSize.height, 0.225) - bgoScaled.height / 2,
-      bgoScaled.width,
-      bgoScaled.height
-    );
+      context.drawImage(
+        this.images.get('banner-gameover')!,
+        lerp(0, this.canvasSize.width, 0.5) - bgoScaled.width / 2,
+        lerp(0, this.canvasSize.height, 0.225) - bgoScaled.height / 2,
+        bgoScaled.width,
+        bgoScaled.height
+      );
+    }
 
-    const sbScaled = rescaleDim(
-      {
-        width: this.images.get('score-board')!.width,
-        height: this.images.get('score-board')!.height
-      },
-      { width: lerp(0, this.canvasSize.width, 0.85) }
-    );
+    if (this.show.scoreBoard) {
+      const sbScaled = rescaleDim(
+        {
+          width: this.images.get('score-board')!.width,
+          height: this.images.get('score-board')!.height
+        },
+        { width: lerp(0, this.canvasSize.width, 0.85) }
+      );
 
-    context.drawImage(
-      this.images.get('score-board')!,
-      lerp(0, this.canvasSize.width, 0.5) - sbScaled.width / 2,
-      lerp(0, this.canvasSize.height, 0.438) - sbScaled.height / 2,
-      sbScaled.width,
-      sbScaled.height
-    );
+      context.drawImage(
+        this.images.get('score-board')!,
+        lerp(0, this.canvasSize.width, 0.5) - sbScaled.width / 2,
+        lerp(0, this.canvasSize.height, 0.438) - sbScaled.height / 2,
+        sbScaled.width,
+        sbScaled.height
+      );
+    }
 
-    this.rankingButton.Display(context);
-    this.playButton.Display(context);
+    if (this.show.buttons) {
+      this.rankingButton.Display(context);
+      this.playButton.Display(context);
+    }
+  }
+
+  public showBanner(): void {
+    this.show.banner = true;
+  }
+
+  public showBoard(): void {
+    this.show.scoreBoard = true;
+  }
+
+  public showButtons(): void {
+    this.show.buttons = true;
+  }
+
+  /**
+   * Hide all at once
+   * */
+  public hide(): void {
+    this.show.banner = false;
+    this.show.scoreBoard = false;
+    this.show.buttons = false;
   }
 
   public mouseDown({ x, y }: ICoordinate): void {
