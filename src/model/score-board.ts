@@ -18,11 +18,17 @@ export default class ScoreBoard extends ParentObject {
   private rankingButton: RankingButton;
   private show: IImageState;
   private FlyInAnim: Fly;
+  private currentScore: number;
+  private currentGeneratedNumber: number;
+  private currentHighScore: number;
   constructor() {
     super();
     this.images = new Map<string, HTMLImageElement>();
     this.playButton = new PlayButton();
     this.rankingButton = new RankingButton();
+    this.currentHighScore = 0;
+    this.currentGeneratedNumber = 0;
+    this.currentScore = 0;
     this.show = {
       banner: false,
       scoreBoard: false,
@@ -105,15 +111,18 @@ export default class ScoreBoard extends ParentObject {
         { width: lerp(0, this.canvasSize.width, 0.85) }
       );
 
-      const anim = this.FlyInAnim.value;
-
+      // Need to clone
+      const anim = Object.assign({}, this.FlyInAnim.value);
+      anim.x = lerp(0, this.canvasSize.width, anim.x) - sbScaled.width / 2;
+      anim.y = lerp(0, this.canvasSize.height, anim.y) - sbScaled.height / 2;
       context.drawImage(
         this.images.get('score-board')!,
-        lerp(0, this.canvasSize.width, anim.x) - sbScaled.width / 2,
-        lerp(0, this.canvasSize.height, anim.y) - sbScaled.height / 2,
+        anim.x,
+        anim.y,
         sbScaled.width,
         sbScaled.height
       );
+      this.displayBestScore(context, anim, sbScaled);
 
       if (this.FlyInAnim.status.complete && !this.FlyInAnim.status.running) {
         this.showButtons();
@@ -139,6 +148,48 @@ export default class ScoreBoard extends ParentObject {
     this.show.buttons = true;
     this.playButton.active = true;
     this.rankingButton.active = true;
+  }
+
+  private setHighScore(num: number): void {
+    this.currentHighScore = num;
+  }
+
+  public setScore(num: number): void {
+    this.currentScore = num;
+  }
+
+  private displayBestScore(
+    context: CanvasRenderingContext2D,
+    coord: ICoordinate,
+    parentSize: IDimension
+  ): void {
+    const numSize = rescaleDim(
+      {
+        width: this.images.get('number-1')!.width,
+        height: this.images.get('number-1')!.height
+      },
+      { width: lerp(0, parentSize.width, 0.052) }
+    );
+
+    coord.x = lerp(0, coord.x + parentSize.width / 2, 1.565);
+    coord.y = lerp(0, coord.y + parentSize.height / 2, 1.078);
+
+    const numArr: string[] = String(this.currentHighScore).split('');
+
+    context.save();
+    context.translate(coord.x, coord.y);
+
+    numArr.reverse().forEach((c: string, index: number) => {
+      context.drawImage(
+        this.images.get(`number-${c}`)!,
+        -(index * (numSize.width + 5)),
+        0,
+        numSize.width,
+        numSize.height
+      );
+    });
+
+    context.restore();
   }
 
   /**

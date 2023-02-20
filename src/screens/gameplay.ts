@@ -30,7 +30,6 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
   private transition: FadeOutIn;
   private hideBird: boolean;
 
-  private highscore: number;
   private showScoreBoard: boolean;
 
   constructor(game: MainGameController) {
@@ -44,7 +43,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.gameState = 'none';
     this.scoreBoard = new ScoreBoard();
     this.transition = new FadeOutIn({ duration: 500 });
-    this.highscore = 0;
+
     this.hideBird = false;
     this.showScoreBoard = false;
   }
@@ -112,6 +111,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     if (this.bird.isDead(this.pipeGenerator.pipes)) {
       this.gameState = 'died';
       window.setTimeout(() => {
+        this.scoreBoard.setScore(this.bird.score);
         this.showScoreBoard = true;
         window.setTimeout(() => {
           this.scoreBoard.showBoard();
