@@ -115,6 +115,7 @@ export default class ScoreBoard extends ParentObject {
       const anim = Object.assign({}, this.FlyInAnim.value);
       anim.x = lerp(0, this.canvasSize.width, anim.x) - sbScaled.width / 2;
       anim.y = lerp(0, this.canvasSize.height, anim.y) - sbScaled.height / 2;
+
       context.drawImage(
         this.images.get('score-board')!,
         anim.x,
@@ -122,7 +123,7 @@ export default class ScoreBoard extends ParentObject {
         sbScaled.width,
         sbScaled.height
       );
-      this.displayBestScore(context, anim, sbScaled);
+      this.displayBestScore(context, anim, sbScaled, false);
 
       if (this.FlyInAnim.status.complete && !this.FlyInAnim.status.running) {
         this.showButtons();
@@ -161,7 +162,8 @@ export default class ScoreBoard extends ParentObject {
   private displayBestScore(
     context: CanvasRenderingContext2D,
     coord: ICoordinate,
-    parentSize: IDimension
+    parentSize: IDimension,
+    haveNewToast: boolean
   ): void {
     const numSize = rescaleDim(
       {
@@ -170,14 +172,16 @@ export default class ScoreBoard extends ParentObject {
       },
       { width: lerp(0, parentSize.width, 0.052) }
     );
-
-    coord.x = lerp(0, coord.x + parentSize.width / 2, 1.565);
-    coord.y = lerp(0, coord.y + parentSize.height / 2, 1.078);
+    coord.x += parentSize.width / 2;
+    coord.y += parentSize.height / 2;
+    const numPos: ICoordinate = { x: 0, y: 0 };
+    numPos.x = lerp(0, coord.x, 1.565);
+    numPos.y = lerp(0, coord.y, 1.078);
 
     const numArr: string[] = String(this.currentHighScore).split('');
 
     context.save();
-    context.translate(coord.x, coord.y);
+    context.translate(numPos.x, numPos.y);
 
     numArr.reverse().forEach((c: string, index: number) => {
       context.drawImage(
@@ -188,6 +192,32 @@ export default class ScoreBoard extends ParentObject {
         numSize.height
       );
     });
+
+    if (!haveNewToast) {
+      context.restore();
+      return;
+    }
+
+    numPos.x = lerp(0, numPos.x, -0.26);
+    numPos.y = lerp(0, numPos.y, -0.0768);
+
+    context.translate(numPos.x, numPos.y);
+
+    const toastSize = rescaleDim(
+      {
+        width: this.images.get('new-icon')!.width,
+        height: this.images.get('new-icon')!.height
+      },
+      { width: lerp(0, parentSize.width, 0.14) }
+    );
+
+    context.drawImage(
+      this.images.get('new-icon')!,
+      0,
+      0,
+      toastSize.width,
+      toastSize.height
+    );
 
     context.restore();
   }
