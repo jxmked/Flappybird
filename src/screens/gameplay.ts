@@ -68,6 +68,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.game.bgPause = false;
     this.hideBird = false;
     this.showScoreBoard = false;
+    this.scoreBoard.hide();
     this.bird.reset();
   }
 
@@ -110,9 +111,17 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
 
     if (this.bird.isDead(this.pipeGenerator.pipes)) {
       this.gameState = 'died';
-      Sfx.hit(() => {
+      window.setTimeout(() => {
         this.showScoreBoard = true;
-        this.scoreBoard.showBoard();
+        window.setTimeout(() => {
+          this.scoreBoard.showBoard();
+          Sfx.swoosh();
+        }, 700);
+        this.scoreBoard.showBanner();
+        Sfx.swoosh();
+      }, 500);
+
+      Sfx.hit(() => {
         this.bird.playDead();
       });
     }

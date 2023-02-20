@@ -114,6 +114,10 @@ export default class ScoreBoard extends ParentObject {
         sbScaled.width,
         sbScaled.height
       );
+
+      if (this.FlyInAnim.status.complete && !this.FlyInAnim.status.running) {
+        this.showButtons();
+      }
     }
 
     if (this.show.buttons) {
@@ -146,6 +150,7 @@ export default class ScoreBoard extends ParentObject {
     this.show.buttons = false;
     this.playButton.active = false;
     this.rankingButton.active = false;
+    this.FlyInAnim.reset();
   }
 
   public onRestart(cb: Function): void {
