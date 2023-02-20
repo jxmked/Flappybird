@@ -124,9 +124,9 @@ export default class ScoreBoard extends ParentObject {
         sbScaled.height
       );
 
-      this.displayBestScore(context, anim, sbScaled, false);
-      this.currentScore = 20;
+      this.displayBestScore(context, anim, sbScaled, true);
       this.addMedal(context, anim, sbScaled);
+
       if (this.FlyInAnim.status.complete && !this.FlyInAnim.status.running) {
         this.showButtons();
       }
@@ -177,9 +177,6 @@ export default class ScoreBoard extends ParentObject {
       medal = this.images.get('coin-10')!;
     }
 
-    coord.x = lerp(0, coord.x, 0.36);
-    coord.y = lerp(0, coord.y, 0.9196);
-
     const scaled = rescaleDim(
       {
         width: medal.width,
@@ -188,7 +185,13 @@ export default class ScoreBoard extends ParentObject {
       { width: lerp(0, parentSize.width, 0.1878) }
     );
 
-    context.drawImage(medal, coord.x, coord.y, scaled.width, scaled.height);
+    context.drawImage(
+      medal,
+      lerp(0, coord.x + parentSize.width / 2, 0.36),
+      lerp(0, coord.y + parentSize.height / 2, 0.9196),
+      scaled.width,
+      scaled.height
+    );
   }
 
   private displayBestScore(
@@ -204,37 +207,25 @@ export default class ScoreBoard extends ParentObject {
       },
       { width: lerp(0, parentSize.width, 0.052) }
     );
-    coord.x += parentSize.width / 2;
-    coord.y += parentSize.height / 2;
 
-    const numPos: ICoordinate = { x: 0, y: 0 };
-    numPos.x = lerp(0, coord.x, 1.565);
-    numPos.y = lerp(0, coord.y, 1.078);
+    coord = Object.assign({}, coord);
+
+    coord.x = lerp(0, coord.x + parentSize.width / 2, 1.565);
+    coord.y = lerp(0, coord.y + parentSize.height / 2, 1.078);
 
     const numArr: string[] = String(this.currentHighScore).split('');
-
-    context.save();
-    context.translate(numPos.x, numPos.y);
 
     numArr.reverse().forEach((c: string, index: number) => {
       context.drawImage(
         this.images.get(`number-${c}`)!,
-        -(index * (numSize.width + 5)),
-        0,
+        coord.x - index * (numSize.width + 5),
+        coord.y,
         numSize.width,
         numSize.height
       );
     });
 
-    if (!haveNewToast) {
-      context.restore();
-      return;
-    }
-
-    numPos.x = lerp(0, numPos.x, -0.26);
-    numPos.y = lerp(0, numPos.y, -0.0768);
-
-    context.translate(numPos.x, numPos.y);
+    if (!haveNewToast) return;
 
     const toastSize = rescaleDim(
       {
@@ -246,13 +237,11 @@ export default class ScoreBoard extends ParentObject {
 
     context.drawImage(
       this.images.get('new-icon')!,
-      0,
-      0,
+      lerp(0, coord.x, 0.73),
+      lerp(0, coord.y, 0.922),
       toastSize.width,
       toastSize.height
     );
-
-    context.restore();
   }
 
   /**
