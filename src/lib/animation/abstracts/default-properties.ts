@@ -4,7 +4,7 @@ export default abstract class DefaultProperties {
   protected startTime: number;
 
   constructor() {
-    this.isComplete = true;
+    this.isComplete = false;
     this.isRunning = false;
     this.startTime = 0;
   }
@@ -29,5 +29,10 @@ export default abstract class DefaultProperties {
     this.isRunning = true;
     this.isComplete = false;
     this.startTime = this.time;
+  }
+
+  public reset(): void {
+    this.isComplete = false;
+    this.isRunning = false;
   }
 }

@@ -112,6 +112,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
       this.gameState = 'died';
       Sfx.hit(() => {
         this.showScoreBoard = true;
+        this.scoreBoard.showBoard();
         this.bird.playDead();
       });
     }
@@ -128,9 +129,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
 
       if (!this.hideBird) this.bird.Display(context);
 
-      if (this.gameState === 'died' && this.showScoreBoard) {
-        this.scoreBoard.Display(context);
-      }
+      this.scoreBoard.Display(context);
     }
 
     context.globalAlpha = flipRange(0, 1, this.transition.value);
@@ -147,7 +146,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     context.globalAlpha = 1;
   }
 
-  setButtonEvent(): void {
+  private setButtonEvent(): void {
     this.scoreBoard.onRestart(() => {
       if (this.transition.status.running) return;
       this.transition.start();
@@ -158,7 +157,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     // })
   }
 
-  click({ x, y }: ICoordinate): void {
+  public click({ x, y }: ICoordinate): void {
     if (this.gameState === 'died') return;
 
     this.state = 'playing';

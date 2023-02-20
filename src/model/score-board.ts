@@ -4,6 +4,7 @@ import ParentObject from '../abstracts/parent-class';
 import PlayButton from './btn-play';
 import RankingButton from './btn-ranking';
 import { asset } from '../lib/sprite-destructor';
+import { Fly } from '../lib/animation';
 
 export interface IImageState {
   banner: boolean;
@@ -16,7 +17,7 @@ export default class ScoreBoard extends ParentObject {
   private playButton: PlayButton;
   private rankingButton: RankingButton;
   private show: IImageState;
-
+  private FlyInAnim: Fly;
   constructor() {
     super();
     this.images = new Map<string, HTMLImageElement>();
@@ -27,6 +28,18 @@ export default class ScoreBoard extends ParentObject {
       scoreBoard: false,
       buttons: false
     };
+    this.FlyInAnim = new Fly({
+      duration: 500,
+      from: {
+        x: 0.5,
+        y: 1.5
+      },
+      to: {
+        x: 0.5,
+        y: 0.438
+      },
+      transition: 'easeOutExpo'
+    });
   }
 
   public init(): void {
@@ -92,10 +105,12 @@ export default class ScoreBoard extends ParentObject {
         { width: lerp(0, this.canvasSize.width, 0.85) }
       );
 
+      const anim = this.FlyInAnim.value;
+
       context.drawImage(
         this.images.get('score-board')!,
-        lerp(0, this.canvasSize.width, 0.5) - sbScaled.width / 2,
-        lerp(0, this.canvasSize.height, 0.438) - sbScaled.height / 2,
+        lerp(0, this.canvasSize.width, anim.x) - sbScaled.width / 2,
+        lerp(0, this.canvasSize.height, anim.y) - sbScaled.height / 2,
         sbScaled.width,
         sbScaled.height
       );
@@ -113,6 +128,7 @@ export default class ScoreBoard extends ParentObject {
 
   public showBoard(): void {
     this.show.scoreBoard = true;
+    this.FlyInAnim.start();
   }
 
   public showButtons(): void {

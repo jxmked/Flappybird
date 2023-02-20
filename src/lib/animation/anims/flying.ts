@@ -3,8 +3,8 @@ import { lerp } from '../../../utils';
 
 export class Fly extends IFlying {
   public get value(): ICoordinate {
-    if (!this.isRunning && this.isComplete) {
-      return this.options.from;
+    if (!this.isRunning) {
+      return this.isComplete ? this.options.to : this.options.from;
     }
 
     const f = this.options.from;
@@ -13,11 +13,14 @@ export class Fly extends IFlying {
 
     if (diff >= 1) {
       this.stop();
+
+      // Prevent bounce effect
+      return this.options.to;
     }
 
     return {
-      x: lerp(f.x, t.x, diff),
-      y: lerp(f.y, t.y, diff)
+      x: lerp(f.x, t.x, this.inUseTransition(diff)),
+      y: lerp(f.y, t.y, this.inUseTransition(diff))
     };
   }
 }

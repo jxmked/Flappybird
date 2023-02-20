@@ -35,7 +35,7 @@ export default abstract class Flying extends IDefaultProperties {
         x: 0,
         y: 0
       },
-      transition: 'cubicBezierCurve'
+      transition: 'cubicBezier'
     };
 
     Object.assign(this.options, options);
