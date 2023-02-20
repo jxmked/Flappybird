@@ -123,8 +123,10 @@ export default class ScoreBoard extends ParentObject {
         sbScaled.width,
         sbScaled.height
       );
-      this.displayBestScore(context, anim, sbScaled, false);
 
+      this.displayBestScore(context, anim, sbScaled, false);
+      this.currentScore = 20;
+      this.addMedal(context, anim, sbScaled);
       if (this.FlyInAnim.status.complete && !this.FlyInAnim.status.running) {
         this.showButtons();
       }
@@ -159,6 +161,36 @@ export default class ScoreBoard extends ParentObject {
     this.currentScore = num;
   }
 
+  private addMedal(
+    context: CanvasRenderingContext2D,
+    coord: ICoordinate,
+    parentSize: IDimension
+  ): void {
+    if (this.currentScore < 10) return; // So sad having a no medal :)
+
+    let medal: HTMLImageElement = this.images.get('coin-40')!;
+    if (this.currentScore >= 30 && this.currentScore < 40) {
+      medal = this.images.get('coin-30')!;
+    } else if (this.currentScore >= 20 && this.currentScore < 30) {
+      medal = this.images.get('coin-20')!;
+    } else if (this.currentScore >= 10 && this.currentScore < 20) {
+      medal = this.images.get('coin-10')!;
+    }
+
+    coord.x = lerp(0, coord.x, 0.36);
+    coord.y = lerp(0, coord.y, 0.9196);
+
+    const scaled = rescaleDim(
+      {
+        width: medal.width,
+        height: medal.height
+      },
+      { width: lerp(0, parentSize.width, 0.1878) }
+    );
+
+    context.drawImage(medal, coord.x, coord.y, scaled.width, scaled.height);
+  }
+
   private displayBestScore(
     context: CanvasRenderingContext2D,
     coord: ICoordinate,
@@ -174,6 +206,7 @@ export default class ScoreBoard extends ParentObject {
     );
     coord.x += parentSize.width / 2;
     coord.y += parentSize.height / 2;
+
     const numPos: ICoordinate = { x: 0, y: 0 };
     numPos.x = lerp(0, coord.x, 1.565);
     numPos.y = lerp(0, coord.y, 1.078);
