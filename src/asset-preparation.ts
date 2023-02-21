@@ -106,8 +106,8 @@ export default (callback: Function): void => {
     sd.cutOut('bird-red-up', 230, 762, 34, 24);
     sd.cutOut('bird-red-mid', 230, 814, 34, 24);
     sd.cutOut('bird-red-down', 230, 866, 34, 24);
-    sd.cutOut('spark-sm', 280, 686, 2, 2);
-    sd.cutOut('spark-md', 278, 736, 6, 6);
+    sd.cutOut('spark-sm', 276, 682, 10, 10);
+    sd.cutOut('spark-md', 276, 734, 10, 10);
     sd.cutOut('spark-lg', 276, 786, 10, 10);
     sd.cutOut('banner-game-ready', 586, 118, 192, 58);
     sd.cutOut('banner-game-over', 786, 118, 200, 52);

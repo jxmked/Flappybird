@@ -1,13 +1,8 @@
-import {
-  GAME_SPEED,
-  PIPE_COLOR,
-  PIPE_HOLL_SIZE,
-  PIPE_INITIAL_DIMENSION
-} from '../constants';
+import { GAME_SPEED, PIPE_HOLL_SIZE, PIPE_INITIAL_DIMENSION } from '../constants';
 import { lerp, rescaleDim } from '../utils';
-
 import ParentClass from '../abstracts/parent-class';
 import { asset } from '../lib/sprite-destructor';
+import SceneGenerator from './scene-generator';
 
 export interface IPairPipe {
   top: HTMLImageElement;
@@ -34,6 +29,7 @@ export default class Pipe extends ParentClass {
   };
   private pipeImg: IPipeImages;
   private img: undefined | IPairPipe;
+  private callUse: boolean;
   public hollSize: number;
   public pipePosition: IPipePairPosition;
   public isPassed: boolean;
@@ -59,6 +55,7 @@ export default class Pipe extends ParentClass {
       bottom: { x: 0, y: 0 }
     };
     this.isPassed = false;
+    this.callUse = false;
     this.velocity.x = GAME_SPEED;
   }
 
@@ -74,7 +71,7 @@ export default class Pipe extends ParentClass {
       }
     };
 
-    this.use(PIPE_COLOR);
+    Object.assign(SceneGenerator.pipeColorList, Object.keys(this.pipeImg));
   }
 
   /**
@@ -141,8 +138,9 @@ export default class Pipe extends ParentClass {
   /**
    * Pipe color selection
    * */
-  public use(select: 'green' | 'red'): void {
+  public use(select: keyof IPipeImages): void {
     this.img = this.pipeImg[select];
+    this.callUse = true;
   }
 
   /**
@@ -153,6 +151,10 @@ export default class Pipe extends ParentClass {
   }
 
   public Display(context: CanvasRenderingContext2D): void {
+    if (!this.callUse) {
+      throw new TypeError('Pipe.use was not called. Pipe color depends on that');
+    }
+
     const width = Pipe.pipeSize.width / 2;
 
     const posX = this.coordinate.x;

@@ -1,7 +1,7 @@
 import { PIPE_DISTANCE, PIPE_MIN_GAP } from '../constants';
 import { lerp, randomClamp } from '../utils';
-
 import Pipe from './pipe';
+import SceneGenerator, { IPipeColor } from './scene-generator';
 
 export interface IRange {
   min: number;
@@ -49,6 +49,8 @@ export default class PipeGenerator {
    * */
   private canvasSize: IDimension;
 
+  private pipeColor: IPipeColor;
+
   constructor() {
     this.range = { max: 0, min: 0 };
     this.width = 0;
@@ -59,6 +61,7 @@ export default class PipeGenerator {
       width: 0,
       height: 0
     };
+    this.pipeColor = 'green';
   }
 
   public reset(): void {
@@ -68,6 +71,7 @@ export default class PipeGenerator {
       width: this.canvasSize.width,
       height: this.canvasSize.height
     });
+    this.pipeColor = SceneGenerator.pipe;
   }
 
   public resize({ max, width, height }: IPipeGeneratorOption): void {
@@ -122,9 +126,8 @@ export default class PipeGenerator {
       pipe.resize(this.canvasSize);
 
       pipe.setHollPosition(this.generate().position);
-
       pipe.init();
-
+      pipe.use(this.pipeColor);
       this.pipes.push(pipe);
     }
 

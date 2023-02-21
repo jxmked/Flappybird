@@ -1,8 +1,8 @@
-import { BG_SPEED, BG_TEXTURE } from '../constants';
+import { BG_SPEED } from '../constants';
 import { lerp, rescaleDim } from '../utils';
-
 import ParentClass from '../abstracts/parent-class';
 import { asset } from '../lib/sprite-destructor';
+import SceneGenerator from './scene-generator';
 
 export interface IBackgroundImages {
   day: HTMLImageElement;
@@ -49,18 +49,20 @@ export default class Background extends ParentClass {
       day: asset('theme-day')!
     };
 
-    this.use(BG_TEXTURE);
+    Object.assign(SceneGenerator.bgThemeList, Object.keys(this.backgroundImage));
+    this.use(SceneGenerator.background);
   }
 
   public reset(): void {
     this.coordinate = { x: 0, y: 0 };
     this.resize(this.canvasSize);
+    this.use(SceneGenerator.background);
   }
 
   /**
    * Select either day and night
    * */
-  public use(select: 'day' | 'night'): void {
+  public use(select: keyof IBackgroundImages): void {
     this.img = this.backgroundImage[select];
   }
 
