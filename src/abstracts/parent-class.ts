@@ -1,7 +1,7 @@
-class ParentObject {
-  canvasSize: IDimension;
-  velocity: IVelocity;
-  coordinate: ICoordinate;
+export default abstract class ParentObject {
+  protected canvasSize: IDimension;
+  public velocity: IVelocity;
+  public coordinate: ICoordinate;
 
   constructor() {
     this.canvasSize = {
@@ -20,13 +20,11 @@ class ParentObject {
     };
   }
 
-  resize({ width, height }: IDimension): void {
+  public resize({ width, height }: IDimension): void {
     this.canvasSize = { width, height };
   }
-}
 
-export default abstract class ParentClass extends ParentObject {
-  abstract Update(): void;
-  abstract Display(context: CanvasRenderingContext2D): void;
-  abstract init(): void;
+  public abstract init(): void;
+  public abstract Update(): void;
+  public abstract Display(context: CanvasRenderingContext2D): void;
 }

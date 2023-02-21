@@ -1,9 +1,12 @@
 import './styles/main.scss';
-import raf from 'raf';
-import prepareAssets from './asset-preparation';
-import GameObject from './game';
-import { rescaleDim, framer as Framer } from './utils';
+
+import { framer as Framer, rescaleDim } from './utils';
+
+import { CANVAS_DIMENSION } from './constants';
 import EventHandler from './events';
+import GameObject from './game';
+import prepareAssets from './asset-preparation';
+import raf from 'raf';
 
 /**
 if (process.env.NODE_ENV !== 'development') {
@@ -23,10 +26,7 @@ if (process.env.NODE_ENV !== 'development') {
 }
 */
 const canvas = document.querySelector('#main-canvas')! as HTMLCanvasElement;
-const canvasDimension = {
-  width: 500,
-  height: 779
-};
+const loadingScreen = document.querySelector('#loading-modal')! as HTMLDivElement;
 let isLoaded = false;
 
 /**
@@ -52,12 +52,12 @@ const GameUpdate = (): void => {
   Game.Display();
 
   if (process.env.NODE_ENV === 'development') fps.mark();
+
   raf(GameUpdate);
 };
 
 const ScreenResize = () => {
-  const { innerHeight } = window;
-  const sizeResult = rescaleDim(canvasDimension, { height: innerHeight });
+  const sizeResult = rescaleDim(CANVAS_DIMENSION, { height: window.innerHeight - 50 });
 
   // Adjust the canvas DOM size
   canvas.style.maxWidth = String(sizeResult.width) + 'px';
@@ -89,8 +89,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
     raf(GameUpdate);
 
-    // Listen to events: Mouse, Touch, Keyboard
-    EventHandler(Game);
+    if (process.env.NODE_ENV === 'development') {
+      EventHandler(Game);
+      loadingScreen.style.display = 'none';
+      document.body.style.backgroundColor = 'rgba(28, 28, 30, 1)';
+      return;
+    }
+
+    window.setTimeout(() => {
+      // Listen to events: Mouse, Touch, Keyboard
+      EventHandler(Game);
+      loadingScreen.style.display = 'none';
+      document.body.style.backgroundColor = 'rgba(28, 28, 30, 1)';
+    }, 1500);
   });
 });
 

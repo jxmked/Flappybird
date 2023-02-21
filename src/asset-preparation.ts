@@ -1,18 +1,14 @@
+import { AssetLoader, asset } from './utils';
+
+import SpriteDestructor from './lib/sprite-destructor';
+import WebSfx from './lib/web-sfx';
+import atlas from './assets/atlas.png';
+import mainIcon from './assets/icon.png';
 import sfDie from './assets/audio/die.ogg';
 import sfHit from './assets/audio/hit.ogg';
 import sfPoint from './assets/audio/point.ogg';
 import sfSwoosh from './assets/audio/swooshing.ogg';
 import sfWing from './assets/audio/wing.ogg';
-
-import mainIcon from './assets/icon.png';
-import atlas from './assets/atlas.png';
-
-// For Images
-import { AssetLoader, asset } from './utils';
-import SpriteDestructor from './lib/sprite-destructor';
-
-// For Sound Effects. Interactive Audio
-import WebSfx from './lib/web-sfx';
 
 export default (callback: Function): void => {
   let isLoaded: boolean = false;
@@ -33,9 +29,7 @@ export default (callback: Function): void => {
       // Flip vertically
       return new Promise<HTMLImageElement>((res: Function, rej: Function) => {
         const tmp = new Image();
-        tmp.addEventListener('load', () => {
-          res(tmp);
-        });
+        tmp.addEventListener('load', () => res(tmp));
         tmp.addEventListener('error', () => rej());
         canvas.width = img.width;
         canvas.height = img.height;
@@ -117,7 +111,7 @@ export default (callback: Function): void => {
     sd.cutOut('spark-lg', 276, 786, 10, 10);
     sd.cutOut('banner-game-ready', 586, 118, 192, 58);
     sd.cutOut('banner-game-over', 786, 118, 200, 52);
-    sd.cutOut('banner-flappybird', 702, 182, 178, 58);
+    sd.cutOut('banner-flappybird', 702, 182, 178, 52);
     sd.cutOut('banner-instruction', 584, 182, 114, 98);
     sd.cutOut('copyright', 886, 184, 122, 10);
     sd.cutOut('icon-plus', 992, 168, 10, 10);

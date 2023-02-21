@@ -5,13 +5,20 @@
 import Game from './game';
 import WebSfx from './lib/web-sfx';
 
+export type IEventParam = MouseEvent | TouchEvent | KeyboardEvent;
+
 export default (Game: Game) => {
   interface IMouse {
     down: boolean;
     position: ICoordinate;
   }
 
-  let clicked = false;
+  let clicked: boolean = false;
+
+  // Trigger the event once
+  let hasMouseDown: boolean = false;
+  let hasMouseUp: boolean = true;
+
   const mouse: IMouse = {
     down: false,
     position: {
@@ -35,40 +42,47 @@ export default (Game: Game) => {
     clicked = true;
   };
 
-  const mouseMove = (
-    { x, y }: ICoordinate,
-    evt: MouseEvent | TouchEvent | KeyboardEvent
-  ): void => {
+  const mouseMove = ({ x, y }: ICoordinate, evt: IEventParam): void => {
     evt.preventDefault();
     mouse.position = getBoundedPosition({ x, y });
   };
 
   const mouseUP = (
     { x, y }: ICoordinate,
-    evt: MouseEvent | TouchEvent | KeyboardEvent
+    evt: IEventParam,
+    isRetreive: boolean
   ): void => {
+    if (hasMouseUp) return;
+    hasMouseUp = true;
+    hasMouseDown = false;
+
     /**
      * Required due to autoplay restriction
      * */
     WebSfx.init();
 
     evt.preventDefault();
-    mouse.position = getBoundedPosition({ x, y });
+    if (!isRetreive) mouse.position = getBoundedPosition({ x, y });
+
+    Game.mouseUp(mouse.position);
     mouse.down = false;
     clicked = false;
   };
 
-  const mouseDown = (
-    { x, y }: ICoordinate,
-    evt: MouseEvent | TouchEvent | KeyboardEvent
-  ): void => {
+  const mouseDown = ({ x, y }: ICoordinate, evt: IEventParam): void => {
+    if (hasMouseDown) return;
+    hasMouseUp = false;
+    hasMouseDown = true;
+
     /**
+     * Trigger multiple times
      * Required due to autoplay restriction
      * */
     WebSfx.init();
 
     evt.preventDefault();
     mouse.position = getBoundedPosition({ x, y });
+    Game.mouseDown(mouse.position);
     mouse.down = true;
 
     if (mouse.down) {
@@ -88,7 +102,7 @@ export default (Game: Game) => {
     let x = evt.clientX;
     let y = evt.clientY;
 
-    mouseUP({ x, y }, evt);
+    mouseUP({ x, y }, evt, false);
   });
 
   Game.canvas.addEventListener('mousemove', (evt: MouseEvent) => {
@@ -108,14 +122,14 @@ export default (Game: Game) => {
 
   Game.canvas.addEventListener('touchend', (evt: TouchEvent) => {
     if (evt.touches.length < 1) {
-      mouseUP(mouse.position, evt);
+      mouseUP(mouse.position, evt, true);
       return;
     }
 
     let x = evt.touches[0].clientX;
     let y = evt.touches[0].clientY;
 
-    mouseUP({ x, y }, evt);
+    mouseUP({ x, y }, evt, false);
   });
 
   Game.canvas.addEventListener('touchmove', (evt: TouchEvent) => {
@@ -164,7 +178,8 @@ export default (Game: Game) => {
           x: Game.canvas.width / 2,
           y: Game.canvas.height / 2
         },
-        evt
+        evt,
+        false
       );
     }
   });

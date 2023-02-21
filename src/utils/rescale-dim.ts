@@ -5,9 +5,9 @@
  * @param oldDim - Initial {width, height} dimension.
  * @param newDim - New Dimension to match width. Its either { width } or { height } but cannot both.
  */
-type IRescaleDim = { width: number } | { height: number };
+export type IRescaleDim = { width: number } | { height: number };
 
-const rescaleDim = (oldDim: IDimension, newDim: IRescaleDim): IDimension => {
+export const rescaleDim = (oldDim: IDimension, newDim: IRescaleDim): IDimension => {
   const filledDim: IDimension = {
     width: 0,
     height: 0
@@ -23,5 +23,3 @@ const rescaleDim = (oldDim: IDimension, newDim: IRescaleDim): IDimension => {
 
   return filledDim;
 };
-
-export { rescaleDim, IRescaleDim };

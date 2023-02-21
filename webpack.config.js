@@ -39,7 +39,7 @@ const CONFIG = {
 
   // For site.webmanifest
   appName: 'Flappy Bird',
-  shortAppName: 'AIBirds',
+  shortAppName: 'FlappyBird',
   description: package.description,
   colors: {
     background: '#3a3a3c',
@@ -48,7 +48,7 @@ const CONFIG = {
   favicon: 'favicon.ico', // Must be ends with .ico
   icons: {
     src: path.resolve('src/assets/icon.png'),
-    sizes: [96, 128, 192, 256, 384, 512]
+    sizes: [96, 128, 256, 512]
   }
 };
 

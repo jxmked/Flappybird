@@ -1,8 +1,8 @@
-import ParentClass from '../abstracts/parent-class';
-
-import { asset } from '../lib/sprite-destructor';
-import { rescaleDim, lerp } from '../utils';
 import { BG_SPEED, BG_TEXTURE } from '../constants';
+import { lerp, rescaleDim } from '../utils';
+
+import ParentClass from '../abstracts/parent-class';
+import { asset } from '../lib/sprite-destructor';
 
 export interface IBackgroundImages {
   day: HTMLImageElement;
@@ -13,17 +13,17 @@ export default class Background extends ParentClass {
   /**
    * Background Image selection (Day & Night)
    * */
-  backgroundImage: IBackgroundImages;
+  private backgroundImage: IBackgroundImages;
 
   /**
    * background dimension.
    * */
-  backgroundSize: IDimension;
+  private backgroundSize: IDimension;
 
   /**
    * Current Image to be use
    * */
-  img: undefined | HTMLImageElement;
+  private img: undefined | HTMLImageElement;
 
   constructor() {
     super();
@@ -43,7 +43,7 @@ export default class Background extends ParentClass {
   /**
    * Initialize Images after all asset has been loaded
    * */
-  init() {
+  public init(): void {
     this.backgroundImage = {
       night: asset('theme-night')!,
       day: asset('theme-day')!
@@ -52,17 +52,22 @@ export default class Background extends ParentClass {
     this.use(BG_TEXTURE);
   }
 
+  public reset(): void {
+    this.coordinate = { x: 0, y: 0 };
+    this.resize(this.canvasSize);
+  }
+
   /**
    * Select either day and night
    * */
-  use(select: 'day' | 'night'): void {
+  public use(select: 'day' | 'night'): void {
     this.img = this.backgroundImage[select];
   }
 
   /**
    * Resize Background image while Keeping the same ratio
    * */
-  resize({ width, height }: IDimension): void {
+  public resize({ width, height }: IDimension): void {
     super.resize({ width, height });
 
     this.backgroundSize = rescaleDim(
@@ -74,7 +79,7 @@ export default class Background extends ParentClass {
     );
   }
 
-  Update() {
+  public Update(): void {
     /**
      * We use linear interpolation instead of by pixel to move the object.
      * It is to keep the speed same in different Screen Sizes & Screen DPI.
@@ -87,7 +92,7 @@ export default class Background extends ParentClass {
     this.coordinate.y += this.velocity.y;
   }
 
-  Display(context: CanvasRenderingContext2D) {
+  public Display(context: CanvasRenderingContext2D): void {
     const { width, height } = this.backgroundSize;
     const { x, y } = this.coordinate;
 

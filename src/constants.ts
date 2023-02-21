@@ -17,8 +17,8 @@ export const BG_SPEED = 0.0002;
 
 // Initial Canvas Size. Changing this may cause problem in some cases.
 export const CANVAS_DIMENSION = {
-  width: 500,
-  height: 779
+  width: 288,
+  height: 512
 };
 
 // Sound effect volume. (0 - 1)
@@ -42,7 +42,7 @@ export const BIRD_MAX_ROTATION = 90;
 export const BIRD_MIN_ROTATION = -15;
 
 // Height of bird. Based on canvas Height
-export const BIRD_HEIGHT = 0.101;
+export const BIRD_HEIGHT = 0.024;
 
 // Weight of bird. Drag every update. Based on canvas height
 export const BIRD_WEIGHT = 0.00047;

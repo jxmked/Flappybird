@@ -39,20 +39,20 @@ export default class Stats {
     };
   }
 
-  text(pos: ICoordinate, preText: string, postText: string): void {
+  public text(pos: ICoordinate, preText: string, postText: string): void {
     this.textProps.position = pos;
     this.textProps.preText = preText;
     this.textProps.postText = postText;
   }
 
-  container(aPoint: ICoordinate, bPoint: ICoordinate): void {
+  public container(aPoint: ICoordinate, bPoint: ICoordinate): void {
     this.containerProps = {
       startingPoint: aPoint,
       endPoint: bPoint
     };
   }
 
-  mark(): void {
+  public mark(): void {
     const now = performance.now();
 
     while (this.timeArray.length > 0 && this.timeArray[0] <= now - 1000) {
