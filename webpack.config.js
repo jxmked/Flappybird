@@ -8,6 +8,7 @@ const GA4WebpackPlugin = require('ga4-webpack-plugin');
 const package = require('./package.json');
 const webpack = require("webpack");
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 /**
  * First Webpack Config
@@ -80,8 +81,15 @@ let prodPlugins = [
   }),
   new WebpackManifestPlugin({
     basePath: '',
+    publicPath: '',
     fileName: 'asset-manifest.json'
   }),
+  new CopyPlugin({
+      patterns: [
+        { from: 'src/sw.js', to: 'sw.js' },
+      ],
+    }),
+  
 ];
 
 module.exports = function (env, config) {

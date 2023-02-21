@@ -35,6 +35,7 @@
     "@typescript-eslint/parser": "^5.51.0",
     "browser-sync": "^2.27.11",
     "browser-sync-webpack-plugin": "^2.3.0",
+    "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.3",
     "eslint": "^8.34.0",
     "file-loader": "^6.2.0",

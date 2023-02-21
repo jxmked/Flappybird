@@ -8,23 +8,22 @@ import GameObject from './game';
 import prepareAssets from './asset-preparation';
 import raf from 'raf';
 
-/**
 if (process.env.NODE_ENV !== 'development') {
   // Load Service Worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker
-        .register('/service-worker.js')
+        .register('/sw.js')
         .then((registration) => {
-          console.log('SW registered: ', registration);
+          console.log('SW registered');
         })
         .catch((registrationError) => {
-          console.log('SW registration failed: ', registrationError);
+          console.log('SW registration failed');
         });
     });
   }
 }
-*/
+
 const canvas = document.querySelector('#main-canvas')! as HTMLCanvasElement;
 const loadingScreen = document.querySelector('#loading-modal')! as HTMLDivElement;
 let isLoaded = false;
