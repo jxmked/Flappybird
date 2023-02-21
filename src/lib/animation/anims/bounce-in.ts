@@ -58,8 +58,8 @@ export class BounceIn extends DefaultProps {
     }
 
     const { fading, bounce } = this.options.durations;
-
     const timeDiff = this.timeDiff;
+
     let opacity: number = easing.swing(timeDiff / fading);
     let value: number = -easing.sineWaveHS(timeDiff / bounce);
 

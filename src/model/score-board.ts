@@ -101,15 +101,13 @@ export default class ScoreBoard extends ParentObject {
         { width: lerp(0, this.canvasSize.width, 0.7) }
       );
       const anim = this.BounceInAnim.value;
-      let yPos = lerp(0, this.canvasSize.height, 0.225) - bgoScaled.height / 2;
-      yPos += anim.value * 30;
+      const yPos = lerp(0, this.canvasSize.height, 0.225) - bgoScaled.height / 2;
 
       context.globalAlpha = anim.opacity;
-
       context.drawImage(
         this.images.get('banner-gameover')!,
         lerp(0, this.canvasSize.width, 0.5) - bgoScaled.width / 2,
-        yPos,
+        yPos + anim.value * 35,
         bgoScaled.width,
         bgoScaled.height
       );
