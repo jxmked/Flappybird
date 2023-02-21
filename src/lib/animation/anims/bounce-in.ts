@@ -57,13 +57,13 @@ export class BounceIn extends DefaultProps {
       };
     }
 
-    const timeDiff = this.timeDiff;
-    let opacity: number = easing.swing(timeDiff / this.options.durations.fading);
-    let value: number = -easing.sineWaveHS(timeDiff / this.options.durations.bounce);
+    const { fading, bounce } = this.options.durations;
 
-    if (
-      timeDiff >= Math.max(this.options.durations.fading, this.options.durations.bounce)
-    ) {
+    const timeDiff = this.timeDiff;
+    let opacity: number = easing.swing(timeDiff / fading);
+    let value: number = -easing.sineWaveHS(timeDiff / bounce);
+
+    if (timeDiff >= Math.max(fading, bounce)) {
       this.stop();
       return {
         opacity: 1,
@@ -71,11 +71,11 @@ export class BounceIn extends DefaultProps {
       };
     }
 
-    if (timeDiff >= this.options.durations.fading) {
+    if (timeDiff >= fading) {
       opacity = 1;
     }
 
-    if (timeDiff >= this.options.durations.bounce) {
+    if (timeDiff >= bounce) {
       value = 0;
     }
 
