@@ -1,6 +1,7 @@
 import { lerp, rescaleDim } from '../utils';
 
 import ParentObject from '../abstracts/parent-class';
+import SparkModel from './spark';
 import PlayButton from './btn-play';
 import RankingButton from './btn-ranking';
 import { asset } from '../lib/sprite-destructor';
@@ -24,12 +25,14 @@ export default class ScoreBoard extends ParentObject {
   private currentHighScore: number;
   private TimingEventAnim: TimingEvent;
   private isNewHighScore: boolean;
+  private spark: SparkModel;
 
   constructor() {
     super();
     this.images = new Map<string, HTMLImageElement>();
     this.playButton = new PlayButton();
     this.rankingButton = new RankingButton();
+    this.spark = new SparkModel();
     this.currentHighScore = 0;
     this.currentGeneratedNumber = 0;
     this.currentScore = 0;
@@ -51,9 +54,7 @@ export default class ScoreBoard extends ParentObject {
       },
       transition: 'easeOutExpo'
     });
-    this.TimingEventAnim = new TimingEvent({
-      diff: 70
-    });
+    this.TimingEventAnim = new TimingEvent({ diff: 30 });
     this.BounceInAnim = new BounceIn({
       durations: {
         bounce: 300,
@@ -70,9 +71,6 @@ export default class ScoreBoard extends ParentObject {
     this.images.set('coin-30', asset('coin-shine-gold'));
     this.images.set('coin-40', asset('coin-shine-silver'));
     this.images.set('new-icon', asset('toast-new'));
-    this.images.set('spark-sm', asset('spark-sm'));
-    this.images.set('park-md', asset('spark-md'));
-    this.images.set('spark-lg', asset('spark-lg'));
 
     for (let i = 0; i < 10; ++i) {
       this.images.set(`number-${i}`, asset(`number-md-${i}`));
@@ -83,6 +81,7 @@ export default class ScoreBoard extends ParentObject {
 
     this.playButton.active = false;
     this.rankingButton.active = false;
+    this.spark.init();
   }
 
   public resize({ width, height }: IDimension): void {
@@ -90,11 +89,13 @@ export default class ScoreBoard extends ParentObject {
 
     this.rankingButton.resize(this.canvasSize);
     this.playButton.resize(this.canvasSize);
+    this.spark.resize(this.canvasSize);
   }
 
   public Update(): void {
     this.rankingButton.Update();
     this.playButton.Update();
+    this.spark.Update();
   }
 
   public Display(context: CanvasRenderingContext2D): void {
@@ -146,14 +147,18 @@ export default class ScoreBoard extends ParentObject {
         this.currentGeneratedNumber++;
       }
 
+      /**
+       * Only show the buttons, medal, Update high score if possible
+       * and 'new' icon after counting
+       * */
       if (this.TimingEventAnim.status.complete && !this.TimingEventAnim.status.running) {
         if (this.currentGeneratedNumber > this.currentHighScore) {
           this.setHighScore(this.currentGeneratedNumber);
           this.isNewHighScore = true;
         }
 
-        this.showButtons();
         this.addMedal(context, anim, sbScaled);
+        this.showButtons();
       }
 
       this.displayScore(context, anim, sbScaled);
@@ -182,6 +187,7 @@ export default class ScoreBoard extends ParentObject {
   public showBoard(): void {
     this.show.scoreBoard = true;
     this.FlyInAnim.start();
+    this.spark.doSpark();
   }
 
   public showButtons(): void {
@@ -204,31 +210,36 @@ export default class ScoreBoard extends ParentObject {
     parentSize: IDimension
   ): void {
     if (this.currentScore < 10) return; // So sad having a no medal :)
+    let medal: HTMLImageElement | undefined;
 
-    let medal: HTMLImageElement = this.images.get('coin-40')!;
-    if (this.currentScore >= 30 && this.currentScore < 40) {
-      medal = this.images.get('coin-30')!;
+    if (this.currentScore >= 10 && this.currentScore < 20) {
+      medal = this.images.get('coin-10');
     } else if (this.currentScore >= 20 && this.currentScore < 30) {
-      medal = this.images.get('coin-20')!;
-    } else if (this.currentScore >= 10 && this.currentScore < 20) {
-      medal = this.images.get('coin-10')!;
+      medal = this.images.get('coin-20');
+    } else {
+      if (Math.floor(this.currentScore / 10) % 2 === 0) {
+        medal = this.images.get('coin-40');
+      } else {
+        medal = this.images.get('coin-30');
+      }
     }
 
     const scaled = rescaleDim(
       {
-        width: medal.width,
-        height: medal.height
+        width: medal!.width,
+        height: medal!.height
       },
       { width: lerp(0, parentSize.width, 0.1878) }
     );
+    const pos = {
+      x: lerp(0, coord.x + parentSize.width / 2, 0.36),
+      y: lerp(0, coord.y + parentSize.height / 2, 0.9196)
+    };
 
-    context.drawImage(
-      medal,
-      lerp(0, coord.x + parentSize.width / 2, 0.36),
-      lerp(0, coord.y + parentSize.height / 2, 0.9196),
-      scaled.width,
-      scaled.height
-    );
+    context.drawImage(medal!, pos.x, pos.y, scaled.width, scaled.height);
+
+    this.spark.move(pos, scaled);
+    this.spark.Display(context);
   }
 
   private displayScore(
@@ -245,7 +256,6 @@ export default class ScoreBoard extends ParentObject {
     );
 
     coord = Object.assign({}, coord);
-
     coord.x = lerp(0, coord.x + parentSize.width / 2, 1.565);
     coord.y = lerp(0, coord.y + parentSize.height / 2, 0.864);
 
@@ -326,6 +336,7 @@ export default class ScoreBoard extends ParentObject {
     this.FlyInAnim.reset();
     this.BounceInAnim.reset();
     this.TimingEventAnim.reset();
+    this.spark.stop();
   }
 
   public onRestart(cb: Function): void {
