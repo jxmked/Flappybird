@@ -60,7 +60,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.gameState = 'none';
     this.state = 'waiting';
     this.resize(this.canvasSize);
-    // this.game.background.reset();
+    this.game.background.reset();
     this.game.platform.reset();
     this.pipeGenerator.reset();
     this.bannerInstruction.reset();

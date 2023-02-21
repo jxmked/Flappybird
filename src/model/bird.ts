@@ -1,5 +1,4 @@
 import {
-  BIRD_DEFAULT_COLOR,
   BIRD_HEIGHT,
   BIRD_INITIAL_DIMENSION,
   BIRD_JUMP_HEIGHT,
@@ -11,11 +10,11 @@ import {
   BIRD_X_POSITION
 } from '../constants';
 import { clamp, flipRange, lerp, rescaleDim, sine as sineWave } from '../utils';
-
 import ParentClass from '../abstracts/parent-class';
 import Pipe from './pipe';
 import Sfx from './sfx';
 import { asset } from '../lib/sprite-destructor';
+import SceneGenerator from './scene-generator';
 
 export interface IBirdObject {
   up: HTMLImageElement;
@@ -29,7 +28,7 @@ export interface IBirdImages {
   blue: IBirdObject;
 }
 
-export type IBirdColors = 'yellow' | 'red' | 'blue';
+export type IBirdColors = keyof IBirdImages;
 
 export default class Bird extends ParentClass {
   /**
@@ -155,8 +154,8 @@ export default class Bird extends ParentClass {
         down: asset('bird-red-down')!
       }
     };
-
-    this.use(BIRD_DEFAULT_COLOR);
+    Object.assign(SceneGenerator.birdColorList, Object.keys(this.birdColorObject));
+    this.use(SceneGenerator.bird);
   }
 
   public reset(): void {
@@ -167,6 +166,7 @@ export default class Bird extends ParentClass {
     this.causeOfDeath = 'none';
     this.died = false;
     this.resize(this.canvasSize);
+    this.use(SceneGenerator.bird);
   }
 
   /**

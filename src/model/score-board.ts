@@ -6,6 +6,7 @@ import PlayButton from './btn-play';
 import RankingButton from './btn-ranking';
 import { asset } from '../lib/sprite-destructor';
 import { Fly, BounceIn, TimingEvent } from '../lib/animation';
+import Storage from '../lib/storage';
 
 export interface IImageState {
   banner: boolean;
@@ -82,6 +83,14 @@ export default class ScoreBoard extends ParentObject {
     this.playButton.active = false;
     this.rankingButton.active = false;
     this.spark.init();
+
+    /**
+     * We need to make sure about this
+     * else may throw any error during
+     * image retrieval
+     * */
+    const prevScore = Storage.get('highscore') as number;
+    this.currentHighScore = typeof prevScore === 'number' ? prevScore : 0;
   }
 
   public resize({ width, height }: IDimension): void {
@@ -197,6 +206,7 @@ export default class ScoreBoard extends ParentObject {
   }
 
   private setHighScore(num: number): void {
+    Storage.save('highscore', num);
     this.currentHighScore = num;
   }
 

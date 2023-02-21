@@ -10,6 +10,7 @@ import { SFX_VOLUME } from './constants';
 import ScreenChanger from './lib/screen-changer';
 import Sfx from './model/sfx';
 import { flipRange } from './utils';
+import Storage from './lib/storage';
 
 export default class Game extends ParentClass {
   background: BgModel;
@@ -44,6 +45,7 @@ export default class Game extends ParentClass {
   }
 
   init(): void {
+    new Storage(); // Init first
     this.background.init();
     this.platform.init();
 
