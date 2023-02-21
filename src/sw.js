@@ -5,7 +5,7 @@
  *
  * */
 
-var APP_PREFIX = 'FlappyBird';
+var APP_PREFIX = 'Flappybird';
 var VERSION = 'version_1';
 var CACHE_NAME = APP_PREFIX + VERSION;
 var prefix = '/';
