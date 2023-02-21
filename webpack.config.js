@@ -81,7 +81,7 @@ let prodPlugins = [
   }),
   new WebpackManifestPlugin({
     basePath: '',
-    publicPath: '',
+    publicPath: 'Flappybird/',
     fileName: 'asset-manifest.json'
   }),
   new CopyPlugin({

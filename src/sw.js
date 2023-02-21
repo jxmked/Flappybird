@@ -10,12 +10,12 @@ var VERSION = 'version_1';
 var CACHE_NAME = APP_PREFIX + VERSION;
 var prefix = '/';
 
-var URLS = [''];
+var URLS = [APP_PREFIX + '/'];
 
 function getFiles() {
   return new Promise(async function (resolve, reject) {
     try {
-      const res = await fetch(prefix + 'asset-manifest.json', {
+      const res = await fetch('asset-manifest.json', {
         method: 'GET'
       });
 
@@ -36,11 +36,11 @@ self.addEventListener('fetch', function (e) {
   e.respondWith(
     caches.match(e.request).then(function (request) {
       if (request) {
-        if (/(google|gtag|adsense)/i.test(request.url)) return;
         return request;
       } else {
         try {
           return fetch(e.request).catch(function (err) {
+            console.error('Unable to fetch');
             console.info('Offline mode');
           });
         } catch (err) {}
@@ -51,11 +51,16 @@ self.addEventListener('fetch', function (e) {
 
 self.addEventListener('install', function (e) {
   e.waitUntil(
-    getFiles().then(function () {
-      var i = [...new Set(URLS)];
-      caches.open(CACHE_NAME).then(function (cache) {
-        return cache.addAll(i);
-      });
+    new Promise(function (resolve, reject) {
+      getFiles()
+        .then(function () {
+          var i = [...new Set(URLS)];
+          caches.open(CACHE_NAME).then(function (cache) {
+            resolve();
+            return cache.addAll(i);
+          });
+        })
+        .catch(reject);
     })
   );
 });
@@ -67,6 +72,7 @@ self.addEventListener('activate', function (e) {
         return key.indexOf(APP_PREFIX);
       });
       cacheWhitelist.push(CACHE_NAME);
+
       return Promise.all(
         keyList.map(function (key, i) {
           if (cacheWhitelist.indexOf(key) === -1) {
