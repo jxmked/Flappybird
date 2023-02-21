@@ -111,7 +111,7 @@ export default class Game extends ParentClass {
     // Remove smoothing effect of an image
     this.context.imageSmoothingEnabled = false;
     this.context.imageSmoothingQuality = 'high';
-    
+
     this.screenChanger.setState(this.state);
     this.background.Display(this.context);
 
@@ -121,9 +121,9 @@ export default class Game extends ParentClass {
 
     this.platform.Display(this.context);
     this.screenChanger.Display(this.context);
-    
+
     this.context.globalAlpha = flipRange(0, 1, this.opacity);
-    
+
     if (this.isTransitioning) {
       this.context.fillStyle = 'black';
       this.context.fillRect(0, 0, this.canvasSize.width, this.canvasSize.height);
