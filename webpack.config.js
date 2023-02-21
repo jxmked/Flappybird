@@ -63,6 +63,7 @@ let prodPlugins = [
     description: CONFIG.description,
     orientation: 'portrait',
     start_url: '.',
+    display: 'standalone',
     background_color: CONFIG.colors.background,
     theme_color: CONFIG.colors.theme,
     icons: [
