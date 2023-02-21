@@ -10,7 +10,7 @@ import { IBirdColors } from './model/bird';
  * */
 
 // Pipe and Platform Speed should be the same
-export const GAME_SPEED = 0.0058;
+export const GAME_SPEED = 0.0062;
 
 // Background Speed
 export const BG_SPEED = 0.0002;

@@ -136,7 +136,7 @@ export default (Game: Game) => {
     let x = evt.touches[0].clientX;
     let y = evt.touches[0].clientY;
 
-    mouseDown({ x, y }, evt);
+    mouseMove({ x, y }, evt);
   });
 
   // Keyboard event
