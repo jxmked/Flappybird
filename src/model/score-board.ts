@@ -4,7 +4,7 @@ import ParentObject from '../abstracts/parent-class';
 import PlayButton from './btn-play';
 import RankingButton from './btn-ranking';
 import { asset } from '../lib/sprite-destructor';
-import { Fly } from '../lib/animation';
+import { Fly, BounceIn } from '../lib/animation';
 
 export interface IImageState {
   banner: boolean;
@@ -18,9 +18,11 @@ export default class ScoreBoard extends ParentObject {
   private rankingButton: RankingButton;
   private show: IImageState;
   private FlyInAnim: Fly;
+  private BounceInAnim: BounceIn;
   private currentScore: number;
   private currentGeneratedNumber: number;
   private currentHighScore: number;
+
   constructor() {
     super();
     this.images = new Map<string, HTMLImageElement>();
@@ -45,6 +47,12 @@ export default class ScoreBoard extends ParentObject {
         y: 0.438
       },
       transition: 'easeOutExpo'
+    });
+    this.BounceInAnim = new BounceIn({
+      durations: {
+        bounce: 300,
+        fading: 100
+      }
     });
   }
 
@@ -92,14 +100,21 @@ export default class ScoreBoard extends ParentObject {
         },
         { width: lerp(0, this.canvasSize.width, 0.7) }
       );
+      const anim = this.BounceInAnim.value;
+      let yPos = lerp(0, this.canvasSize.height, 0.225) - bgoScaled.height / 2;
+      yPos += anim.value * 30;
+
+      context.globalAlpha = anim.opacity;
 
       context.drawImage(
         this.images.get('banner-gameover')!,
         lerp(0, this.canvasSize.width, 0.5) - bgoScaled.width / 2,
-        lerp(0, this.canvasSize.height, 0.225) - bgoScaled.height / 2,
+        yPos,
         bgoScaled.width,
         bgoScaled.height
       );
+
+      context.globalAlpha = 1;
     }
 
     if (this.show.scoreBoard) {
@@ -140,6 +155,7 @@ export default class ScoreBoard extends ParentObject {
 
   public showBanner(): void {
     this.show.banner = true;
+    this.BounceInAnim.start();
   }
 
   public showBoard(): void {
@@ -254,6 +270,7 @@ export default class ScoreBoard extends ParentObject {
     this.playButton.active = false;
     this.rankingButton.active = false;
     this.FlyInAnim.reset();
+    this.BounceInAnim.reset();
   }
 
   public onRestart(cb: Function): void {

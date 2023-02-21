@@ -37,7 +37,7 @@ export const quadratic: IEasingUtils['quadratic'] = (t) => {
 export const cubicBezier: IEasingUtils['cubicBezier'] = (t) => {
   /**
    * f(x) = { 2x^3, if x <= 0.5,
-   *        { 1 - 2x^3, > 0.5
+   *        { 1 - 2x^3, x > 0.5
    * */
   return t <= 0.5 ? 2 * Math.pow(t, 3) : 1 - 2 * Math.pow(t, 3);
 };
