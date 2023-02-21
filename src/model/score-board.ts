@@ -4,7 +4,7 @@ import ParentObject from '../abstracts/parent-class';
 import PlayButton from './btn-play';
 import RankingButton from './btn-ranking';
 import { asset } from '../lib/sprite-destructor';
-import { Fly, BounceIn } from '../lib/animation';
+import { Fly, BounceIn, TimingEvent } from '../lib/animation';
 
 export interface IImageState {
   banner: boolean;
@@ -22,6 +22,8 @@ export default class ScoreBoard extends ParentObject {
   private currentScore: number;
   private currentGeneratedNumber: number;
   private currentHighScore: number;
+  private TimingEventAnim: TimingEvent;
+  private isNewHighScore: boolean;
 
   constructor() {
     super();
@@ -31,6 +33,7 @@ export default class ScoreBoard extends ParentObject {
     this.currentHighScore = 0;
     this.currentGeneratedNumber = 0;
     this.currentScore = 0;
+    this.isNewHighScore = false;
     this.show = {
       banner: false,
       scoreBoard: false,
@@ -47,6 +50,9 @@ export default class ScoreBoard extends ParentObject {
         y: 0.438
       },
       transition: 'easeOutExpo'
+    });
+    this.TimingEventAnim = new TimingEvent({
+      diff: 70
     });
     this.BounceInAnim = new BounceIn({
       durations: {
@@ -107,11 +113,10 @@ export default class ScoreBoard extends ParentObject {
       context.drawImage(
         this.images.get('banner-gameover')!,
         lerp(0, this.canvasSize.width, 0.5) - bgoScaled.width / 2,
-        yPos + anim.value * 35,
+        yPos + anim.value * lerp(0, this.canvasSize.height, 0.015),
         bgoScaled.width,
         bgoScaled.height
       );
-
       context.globalAlpha = 1;
     }
 
@@ -137,11 +142,29 @@ export default class ScoreBoard extends ParentObject {
         sbScaled.height
       );
 
-      this.displayBestScore(context, anim, sbScaled, true);
-      this.addMedal(context, anim, sbScaled);
+      if (this.TimingEventAnim.value && this.currentScore > this.currentGeneratedNumber) {
+        this.currentGeneratedNumber++;
+      }
+
+      if (this.TimingEventAnim.status.complete && !this.TimingEventAnim.status.running) {
+        if (this.currentGeneratedNumber > this.currentHighScore) {
+          this.setHighScore(this.currentGeneratedNumber);
+          this.isNewHighScore = true;
+        }
+
+        this.showButtons();
+        this.addMedal(context, anim, sbScaled);
+      }
+
+      this.displayScore(context, anim, sbScaled);
+      this.displayBestScore(context, anim, sbScaled, this.isNewHighScore);
 
       if (this.FlyInAnim.status.complete && !this.FlyInAnim.status.running) {
-        this.showButtons();
+        this.TimingEventAnim.start();
+
+        if (this.currentGeneratedNumber === this.currentScore) {
+          this.TimingEventAnim.stop();
+        }
       }
     }
 
@@ -208,6 +231,37 @@ export default class ScoreBoard extends ParentObject {
     );
   }
 
+  private displayScore(
+    context: CanvasRenderingContext2D,
+    coord: ICoordinate,
+    parentSize: IDimension
+  ): void {
+    const numSize = rescaleDim(
+      {
+        width: this.images.get('number-1')!.width,
+        height: this.images.get('number-1')!.height
+      },
+      { width: lerp(0, parentSize.width, 0.05) }
+    );
+
+    coord = Object.assign({}, coord);
+
+    coord.x = lerp(0, coord.x + parentSize.width / 2, 1.565);
+    coord.y = lerp(0, coord.y + parentSize.height / 2, 0.864);
+
+    const numArr: string[] = String(this.currentGeneratedNumber).split('');
+
+    numArr.reverse().forEach((c: string, index: number) => {
+      context.drawImage(
+        this.images.get(`number-${c}`)!,
+        coord.x - index * (numSize.width + 5),
+        coord.y,
+        numSize.width,
+        numSize.height
+      );
+    });
+  }
+
   private displayBestScore(
     context: CanvasRenderingContext2D,
     coord: ICoordinate,
@@ -219,13 +273,13 @@ export default class ScoreBoard extends ParentObject {
         width: this.images.get('number-1')!.width,
         height: this.images.get('number-1')!.height
       },
-      { width: lerp(0, parentSize.width, 0.052) }
+      { width: lerp(0, parentSize.width, 0.05) }
     );
 
     coord = Object.assign({}, coord);
 
     coord.x = lerp(0, coord.x + parentSize.width / 2, 1.565);
-    coord.y = lerp(0, coord.y + parentSize.height / 2, 1.078);
+    coord.y = lerp(0, coord.y + parentSize.height / 2, 1.074);
 
     const numArr: string[] = String(this.currentHighScore).split('');
 
@@ -267,8 +321,11 @@ export default class ScoreBoard extends ParentObject {
     this.show.buttons = false;
     this.playButton.active = false;
     this.rankingButton.active = false;
+    this.currentGeneratedNumber = 0;
+    this.isNewHighScore = false;
     this.FlyInAnim.reset();
     this.BounceInAnim.reset();
+    this.TimingEventAnim.reset();
   }
 
   public onRestart(cb: Function): void {
