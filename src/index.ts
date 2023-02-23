@@ -8,6 +8,7 @@ import GameObject from './game';
 import prepareAssets from './asset-preparation';
 import raf from 'raf';
 
+/* Working on this
 if (process.env.NODE_ENV !== 'development') {
   // Load Service Worker
   if ('serviceWorker' in navigator) {
@@ -22,7 +23,7 @@ if (process.env.NODE_ENV !== 'development') {
         });
     });
   }
-}
+} */
 
 const canvas = document.querySelector('#main-canvas')! as HTMLCanvasElement;
 const loadingScreen = document.querySelector('#loading-modal')! as HTMLDivElement;
