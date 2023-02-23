@@ -1,12 +1,14 @@
 import ParentClass from '../abstracts/parent-class';
 import { FadeOut } from '../lib/animation';
+import { IEasingKey } from '../lib/animation/easing';
 import { IFadingStatus } from '../lib/animation/abstracts/fading';
-import { lerp, clamp } from '../utils';
+import { lerp } from '../utils';
 
 export interface IFlashScreenConstructorOption {
   style: string;
   strong: number;
   interval: number;
+  easing: IEasingKey;
 }
 
 export interface IRecordEvent {
@@ -29,14 +31,14 @@ export default class FlashScreen extends ParentClass {
   private events: IRecordEvent[];
   private value: number;
 
-  constructor({ style, strong, interval }: IFlashScreenConstructorOption) {
+  constructor({ style, strong, interval, easing }: IFlashScreenConstructorOption) {
     super();
     this.strong = strong;
     this.style = style;
     this.events = [];
     this.fadeEvent = new FadeOut({
       duration: interval,
-      transition: 'sineWaveHS'
+      transition: easing
     });
     this.value = 0;
   }
@@ -84,9 +86,6 @@ export default class FlashScreen extends ParentClass {
     } else {
       this.value = 0;
     }
-
-    // FIXME: Weird flickering before ending the animation
-    this.value = clamp(0, 1, this.value);
   }
 
   public Display(context: CanvasRenderingContext2D): void {

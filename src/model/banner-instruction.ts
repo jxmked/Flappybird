@@ -72,7 +72,9 @@ export default class BannerInstruction extends ParentClass {
         height: 0
       }
     };
-    this.fadeOut = new FadeOut();
+    this.fadeOut = new FadeOut({
+      transition: 'linear'
+    });
     this.opacity = 1;
     this.isComplete = false;
     this.doesTap = false;

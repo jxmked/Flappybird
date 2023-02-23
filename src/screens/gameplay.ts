@@ -42,8 +42,18 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.bannerInstruction = new BannerInstruction();
     this.gameState = 'none';
     this.scoreBoard = new ScoreBoard();
-    this.transition = new FlashScreen({ interval: 500, strong: 1.0, style: 'black' });
-    this.flashScreen = new FlashScreen({ style: 'white', interval: 180, strong: 0.7 });
+    this.transition = new FlashScreen({
+      interval: 500,
+      strong: 1.0,
+      style: 'black',
+      easing: 'sineWaveHS'
+    });
+    this.flashScreen = new FlashScreen({
+      style: 'white',
+      interval: 180,
+      strong: 0.7,
+      easing: 'linear'
+    });
     this.hideBird = false;
     this.showScoreBoard = false;
 
