@@ -85,11 +85,13 @@ let prodPlugins = [
     publicPath: 'Flappybird/',
     fileName: 'asset-manifest.json'
   }),
+  
+  /*
   new CopyPlugin({
       patterns: [
         { from: 'src/sw.js', to: 'sw.js' },
       ],
-    }),
+    }), */
   
 ];
 
