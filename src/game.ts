@@ -1,6 +1,5 @@
 import BgModel from './model/background';
 import BirdModel from './model/bird';
-import { FadeOutIn } from './lib/animation';
 import GamePlay from './screens/gameplay';
 import Intro from './screens/intro';
 import ParentClass from './abstracts/parent-class';
@@ -9,23 +8,21 @@ import PlatformModel from './model/platform';
 import { SFX_VOLUME } from './constants';
 import ScreenChanger from './lib/screen-changer';
 import Sfx from './model/sfx';
-import { flipRange } from './utils';
 import Storage from './lib/storage';
+import FlashScreen from './model/flash-screen';
 
 export default class Game extends ParentClass {
-  background: BgModel;
-  platform: PlatformModel;
-  canvas: HTMLCanvasElement;
-  context: CanvasRenderingContext2D;
-  pipeGenerator: PipeGenerator;
-  screenIntro: Intro;
-  gamePlay: GamePlay;
-  state: string;
-  isTransitioning: boolean;
-  opacity: number;
-  bgPause: boolean;
-  screenChanger: ScreenChanger;
-  transition: FadeOutIn;
+  public background: BgModel;
+  public platform: PlatformModel;
+  public canvas: HTMLCanvasElement;
+  public context: CanvasRenderingContext2D;
+  public pipeGenerator: PipeGenerator;
+  public bgPause: boolean;
+  private screenChanger: ScreenChanger;
+  private transition: FlashScreen;
+  private screenIntro: Intro;
+  private gamePlay: GamePlay;
+  private state: string;
 
   constructor(canvas: HTMLCanvasElement) {
     super();
@@ -39,15 +36,23 @@ export default class Game extends ParentClass {
     this.gamePlay = new GamePlay(this);
     this.state = 'intro';
     this.bgPause = false;
-    this.opacity = 1;
-    this.isTransitioning = false;
-    this.transition = new FadeOutIn({ duration: 500 });
+    this.transition = new FlashScreen({
+      interval: 700,
+      strong: 1,
+      style: 'black',
+      easing: 'sineWaveHS'
+    });
+
+    this.transition.setEvent([0.98, 1], () => {
+      this.state = 'game';
+    });
   }
 
-  init(): void {
+  public init(): void {
     new Storage(); // Init first
     this.background.init();
     this.platform.init();
+    this.transition.init();
 
     Sfx.init();
     Sfx.volume(SFX_VOLUME);
@@ -65,17 +70,17 @@ export default class Game extends ParentClass {
     this.screenChanger.register('game', this.gamePlay);
   }
 
-  reset(): void {
+  public reset(): void {
     this.background.reset();
     this.platform.reset();
     this.Resize(this.canvasSize);
   }
 
-  Resize({ width, height }: IDimension): void {
+  public Resize({ width, height }: IDimension): void {
     super.resize({ width, height });
     this.background.resize(this.canvasSize);
     this.platform.resize(this.canvasSize);
-
+    this.transition.resize(this.canvasSize);
     BirdModel.platformHeight = this.platform.platformSize.height;
 
     this.pipeGenerator.resize({
@@ -90,15 +95,9 @@ export default class Game extends ParentClass {
     this.canvas.height = height;
   }
 
-  Update(): void {
+  public Update(): void {
+    this.transition.Update();
     this.screenChanger.setState(this.state);
-
-    if (this.isTransitioning) {
-      this.opacity = this.transition.value;
-      if (this.opacity <= 0.001) {
-        this.state = 'game';
-      }
-    }
 
     if (!this.bgPause) {
       this.background.Update();
@@ -108,7 +107,7 @@ export default class Game extends ParentClass {
     this.screenChanger.Update();
   }
 
-  Display(): void {
+  public Display(): void {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     // Remove smoothing effect of an image
     this.context.imageSmoothingEnabled = false;
@@ -123,45 +122,35 @@ export default class Game extends ParentClass {
 
     this.platform.Display(this.context);
     this.screenChanger.Display(this.context);
-
-    this.context.globalAlpha = flipRange(0, 1, this.opacity);
-
-    if (this.isTransitioning) {
-      this.context.fillStyle = 'black';
-      this.context.fillRect(0, 0, this.canvasSize.width, this.canvasSize.height);
-      this.context.fill();
-    }
-
-    this.context.globalAlpha = 1;
+    this.transition.Display(this.context);
   }
 
-  setEvent(): void {
+  public setEvent(): void {
     this.screenIntro.playButton.onClick(() => {
       if (this.state !== 'intro') return;
-      this.isTransitioning = true;
 
       // Deactivate buttons
       this.screenIntro.playButton.active = false;
       this.screenIntro.rankingButton.active = false;
       this.screenIntro.rateButton.active = false;
 
+      this.transition.reset();
       this.transition.start();
-      this.isTransitioning = true;
     });
   }
 
-  onClick({ x, y }: ICoordinate): void {
+  public onClick({ x, y }: ICoordinate): void {
     if (this.state === 'game') {
       this.gamePlay.click({ x, y });
     }
   }
 
-  mouseDown({ x, y }: ICoordinate): void {
+  public mouseDown({ x, y }: ICoordinate): void {
     this.screenIntro.mouseDown({ x, y });
     this.gamePlay.mouseDown({ x, y });
   }
 
-  mouseUp({ x, y }: ICoordinate): void {
+  public mouseUp({ x, y }: ICoordinate): void {
     this.screenIntro.mouseUp({ x, y });
     this.gamePlay.mouseUp({ x, y });
   }
