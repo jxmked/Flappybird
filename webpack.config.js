@@ -160,7 +160,7 @@ module.exports = function (env, config) {
         "process.env": Object.fromEntries(Object.entries(CONFIG.env).map((x) => [x[0], JSON.stringify(x[1])])),
       }),
       new GA4WebpackPlugin({
-        id: 'G-JPJZGW7PW6',
+        id: 'G-TFPC622JKX',
         inject: !devMode, // Only inject in build mode
         callPageView: true
       }),

@@ -10,6 +10,7 @@ import { flipRange, lerp } from '../utils';
 import BannerInstruction from '../model/banner-instruction';
 import BirdModel from '../model/bird';
 import CounterModel from '../model/count';
+import FlashScreen from '../model/flash-screen';
 import { FadeOutIn } from '../lib/animation';
 import { IScreenChangerObject } from '../lib/screen-changer';
 import MainGameController from '../game';
@@ -29,7 +30,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
   private scoreBoard: ScoreBoard;
   private transition: FadeOutIn;
   private hideBird: boolean;
-
+  private flashScreen: FlashScreen;
   private showScoreBoard: boolean;
 
   constructor(game: MainGameController) {
@@ -43,7 +44,11 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.gameState = 'none';
     this.scoreBoard = new ScoreBoard();
     this.transition = new FadeOutIn({ duration: 500 });
-
+    this.flashScreen = new FlashScreen({
+      style: 'white',
+      interval: 230,
+      strong: 0.6
+    });
     this.hideBird = false;
     this.showScoreBoard = false;
   }
@@ -54,6 +59,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.bannerInstruction.init();
     this.scoreBoard.init();
     this.setButtonEvent();
+    this.flashScreen.init();
   }
 
   public reset(): void {
@@ -69,6 +75,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.showScoreBoard = false;
     this.scoreBoard.hide();
     this.bird.reset();
+    this.flashScreen.reset();
   }
 
   public resize({ width, height }: IDimension): void {
@@ -78,6 +85,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.count.resize(this.canvasSize);
     this.bannerInstruction.resize(this.canvasSize);
     this.scoreBoard.resize(this.canvasSize);
+    this.flashScreen.resize(this.canvasSize);
   }
 
   public Update(): void {
@@ -104,11 +112,13 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
       return;
     }
 
+    this.flashScreen.Update();
     this.bannerInstruction.Update();
     this.pipeGenerator.Update();
     this.bird.Update();
 
     if (this.bird.isDead(this.pipeGenerator.pipes)) {
+      this.flashScreen.start();
       this.gameState = 'died';
       window.setTimeout(() => {
         this.scoreBoard.setScore(this.bird.score);
@@ -151,6 +161,8 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     context.fillStyle = 'black';
     context.fillRect(0, 0, this.canvasSize.width, this.canvasSize.height);
     context.fill();
+
+    this.flashScreen.Display(context);
 
     context.globalAlpha = 1;
   }

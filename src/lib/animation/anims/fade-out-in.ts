@@ -1,5 +1,4 @@
 import Fading from '../abstracts/fading';
-import { swing } from '../easing';
 
 export class FadeOutIn extends Fading {
   public get value(): number {
@@ -10,6 +9,6 @@ export class FadeOutIn extends Fading {
 
     if (value >= 2) this.stop();
 
-    return swing(1 - value);
+    return this.inUseTransition(1 - value);
   }
 }
