@@ -17,6 +17,7 @@ import PlayButton from '../model/btn-play';
 import RankingButton from '../model/btn-ranking';
 import RateButton from '../model/btn-rate';
 import { asset } from '../lib/sprite-destructor';
+import { APP_VERSION } from '../constants';
 
 export default class Introduction extends ParentClass implements IScreenChangerObject {
   public playButton: PlayButton;
@@ -110,6 +111,22 @@ export default class Introduction extends ParentClass implements IScreenChangerO
       crScaled.height
     );
     // ----------------------------------
+
+    this.insertAppVersion(context);
+  }
+
+  private insertAppVersion(context: CanvasRenderingContext2D): void {
+    const fSize = lerp(0, this.canvasSize.width, 0.035);
+    const bot = lerp(0, this.canvasSize.height, 0.985);
+    const right = lerp(0, this.canvasSize.width, 0.985);
+
+    context.font = `bold ${fSize}px monospace`;
+    context.textAlign = 'center';
+    context.fillStyle = 'white';
+    context.fillText(`v${APP_VERSION}`, right - 2 * fSize, bot);
+
+    context.strokeStyle = 'black';
+    context.strokeText(`v${APP_VERSION}`, right - 2 * fSize, bot);
   }
 
   public mouseDown({ x, y }: ICoordinate): void {

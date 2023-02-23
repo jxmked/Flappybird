@@ -25,6 +25,8 @@ export const CANVAS_DIMENSION = {
 // Will be fed to GainNode in Audio Context
 export const SFX_VOLUME = 1;
 
+export const APP_VERSION = process.env.APP_VERSION;
+
 /**
  * Bird
  */

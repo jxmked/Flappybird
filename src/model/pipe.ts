@@ -5,8 +5,8 @@ import { asset } from '../lib/sprite-destructor';
 import SceneGenerator from './scene-generator';
 
 export interface IPairPipe {
-  top: HTMLImageElement;
-  bottom: HTMLImageElement;
+  top: HTMLImageElement | undefined;
+  bottom: HTMLImageElement | undefined;
 }
 
 export interface IPipePairPosition {
@@ -19,6 +19,11 @@ export interface IPipeImages {
   green: IPairPipe;
 }
 
+export interface IPipeScaled {
+  top: IDimension;
+  bottom: IDimension;
+}
+
 export default class Pipe extends ParentClass {
   /**
    *
@@ -29,7 +34,7 @@ export default class Pipe extends ParentClass {
   };
   private pipeImg: IPipeImages;
   private img: undefined | IPairPipe;
-  private callUse: boolean;
+  private scaled: IPipeScaled;
   public hollSize: number;
   public pipePosition: IPipePairPosition;
   public isPassed: boolean;
@@ -38,12 +43,12 @@ export default class Pipe extends ParentClass {
     super();
     this.pipeImg = {
       red: {
-        top: new Image(),
-        bottom: new Image()
+        top: void 0,
+        bottom: void 0
       },
       green: {
-        top: new Image(),
-        bottom: new Image()
+        top: void 0,
+        bottom: void 0
       }
     };
 
@@ -55,8 +60,11 @@ export default class Pipe extends ParentClass {
       bottom: { x: 0, y: 0 }
     };
     this.isPassed = false;
-    this.callUse = false;
     this.velocity.x = GAME_SPEED;
+    this.scaled = {
+      top: { width: 0, height: 0 },
+      bottom: { width: 0, height: 0 }
+    };
   }
 
   public init(): void {
@@ -70,7 +78,6 @@ export default class Pipe extends ParentClass {
         bottom: asset('pipe-green-bottom')!
       }
     };
-
     Object.assign(SceneGenerator.pipeColorList, Object.keys(this.pipeImg));
   }
 
@@ -118,12 +125,27 @@ export default class Pipe extends ParentClass {
     this.hollSize = lerp(0, this.canvasSize.height, PIPE_HOLL_SIZE);
 
     // Relocate the pipe holl
-    // I'm getting a problem when i am using lerp() for this.
     this.coordinate.x = lerp(0, width, oldX / 100);
     this.coordinate.y = lerp(0, height, oldY / 100);
 
     // Update velocity. Converting percentages to pixels
     this.velocity.x = lerp(0, width, GAME_SPEED);
+
+    this.scaled.top = rescaleDim(
+      {
+        width: this.img!.top!.width,
+        height: this.img!.top!.height
+      },
+      { width: min }
+    );
+
+    this.scaled.bottom = rescaleDim(
+      {
+        width: this.img!.bottom!.width,
+        height: this.img!.bottom!.height
+      },
+      { width: min }
+    );
   }
 
   /**
@@ -139,8 +161,7 @@ export default class Pipe extends ParentClass {
    * Pipe color selection
    * */
   public use(select: keyof IPipeImages): void {
-    this.img = this.pipeImg[select];
-    this.callUse = true;
+    this.img = this.pipeImg[select]!;
   }
 
   /**
@@ -151,33 +172,11 @@ export default class Pipe extends ParentClass {
   }
 
   public Display(context: CanvasRenderingContext2D): void {
-    if (!this.callUse) {
-      throw new TypeError('Pipe.use was not called. Pipe color depends on that');
-    }
-
     const width = Pipe.pipeSize.width / 2;
 
     const posX = this.coordinate.x;
     const posY = this.coordinate.y;
     const radius = this.hollSize / 2;
-
-    // For Top pipe
-    const topImgDim = rescaleDim(
-      {
-        width: this.img!.top.width,
-        height: this.img!.top.height
-      },
-      { width: width * 2 }
-    );
-
-    // For Bottom Pipe
-    const botImgDim = rescaleDim(
-      {
-        width: this.img!.bottom.width,
-        height: this.img!.bottom.height
-      },
-      { width: width * 2 }
-    );
 
     /**
      * To draw off canvas, subtract the height of pipe to holl position.
@@ -188,19 +187,19 @@ export default class Pipe extends ParentClass {
      * */
 
     context.drawImage(
-      this.img!.top,
+      this.img!.top!,
       posX - width,
-      -(topImgDim.height - Math.abs(posY - radius)),
-      topImgDim.width,
-      topImgDim.height
+      -(this.scaled.top.height - Math.abs(posY - radius)),
+      this.scaled.top.width,
+      this.scaled.top.height
     );
 
     context.drawImage(
-      this.img!.bottom,
+      this.img!.bottom!,
       posX - width,
       posY + radius,
-      botImgDim.width,
-      botImgDim.height
+      this.scaled.bottom.width,
+      this.scaled.bottom.height
     );
   }
 }

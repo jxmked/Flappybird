@@ -123,11 +123,12 @@ export default class PipeGenerator {
     if (this.needPipe()) {
       const pipe = new Pipe();
 
+      pipe.init();
+      pipe.use(this.pipeColor);
+
       pipe.resize(this.canvasSize);
 
       pipe.setHollPosition(this.generate().position);
-      pipe.init();
-      pipe.use(this.pipeColor);
       this.pipes.push(pipe);
     }
 

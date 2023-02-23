@@ -32,7 +32,7 @@ const CONFIG = {
   // Changing this during runtime will not going to parse it.
   // Restart the webpack to load
   env: {
-    
+    APP_VERSION: package.version
   },
   windowResizeable: false,
 
