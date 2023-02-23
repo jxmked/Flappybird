@@ -28,7 +28,7 @@ const CONFIG = {
     entry: './src/index.ts', // Typescript only
     dir: 'src'
   },
-  
+
   // Changing this during runtime will not going to parse it.
   // Restart the webpack to load
   env: {
@@ -52,6 +52,12 @@ const CONFIG = {
     sizes: [96, 128, 256, 512]
   }
 };
+
+const PATHS = {
+  src: path.join(__dirname, '../' + CONFIG.input.dir),
+  dist: path.join(__dirname, '../' + CONFIG.output.dir)
+};
+
 
 /**
  * Production Plugins
@@ -85,14 +91,14 @@ let prodPlugins = [
     publicPath: 'Flappybird/',
     fileName: 'asset-manifest.json'
   }),
-  
+
   /*
   new CopyPlugin({
       patterns: [
         { from: 'src/sw.js', to: 'sw.js' },
       ],
     }), */
-  
+
 ];
 
 module.exports = function (env, config) {
@@ -111,9 +117,10 @@ module.exports = function (env, config) {
     CONFIG.output.chunk = '[id]';
     prodPlugins = [];
   }
-  
+
   return {
     entry: CONFIG.input.entry,
+    mode: CONFIG.env['NODE_ENV'],
     module: {
       rules: [
         {
@@ -148,7 +155,7 @@ module.exports = function (env, config) {
     output: {
       filename: CONFIG.output.name + '.js',
       chunkFilename: CONFIG.output.chunk + '.js',
-      path: path.resolve(__dirname, './' + CONFIG.output.dir),
+      path: PATHS.dist, //path.resolve(__dirname, './' + CONFIG.output.dir),
       clean: true
     },
     optimization: {
@@ -156,6 +163,11 @@ module.exports = function (env, config) {
         chunks: 'all'
       }
     },
+
+    optimization: {
+      moduleIds: 'named'
+    },
+
 
     plugins: [
       new webpack.DefinePlugin({
@@ -167,18 +179,21 @@ module.exports = function (env, config) {
         callPageView: true
       }),
 
-      new BrowserSyncPlugin({
-        host: 'localhost',
-        port: 3000,
-        server: {
-          baseDir: [CONFIG.output.dir]
-        },
+      // new BrowserSyncPlugin({
+      //   host: 'localhost',
+      //   port: 3000,
+      //   server: {
+      //     baseDir: [CONFIG.output.dir]
+      //   },
 
-        files: ['./' + CONFIG.output.dir + '/*'],
-        notify: false,
-        ui: false, // Web UI for BrowserSyncPlugin
-        open: false // Open browser after initiation
-      }),
+      //   files: ['./' + CONFIG.output.dir + '/*'],
+      //   notify: false,
+      //   ui: false, // Web UI for BrowserSyncPlugin
+      //   open: false // Open browser after initiation
+      // }),
+
+      new webpack.HotModuleReplacementPlugin(),
+      // new webpack.NamedModulesPlugin(),
 
       new HtmlWebpackPlugin({
         filename: 'index.html',
@@ -237,8 +252,16 @@ module.exports = function (env, config) {
             property: 'og:image:alt',
             content: 'Logo'
           }
-        }
+        },
+        minify: {
+          collapseWhitespace: true,
+          conservativeCollapse: true,
+          preserveLineBreaks: true,
+          useShortDoctype: true,
+          html5: true
+        },
       }),
+
 
       new MiniCssExtractPlugin({
         filename: CONFIG.output.name + '.css',
@@ -252,6 +275,25 @@ module.exports = function (env, config) {
         APP_VERSION: package.version,
         APP_MODE: devMode ? 'development' : 'production'
       })
-    ].concat(prodPlugins)
+    ].concat(prodPlugins),
+    devServer: {
+      // contentBase: PATHS.dist,
+      compress: true,
+      headers: {
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY'
+      },
+      static: {
+        directory: path.join(__dirname, 'dist'),
+      },
+      open: false,
+      // overlay: {
+      //   warnings: true,
+      //   errors: true
+      // },
+      port: 3000,
+      // publicPath: 'http://localhost:3000/',
+      hot: true
+    },
   };
 };
