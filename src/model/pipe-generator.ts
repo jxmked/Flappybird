@@ -135,6 +135,7 @@ export default class PipeGenerator {
       this.pipes[index].Update();
       if (this.pipes[index].isOut()) {
         this.pipes.splice(index, 1);
+        index--;
       }
     }
   }
