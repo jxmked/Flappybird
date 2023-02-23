@@ -1,6 +1,7 @@
 import ParentClass from '../abstracts/parent-class';
 import { FadeOut } from '../lib/animation';
-import { lerp } from '../utils';
+import { IFadingStatus } from '../lib/animation/abstracts/fading';
+import { lerp, clamp } from '../utils';
 
 export interface IFlashScreenConstructorOption {
   style: string;
@@ -14,6 +15,11 @@ export interface IRecordEvent {
     max: number;
   };
   callback: Function;
+  isCalled: boolean;
+}
+
+export interface IFlashScreenStatus extends IFadingStatus {
+  value: number;
 }
 
 export default class FlashScreen extends ParentClass {
@@ -21,6 +27,7 @@ export default class FlashScreen extends ParentClass {
   private strong: number;
   private style: string;
   private events: IRecordEvent[];
+  private value: number;
 
   constructor({ style, strong, interval }: IFlashScreenConstructorOption) {
     super();
@@ -31,16 +38,16 @@ export default class FlashScreen extends ParentClass {
       duration: interval,
       transition: 'sineWaveHS'
     });
+    this.value = 0;
   }
 
   public init(): void {}
 
   public reset(): void {
     this.fadeEvent.reset();
-  }
-
-  public resize({ width, height }: IDimension): void {
-    super.resize({ width, height });
+    for (const evt of this.events) {
+      evt.isCalled = false;
+    }
   }
 
   public start(): void {
@@ -53,30 +60,40 @@ export default class FlashScreen extends ParentClass {
         min: range[0],
         max: range[1]
       },
-      callback
+      callback,
+      isCalled: false
     });
   }
 
-  public Update(): void {}
+  public get status(): IFlashScreenStatus {
+    return { ...this.fadeEvent.status, value: this.value };
+  }
 
-  public Display(context: CanvasRenderingContext2D): void {
-    let value = this.fadeEvent.value;
+  public Update(): void {
+    if (!this.status.complete || this.status.running) {
+      this.value = this.fadeEvent.value;
 
-    if (this.fadeEvent.status.complete || !this.fadeEvent.status.running) {
-      value = 0;
-    } else {
       for (const evt of this.events) {
-        if (evt.range.min <= value && evt.range.max >= value) {
+        if (evt.isCalled) continue;
+
+        if (evt.range.min <= this.value && evt.range.max >= this.value) {
           evt.callback();
+          evt.isCalled = true;
         }
       }
+    } else {
+      this.value = 0;
     }
 
-    context.globalAlpha = lerp(0, this.strong, value);
+    // FIXME: Weird flickering before ending the animation
+    this.value = clamp(0, 1, this.value);
+  }
+
+  public Display(context: CanvasRenderingContext2D): void {
+    context.globalAlpha = lerp(0, this.strong, this.value);
     context.fillStyle = this.style;
     context.fillRect(0, 0, this.canvasSize.width, this.canvasSize.height);
     context.fill();
-
     context.globalAlpha = 1;
   }
 }

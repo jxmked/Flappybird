@@ -5,13 +5,12 @@
  * Wait for the tap event
  * */
 
-import { flipRange, lerp } from '../utils';
+import { lerp } from '../utils';
 
 import BannerInstruction from '../model/banner-instruction';
 import BirdModel from '../model/bird';
 import CounterModel from '../model/count';
 import FlashScreen from '../model/flash-screen';
-import { FadeOutIn } from '../lib/animation';
 import { IScreenChangerObject } from '../lib/screen-changer';
 import MainGameController from '../game';
 import ParentClass from '../abstracts/parent-class';
@@ -28,7 +27,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
   private game: MainGameController;
   private bannerInstruction: BannerInstruction;
   private scoreBoard: ScoreBoard;
-  private transition: FadeOutIn;
+  private transition: FlashScreen;
   private hideBird: boolean;
   private flashScreen: FlashScreen;
   private showScoreBoard: boolean;
@@ -43,14 +42,12 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.bannerInstruction = new BannerInstruction();
     this.gameState = 'none';
     this.scoreBoard = new ScoreBoard();
-    this.transition = new FadeOutIn({ duration: 500 });
-    this.flashScreen = new FlashScreen({
-      style: 'white',
-      interval: 230,
-      strong: 0.6
-    });
+    this.transition = new FlashScreen({ interval: 500, strong: 1.0, style: 'black' });
+    this.flashScreen = new FlashScreen({ style: 'white', interval: 180, strong: 0.7 });
     this.hideBird = false;
     this.showScoreBoard = false;
+
+    this.transition.setEvent([0.99, 1], this.reset.bind(this));
   }
 
   public init(): void {
@@ -60,12 +57,12 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.scoreBoard.init();
     this.setButtonEvent();
     this.flashScreen.init();
+    this.transition.init();
   }
 
   public reset(): void {
     this.gameState = 'none';
     this.state = 'waiting';
-    this.resize(this.canvasSize);
     this.game.background.reset();
     this.game.platform.reset();
     this.pipeGenerator.reset();
@@ -75,7 +72,6 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.showScoreBoard = false;
     this.scoreBoard.hide();
     this.bird.reset();
-    this.flashScreen.reset();
   }
 
   public resize({ width, height }: IDimension): void {
@@ -86,15 +82,15 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.bannerInstruction.resize(this.canvasSize);
     this.scoreBoard.resize(this.canvasSize);
     this.flashScreen.resize(this.canvasSize);
+    this.transition.resize(this.canvasSize);
   }
 
   public Update(): void {
-    if (this.bird.alive) {
-      this.scoreBoard.Update();
-    }
+    this.flashScreen.Update();
+    this.transition.Update();
+    this.scoreBoard.Update();
 
     if (!this.bird.alive) {
-      this.scoreBoard.Update();
       this.game.bgPause = true;
       this.bird.Update();
       return;
@@ -112,14 +108,16 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
       return;
     }
 
-    this.flashScreen.Update();
     this.bannerInstruction.Update();
     this.pipeGenerator.Update();
     this.bird.Update();
 
     if (this.bird.isDead(this.pipeGenerator.pipes)) {
+      this.flashScreen.reset();
       this.flashScreen.start();
+
       this.gameState = 'died';
+
       window.setTimeout(() => {
         this.scoreBoard.setScore(this.bird.score);
         this.showScoreBoard = true;
@@ -151,25 +149,14 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
       this.scoreBoard.Display(context);
     }
 
-    context.globalAlpha = flipRange(0, 1, this.transition.value);
-
-    // check if the opacity reaches close to 1
-    if (context.globalAlpha >= 0.99) {
-      this.reset();
-    }
-
-    context.fillStyle = 'black';
-    context.fillRect(0, 0, this.canvasSize.width, this.canvasSize.height);
-    context.fill();
-
     this.flashScreen.Display(context);
-
-    context.globalAlpha = 1;
+    this.transition.Display(context);
   }
 
   private setButtonEvent(): void {
     this.scoreBoard.onRestart(() => {
       if (this.transition.status.running) return;
+      this.transition.reset();
       this.transition.start();
     });
 
