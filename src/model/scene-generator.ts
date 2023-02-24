@@ -1,19 +1,15 @@
 import { randomClamp } from '../utils';
-import { IBackgroundImages } from './background';
-import { IBirdImages } from './bird';
-import { IPipeImages } from './pipe';
-
-export type IBackgroundScene = keyof IBackgroundImages;
-export type IBirdColor = keyof IBirdImages;
-export type IPipeColor = keyof IPipeImages;
+import { ITheme } from './background';
+import { IBirdColor } from './bird';
+import { IPipeColor } from './pipe';
 
 export default class SceneGenerator {
   public static birdColorList: IBirdColor[] = [];
-  public static bgThemeList: IBackgroundScene[] = [];
+  public static bgThemeList: ITheme[] = [];
   public static pipeColorList: IPipeColor[] = [];
   private static isNight: boolean = false;
 
-  public static get background(): IBackgroundScene {
+  public static get background(): ITheme {
     if (SceneGenerator.bgThemeList.length < 1) throw new Error('No theme available');
 
     const t =

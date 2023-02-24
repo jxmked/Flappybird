@@ -120,7 +120,6 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
 
     this.bannerInstruction.Update();
     this.pipeGenerator.Update();
-    this.bird.Update();
 
     if (this.bird.isDead(this.pipeGenerator.pipes)) {
       this.flashScreen.reset();
@@ -143,6 +142,8 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
         this.bird.playDead();
       });
     }
+
+    this.bird.Update();
   }
 
   public Display(context: CanvasRenderingContext2D): void {

@@ -4,25 +4,17 @@ import ParentClass from '../abstracts/parent-class';
 import { asset } from '../lib/sprite-destructor';
 import SceneGenerator from './scene-generator';
 
-export interface IPairPipe {
-  top: HTMLImageElement | undefined;
-  bottom: HTMLImageElement | undefined;
-}
-
 export interface IPipePairPosition {
   top: ICoordinate;
   bottom: ICoordinate;
 }
-
-export interface IPipeImages {
-  red: IPairPipe;
-  green: IPairPipe;
-}
-
 export interface IPipeScaled {
   top: IDimension;
   bottom: IDimension;
 }
+
+export type IPipeColor = string;
+export type IPipeRecords = Map<IPipeColor, HTMLImageElement>;
 
 export default class Pipe extends ParentClass {
   /**
@@ -32,29 +24,20 @@ export default class Pipe extends ParentClass {
     width: 0,
     height: 0
   };
-  private pipeImg: IPipeImages;
-  private img: undefined | IPairPipe;
+
   private scaled: IPipeScaled;
   public hollSize: number;
   public pipePosition: IPipePairPosition;
   public isPassed: boolean;
 
+  private images: IPipeRecords;
+  private color: IPipeColor;
+
   constructor() {
     super();
-    this.pipeImg = {
-      red: {
-        top: void 0,
-        bottom: void 0
-      },
-      green: {
-        top: void 0,
-        bottom: void 0
-      }
-    };
-
+    this.images = new Map<string, HTMLImageElement>();
+    this.color = 'green';
     this.hollSize = 0;
-
-    this.img = void 0;
     this.pipePosition = {
       top: { x: 0, y: 0 },
       bottom: { x: 0, y: 0 }
@@ -68,17 +51,12 @@ export default class Pipe extends ParentClass {
   }
 
   public init(): void {
-    this.pipeImg = {
-      red: {
-        top: asset('pipe-red-top')!,
-        bottom: asset('pipe-red-bottom')!
-      },
-      green: {
-        top: asset('pipe-green-top')!,
-        bottom: asset('pipe-green-bottom')!
-      }
-    };
-    Object.assign(SceneGenerator.pipeColorList, Object.keys(this.pipeImg));
+    this.images.set('green.top', asset('pipe-green-top'));
+    this.images.set('green.bottom', asset('pipe-green-bottom'));
+    this.images.set('red.top', asset('pipe-red-top'));
+    this.images.set('red.bottom', asset('pipe-red-bottom'));
+
+    Object.assign(SceneGenerator.pipeColorList, ['red', 'green']);
   }
 
   /**
@@ -133,16 +111,16 @@ export default class Pipe extends ParentClass {
 
     this.scaled.top = rescaleDim(
       {
-        width: this.img!.top!.width,
-        height: this.img!.top!.height
+        width: this.images.get(`${this.color}.top`)!.width,
+        height: this.images.get(`${this.color}.top`)!.height
       },
       { width: min }
     );
 
     this.scaled.bottom = rescaleDim(
       {
-        width: this.img!.bottom!.width,
-        height: this.img!.bottom!.height
+        width: this.images.get(`${this.color}.bottom`)!.width,
+        height: this.images.get(`${this.color}.bottom`)!.height
       },
       { width: min }
     );
@@ -160,8 +138,8 @@ export default class Pipe extends ParentClass {
   /**
    * Pipe color selection
    * */
-  public use(select: keyof IPipeImages): void {
-    this.img = this.pipeImg[select]!;
+  public use(select: IPipeColor): void {
+    this.color = select;
   }
 
   /**
@@ -187,7 +165,7 @@ export default class Pipe extends ParentClass {
      * */
 
     context.drawImage(
-      this.img!.top!,
+      this.images.get(`${this.color}.top`)!,
       posX - width,
       -(this.scaled.top.height - Math.abs(posY - radius)),
       this.scaled.top.width,
@@ -195,7 +173,7 @@ export default class Pipe extends ParentClass {
     );
 
     context.drawImage(
-      this.img!.bottom!,
+      this.images.get(`${this.color}.bottom`)!,
       posX - width,
       posY + radius,
       this.scaled.bottom.width,

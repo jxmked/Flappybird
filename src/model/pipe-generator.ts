@@ -1,8 +1,8 @@
 import { PIPE_DISTANCE, PIPE_MIN_GAP } from '../constants';
 import { lerp, randomClamp } from '../utils';
 import Pipe from './pipe';
-import SceneGenerator, { IPipeColor } from './scene-generator';
-
+import SceneGenerator from './scene-generator';
+import { IPipeColor } from './pipe';
 export interface IRange {
   min: number;
   max: number;

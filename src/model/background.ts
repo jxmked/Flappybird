@@ -4,52 +4,38 @@ import ParentClass from '../abstracts/parent-class';
 import { asset } from '../lib/sprite-destructor';
 import SceneGenerator from './scene-generator';
 
-export interface IBackgroundImages {
-  day: HTMLImageElement;
-  night: HTMLImageElement;
-}
-
+export type ITheme = string;
+export type IRecords = Map<ITheme, HTMLImageElement>;
 export default class Background extends ParentClass {
-  /**
-   * Background Image selection (Day & Night)
-   * */
-  private backgroundImage: IBackgroundImages;
-
   /**
    * background dimension.
    * */
   private backgroundSize: IDimension;
 
-  /**
-   * Current Image to be use
-   * */
-  private img: undefined | HTMLImageElement;
+  private images: IRecords;
+  private theme: ITheme;
 
   constructor() {
     super();
-    this.backgroundImage = {
-      day: new Image(),
-      night: new Image()
-    };
+    this.images = new Map<ITheme, HTMLImageElement>();
+    this.theme = 'day';
+
     this.velocity.x = BG_SPEED;
 
     this.backgroundSize = {
       width: 0,
       height: 0
     };
-    this.img = void 0;
   }
 
   /**
    * Initialize Images after all asset has been loaded
    * */
   public init(): void {
-    this.backgroundImage = {
-      night: asset('theme-night')!,
-      day: asset('theme-day')!
-    };
+    this.images.set('day', asset('theme-day'));
+    this.images.set('night', asset('theme-night'));
 
-    Object.assign(SceneGenerator.bgThemeList, Object.keys(this.backgroundImage));
+    Object.assign(SceneGenerator.bgThemeList, ['day', 'night']);
     this.use(SceneGenerator.background);
   }
 
@@ -62,8 +48,8 @@ export default class Background extends ParentClass {
   /**
    * Select either day and night
    * */
-  public use(select: keyof IBackgroundImages): void {
-    this.img = this.backgroundImage[select];
+  public use(select: ITheme): void {
+    this.theme = select;
   }
 
   /**
@@ -74,8 +60,8 @@ export default class Background extends ParentClass {
 
     this.backgroundSize = rescaleDim(
       {
-        width: this.img!.width,
-        height: this.img!.height
+        width: this.images.get(this.theme)!.width,
+        height: this.images.get(this.theme)!.height
       },
       { height }
     );
@@ -108,7 +94,13 @@ export default class Background extends ParentClass {
 
     // Draw the background next to each other in given sequence
     for (let i = 0; i < sequence; i++) {
-      context.drawImage(this.img!, i * width - offset, y, width, height);
+      context.drawImage(
+        this.images.get(this.theme)!,
+        i * width - offset,
+        y,
+        width,
+        height
+      );
     }
   }
 }

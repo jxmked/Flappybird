@@ -116,17 +116,17 @@ export default class Introduction extends ParentClass implements IScreenChangerO
   }
 
   private insertAppVersion(context: CanvasRenderingContext2D): void {
-    const fSize = lerp(0, this.canvasSize.width, 0.035);
+    const fSize = lerp(0, this.canvasSize.width, 0.04);
     const bot = lerp(0, this.canvasSize.height, 0.985);
     const right = lerp(0, this.canvasSize.width, 0.985);
 
     context.font = `bold ${fSize}px monospace`;
     context.textAlign = 'center';
-    context.fillStyle = 'white';
+    context.fillStyle = '#8E8E93';
     context.fillText(`v${APP_VERSION}`, right - 2 * fSize, bot);
 
-    context.strokeStyle = 'black';
-    context.strokeText(`v${APP_VERSION}`, right - 2 * fSize, bot);
+    // context.strokeStyle = 'black';
+    // context.strokeText(`v${APP_VERSION}`, right - 2 * fSize, bot);
   }
 
   public mouseDown({ x, y }: ICoordinate): void {
