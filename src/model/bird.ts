@@ -16,35 +16,13 @@ import Sfx from './sfx';
 import { asset } from '../lib/sprite-destructor';
 import SceneGenerator from './scene-generator';
 
-export interface IBirdObject {
-  up: HTMLImageElement;
-  mid: HTMLImageElement;
-  down: HTMLImageElement;
-}
-
-export interface IBirdImages {
-  yellow: IBirdObject;
-  red: IBirdObject;
-  blue: IBirdObject;
-}
-
-export type IBirdColors = keyof IBirdImages;
-
+export type IBirdColor = string;
+export type IBirdRecords = Map<IBirdColor, HTMLImageElement>;
 export default class Bird extends ParentClass {
   /**
    * Platform Height
    * */
   public static platformHeight = 0;
-
-  /**
-   * Bird color selections
-   * */
-  private birdColorObject: IBirdImages;
-
-  /**
-   * Bird Images
-   * */
-  private birdImg: undefined | IBirdObject;
 
   /**
    * Bird state
@@ -94,30 +72,17 @@ export default class Bird extends ParentClass {
    */
   public doesLanded: boolean;
 
+  private images: IBirdRecords;
+  private color: IBirdColor;
+
   constructor() {
     super();
-
+    this.color = 'yellow';
+    this.images = new Map<string, HTMLImageElement>();
     this.died = false;
-    this.birdColorObject = {
-      yellow: {
-        up: new Image(),
-        mid: new Image(),
-        down: new Image()
-      },
-      blue: {
-        up: new Image(),
-        mid: new Image(),
-        down: new Image()
-      },
-      red: {
-        up: new Image(),
-        mid: new Image(),
-        down: new Image()
-      }
-    };
+
     this.alive = true;
     this.force = 0;
-    this.birdImg = void 0;
     this.score = 0;
     this.scaled = {
       width: 0,
@@ -137,24 +102,17 @@ export default class Bird extends ParentClass {
    * asset has been loaded.
    * */
   public init(): void {
-    this.birdColorObject = {
-      yellow: {
-        up: asset('bird-yellow-up')!,
-        mid: asset('bird-yellow-mid')!,
-        down: asset('bird-yellow-down')!
-      },
-      blue: {
-        up: asset('bird-blue-up')!,
-        mid: asset('bird-blue-mid')!,
-        down: asset('bird-blue-down')!
-      },
-      red: {
-        up: asset('bird-red-up')!,
-        mid: asset('bird-red-mid')!,
-        down: asset('bird-red-down')!
-      }
-    };
-    Object.assign(SceneGenerator.birdColorList, Object.keys(this.birdColorObject));
+    this.images.set('yellow.up', asset('bird-yellow-up'));
+    this.images.set('yellow.mid', asset('bird-yellow-mid'));
+    this.images.set('yellow.down', asset('bird-yellow-down'));
+    this.images.set('blue.up', asset('bird-blue-up'));
+    this.images.set('blue.mid', asset('bird-blue-mid'));
+    this.images.set('blue.down', asset('bird-blue-down'));
+    this.images.set('red.up', asset('bird-red-up'));
+    this.images.set('red.mid', asset('bird-red-mid'));
+    this.images.set('red.down', asset('bird-red-down'));
+
+    Object.assign(SceneGenerator.birdColorList, ['yellow', 'red', 'blue']);
     this.use(SceneGenerator.bird);
   }
 
@@ -322,14 +280,34 @@ export default class Bird extends ParentClass {
    *
    * @param color string color of bird. (red | yellow | blue)
    */
-  public use(color: IBirdColors): void {
-    this.birdImg = this.birdColorObject[color as keyof typeof this.birdColorObject];
+  public use(color: IBirdColor): void {
+    this.color = color;
   }
+
+  /**
+   * Get height and width based on rotation
+   *
+   * @returns New Dimension based on rotation
+   */
+  // private getRotatedDimension():IDimension {
+
+  //   const radians = this.rotation * (Math.PI / 180);
+  //   const a = this.scaled.width / 2;
+  //   const b = this.scaled.height / 2;
+  //   const rX = Math.sqrt((a * a * Math.sin(radians) * Math.sin(radians)) + (b * b * Math.cos(radians) * Math.cos(radians)));
+  //   const rY = Math.sqrt((a * a * Math.cos(radians) * Math.cos(radians)) + (b * b * Math.sin(radians) * Math.sin(radians)));
+
+  //   return {
+  //     height: rY * Math.sin(radians) + rX * Math.cos(radians),
+  //     width: rX * Math.sin(radians) + rY * Math.cos(radians)
+  //   }
+  // }
 
   public Update(): void {
     // Always above the floor
     if (this.doesHitTheFloor()) {
       this.doesLanded = true;
+      // this.coordinate.y = (this.canvasSize.height - Bird.platformHeight) - this.getRotatedDimension().height * 1.5;
       return;
     }
 
@@ -357,8 +335,10 @@ export default class Bird extends ParentClass {
   }
 
   public Display(context: CanvasRenderingContext2D): void {
-    const flapArr = ['up', 'mid', 'down'] as keyof typeof this.birdImg;
-    const img: HTMLImageElement = this.birdImg![flapArr[this.wingState]];
+    const birdKeyString = `${this.color}.${
+      ['up', 'mid', 'down'][this.wingState]
+    }` as IBirdColor;
+
     const { x, y } = this.coordinate;
 
     // Save our previous created picture
@@ -372,7 +352,7 @@ export default class Bird extends ParentClass {
 
     // Start the image at top-left then bottom-right
     context.drawImage(
-      img,
+      this.images.get(birdKeyString)!,
       -this.scaled.width,
       -this.scaled.height,
       this.scaled.width * 2,

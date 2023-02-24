@@ -1,5 +1,3 @@
-import { IBirdColors } from './model/bird';
-
 /**
  * Environment Contants
  */
@@ -54,9 +52,6 @@ export const BIRD_MAX_UP_VELOCITY = -0.3;
 
 // Maximum drag velocity. Preventing our bird to overspeed. Based on canvas height
 export const BIRD_MAX_DOWN_VELOCITY = 0.0141;
-
-// Default bird color.
-export const BIRD_DEFAULT_COLOR: IBirdColors = 'red'; // yellow, blue, red
 
 // Initial Dimension of a bird
 /**

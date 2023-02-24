@@ -40,7 +40,7 @@ export default class Spark extends ParentClass {
     this.images.set('spark-sm', asset('spark-sm'));
     this.images.set('spark-md', asset('spark-md'));
     this.images.set('spark-lg', asset('spark-lg'));
-    this.sparkList = ['spark-sm', 'spark-md', 'spark-lg'];
+    this.sparkList = ['spark-sm', 'spark-md', 'spark-lg', 'spark-md', 'spark-sm'];
   }
 
   public resize({ width, height }: IDimension): void {

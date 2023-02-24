@@ -87,6 +87,7 @@ export default class Stats {
     ctx.globalAlpha = 1; // Required
     ctx.font = '30px monospace';
     ctx.fillStyle = '#58d130';
+    ctx.textAlign = 'left';
     ctx.fillText(out, position.x, position.y);
     ctx.closePath();
   }
