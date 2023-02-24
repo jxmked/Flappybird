@@ -102,15 +102,15 @@ export default class Bird extends ParentClass {
    * asset has been loaded.
    * */
   public init(): void {
-    this.images.set('yellow.up', asset('bird-yellow-up'));
-    this.images.set('yellow.mid', asset('bird-yellow-mid'));
-    this.images.set('yellow.down', asset('bird-yellow-down'));
-    this.images.set('blue.up', asset('bird-blue-up'));
-    this.images.set('blue.mid', asset('bird-blue-mid'));
-    this.images.set('blue.down', asset('bird-blue-down'));
-    this.images.set('red.up', asset('bird-red-up'));
-    this.images.set('red.mid', asset('bird-red-mid'));
-    this.images.set('red.down', asset('bird-red-down'));
+    this.images.set('yellow.0', asset('bird-yellow-up'));
+    this.images.set('yellow.1', asset('bird-yellow-mid'));
+    this.images.set('yellow.2', asset('bird-yellow-down'));
+    this.images.set('blue.0', asset('bird-blue-up'));
+    this.images.set('blue.1', asset('bird-blue-mid'));
+    this.images.set('blue.2', asset('bird-blue-down'));
+    this.images.set('red.0', asset('bird-red-up'));
+    this.images.set('red.1', asset('bird-red-mid'));
+    this.images.set('red.2', asset('bird-red-down'));
 
     Object.assign(SceneGenerator.birdColorList, ['yellow', 'red', 'blue']);
     this.use(SceneGenerator.bird);
@@ -335,9 +335,7 @@ export default class Bird extends ParentClass {
   }
 
   public Display(context: CanvasRenderingContext2D): void {
-    const birdKeyString = `${this.color}.${
-      ['up', 'mid', 'down'][this.wingState]
-    }` as IBirdColor;
+    const birdKeyString = `${this.color}.${this.wingState}`;
 
     const { x, y } = this.coordinate;
 
@@ -352,7 +350,7 @@ export default class Bird extends ParentClass {
 
     // Start the image at top-left then bottom-right
     context.drawImage(
-      this.images.get(birdKeyString)!,
+      this.images.get(birdKeyString as IBirdColor)!,
       -this.scaled.width,
       -this.scaled.height,
       this.scaled.width * 2,

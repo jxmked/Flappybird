@@ -25,10 +25,15 @@ if (process.env.NODE_ENV !== 'development') {
   }
 } */
 
+// Do double buffering
+// I think, this may reduce framedrop from different browser
+const bufferCanvas = document.createElement('canvas') as HTMLCanvasElement;
 const canvas = document.querySelector('#main-canvas')! as HTMLCanvasElement;
+
 const loadingScreen = document.querySelector('#loading-modal')! as HTMLDivElement;
 let isLoaded = false;
 
+const physicalContext = canvas.getContext('2d')!;
 /**
  * While waiting to all assets to load
  * All event that has possibilities to call
@@ -36,7 +41,7 @@ let isLoaded = false;
  * */
 const stacks: Function[] = [];
 
-const Game = new GameObject(canvas);
+const Game = new GameObject(bufferCanvas);
 const fps = new Framer(Game.context);
 
 // prettier-ignore
@@ -56,6 +61,11 @@ const GameUpdate = (): void => {
   raf(GameUpdate);
 };
 
+const UpdateView = (): void => {
+  physicalContext.drawImage(bufferCanvas, 0, 0, bufferCanvas.width, bufferCanvas.height);
+  raf(UpdateView);
+};
+
 const ScreenResize = () => {
   const sizeResult = rescaleDim(CANVAS_DIMENSION, { height: window.innerHeight - 50 });
 
@@ -67,6 +77,9 @@ const ScreenResize = () => {
   sizeResult.height = sizeResult.height * 2;
 
   // Adjust Canvas Drawing Size
+  bufferCanvas.height = sizeResult.height;
+  bufferCanvas.width = sizeResult.width;
+
   canvas.height = sizeResult.height;
   canvas.width = sizeResult.width;
 
@@ -88,9 +101,10 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     raf(GameUpdate);
+    raf(UpdateView);
 
     if (process.env.NODE_ENV === 'development') {
-      EventHandler(Game);
+      EventHandler(Game, canvas);
       loadingScreen.style.display = 'none';
       document.body.style.backgroundColor = 'rgba(28, 28, 30, 1)';
       return;
@@ -98,7 +112,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     window.setTimeout(() => {
       // Listen to events: Mouse, Touch, Keyboard
-      EventHandler(Game);
+      EventHandler(Game, canvas);
       loadingScreen.style.display = 'none';
       document.body.style.backgroundColor = 'rgba(28, 28, 30, 1)';
     }, 1500);
