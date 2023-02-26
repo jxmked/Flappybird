@@ -39,7 +39,7 @@ export const BIRD_X_POSITION = 0.3;
 export const BIRD_MAX_ROTATION = 90;
 
 // Minimum angle of bird in degree
-export const BIRD_MIN_ROTATION = -15;
+export const BIRD_MIN_ROTATION = -19;
 
 // Height of bird. Based on canvas Height
 export const BIRD_HEIGHT = 0.024;
@@ -81,15 +81,9 @@ export const PIPE_INITIAL_DIMENSION: IDimension = {
   height: 300
 };
 
-// Pipe Default color
-export const PIPE_COLOR = 'red'; // green, red
-
 /**
  * Background
  * */
-
-// Default texture
-export const BG_TEXTURE = 'night'; // day, night
 
 /**
  * Count

@@ -45,6 +45,12 @@ body {
     background-color: rgba(242, 242, 244, 0.5);
     backdrop-filter: blur(8px);
 
+    > img {
+      width: 30%;
+      height: 30%;
+      transform: scale(0.75);
+    }
+
     > div {
       text-align: center;
       font-family: 'Arial', 'Sans-Serif';
@@ -54,7 +60,7 @@ body {
       font-weight: 600;
     }
 
-    .lds-ellipsis {
+    > .lds-ellipsis {
       display: inline-block;
       position: relative;
       width: 80px;
