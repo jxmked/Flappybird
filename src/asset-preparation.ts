@@ -3,7 +3,6 @@ import { AssetLoader, asset } from './utils';
 import SpriteDestructor from './lib/sprite-destructor';
 import WebSfx from './lib/web-sfx';
 import atlas from './assets/atlas.png';
-import mainIcon from './assets/icon.png';
 import sfDie from './assets/audio/die.ogg';
 import sfHit from './assets/audio/hit.ogg';
 import sfPoint from './assets/audio/point.ogg';
@@ -13,7 +12,7 @@ import sfWing from './assets/audio/wing.ogg';
 export default (callback: Function): void => {
   let isLoaded: boolean = false;
   // Do not load images and sfx at the same time
-  new AssetLoader([mainIcon, atlas]).then(() => {
+  new AssetLoader([atlas]).then(() => {
     const sd = new SpriteDestructor(asset(atlas as string) as HTMLImageElement);
 
     // Virtual Canvas

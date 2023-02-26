@@ -18,6 +18,7 @@ import SceneGenerator from './scene-generator';
 
 export type IBirdColor = string;
 export type IBirdRecords = Map<IBirdColor, HTMLImageElement>;
+
 export default class Bird extends ParentClass {
   /**
    * Platform Height
@@ -74,6 +75,9 @@ export default class Bird extends ParentClass {
 
   private images: IBirdRecords;
   private color: IBirdColor;
+  private lastCoord: number;
+  private max_lift_velocity: number;
+  private max_fall_velocity: number;
 
   constructor() {
     super();
@@ -92,6 +96,9 @@ export default class Bird extends ParentClass {
     this.wingState = 1;
     this.causeOfDeath = 'none';
     this.doesLanded = false;
+    this.lastCoord = 0;
+    this.max_fall_velocity = 0;
+    this.max_lift_velocity = 0;
   }
 
   /**
@@ -144,6 +151,9 @@ export default class Bird extends ParentClass {
     this.scaled = rescaleDim(BIRD_INITIAL_DIMENSION, {
       height: lerp(0, height, BIRD_HEIGHT)
     });
+
+    this.max_fall_velocity = lerp(0, this.canvasSize.height, BIRD_MAX_DOWN_VELOCITY);
+    this.max_lift_velocity = lerp(0, this.canvasSize.height, BIRD_MAX_UP_VELOCITY);
   }
 
   /**
@@ -165,7 +175,7 @@ export default class Bird extends ParentClass {
    * @param speed - flap speed
    * */
   private flapWing(speed: number): void {
-    this.wingState = Math.round(1 + sineWave(speed, 1));
+    this.wingState = (1 + sineWave(speed, 2)) | 0;
 
     // Make sure the wing is set to mid flap when the bird is falling
     if (this.rotation > 70) {
@@ -185,6 +195,7 @@ export default class Bird extends ParentClass {
 
     Sfx.wing();
     this.velocity.y = this.force;
+    this.lastCoord = this.coordinate.y;
   }
 
   /**
@@ -192,7 +203,7 @@ export default class Bird extends ParentClass {
    * */
   private doesHitTheFloor(): boolean {
     return (
-      this.coordinate.y + this.scaled.height >
+      this.coordinate.y + this.rotatedDimension().height >
       Math.abs(this.canvasSize.height - Bird.platformHeight)
     );
   }
@@ -207,9 +218,8 @@ export default class Bird extends ParentClass {
       return !this.alive;
     }
 
-    const posX = this.coordinate.x;
-    const posY = this.coordinate.y;
-    const boundary = this.getRotatedWidth() - this.scaled.height / 2;
+    const newDim = this.rotatedDimension();
+    const boundary = newDim.width - newDim.height / 2;
 
     for (const pipe of pipes) {
       try {
@@ -221,14 +231,14 @@ export default class Bird extends ParentClass {
 
         // Skip past pipe
         // ---------- Out
-        if (hcx + width < posX - boundary) continue;
+        if (hcx + width < this.coordinate.x - boundary) continue;
 
         // Is Inside of Pipes?
         // In ----------
-        if (Math.abs(hcx - width) <= posX + boundary) {
+        if (Math.abs(hcx - width) <= this.coordinate.x + boundary) {
           // Will get score after passing the
           // center width of pipe
-          if (hcx < posX && !pipe.isPassed) {
+          if (hcx < this.coordinate.x && !pipe.isPassed) {
             this.score++;
             Sfx.point();
             pipe.isPassed = true;
@@ -236,8 +246,8 @@ export default class Bird extends ParentClass {
 
           // Top Pipe ---------- Bottom Pipe
           if (
-            Math.abs(hcy - radius) >= posY - this.scaled.height ||
-            hcy + radius <= posY + this.scaled.height
+            Math.abs(hcy - radius) >= this.coordinate.y - newDim.height ||
+            hcy + radius <= this.coordinate.y + newDim.height
           ) {
             this.alive = false;
             this.causeOfDeath = 'collide';
@@ -253,17 +263,18 @@ export default class Bird extends ParentClass {
     return !this.alive;
   }
 
-  /**
-   * Get the new width of an oval/ellipse shape based on angle
-   *
-   * @returns new width based on rotation
-   */
-  private getRotatedWidth(): number {
+  private rotatedDimension(): IDimension {
     const rad = (this.rotation * Math.PI) / 180;
-    const res =
-      Math.abs(this.scaled.width * Math.cos(rad)) +
-      Math.abs(this.scaled.height * Math.sin(rad));
-    return res > this.scaled.width ? this.scaled.width : res;
+    const w = this.scaled.width / 2;
+    const h = this.scaled.height / 2;
+
+    const sTheta = Math.sin(rad);
+    const cTheta = Math.cos(rad);
+
+    return {
+      width: 2 * Math.sqrt(Math.pow(w * cTheta, 2) + Math.pow(h * sTheta, 2)),
+      height: 2 * Math.sqrt(Math.pow(w * sTheta, 2) + Math.pow(h * cTheta, 2))
+    };
   }
 
   /**
@@ -285,65 +296,55 @@ export default class Bird extends ParentClass {
   }
 
   /**
-   * Get height and width based on rotation
-   *
-   * @returns New Dimension based on rotation
-   */
-  // private getRotatedDimension():IDimension {
+   * Handling Bird Rotation
+   * */
+  private handleRotation(): void {
+    this.rotation += this.coordinate.y < this.lastCoord ? -7.2 : 6.5;
+    this.rotation = clamp(BIRD_MIN_ROTATION, BIRD_MAX_ROTATION, this.rotation);
 
-  //   const radians = this.rotation * (Math.PI / 180);
-  //   const a = this.scaled.width / 2;
-  //   const b = this.scaled.height / 2;
-  //   const rX = Math.sqrt((a * a * Math.sin(radians) * Math.sin(radians)) + (b * b * Math.cos(radians) * Math.cos(radians)));
-  //   const rY = Math.sqrt((a * a * Math.cos(radians) * Math.cos(radians)) + (b * b * Math.sin(radians) * Math.sin(radians)));
-
-  //   return {
-  //     height: rY * Math.sin(radians) + rX * Math.cos(radians),
-  //     width: rX * Math.sin(radians) + rY * Math.cos(radians)
-  //   }
-  // }
-
-  public Update(): void {
-    // Always above the floor
-    if (this.doesHitTheFloor()) {
-      this.doesLanded = true;
-      // this.coordinate.y = (this.canvasSize.height - Bird.platformHeight) - this.getRotatedDimension().height * 1.5;
+    if (!this.alive) {
+      this.wingState = 1;
       return;
     }
 
-    // Calculate the max drag & max lift velocities from given percentages
-    const mx_down_velocity = lerp(0, this.canvasSize.height, BIRD_MAX_DOWN_VELOCITY);
-    const mx_up_velocity = lerp(0, this.canvasSize.height, BIRD_MAX_UP_VELOCITY);
+    // Handle Flap Speed
+    const birdMinRot = Math.abs(BIRD_MIN_ROTATION);
+    const f = 4 + ((this.rotation + birdMinRot) / (birdMinRot + BIRD_MAX_ROTATION)) * 3.2;
+    this.flapWing(flipRange(4, 8.2, f));
+  }
+
+  public Update(): void {
+    // Always above the floor
+    if (this.doesHitTheFloor() || this.doesLanded) {
+      this.doesLanded = true;
+
+      this.coordinate.y =
+        this.canvasSize.height - Bird.platformHeight - this.rotatedDimension().height;
+      this.handleRotation();
+      return;
+    }
 
     // Add the Y velocity into Y coordinate but make sure we did not overspeed
-    this.coordinate.y += clamp(mx_up_velocity, mx_down_velocity, this.velocity.y);
+    this.coordinate.y += clamp(
+      this.max_lift_velocity,
+      this.max_fall_velocity,
+      this.velocity.y
+    );
 
     // Slowly reduce the Y velocity by given weights
     this.velocity.y += lerp(0, this.canvasSize.height, BIRD_WEIGHT);
 
-    // Rotate the bird base on its velocity.
-    this.rotation += this.velocity.y - lerp(0, this.canvasSize.height, 0.0086);
-    this.rotation = clamp(BIRD_MIN_ROTATION, BIRD_MAX_ROTATION, this.rotation);
-
-    /**
-     * Lets convert the rotation into percent but
-     * the percent is in range of 4 - 8.2
-     * */
-    const rmx = Math.abs(BIRD_MIN_ROTATION) + BIRD_MAX_ROTATION;
-    const f = 4 + ((this.rotation + Math.abs(BIRD_MIN_ROTATION)) / rmx) * 3.2;
-    this.flapWing(flipRange(4, 8.2, f));
+    this.handleRotation();
   }
 
   public Display(context: CanvasRenderingContext2D): void {
     const birdKeyString = `${this.color}.${this.wingState}`;
 
-    const { x, y } = this.coordinate;
-
     // Save our previous created picture
     context.save();
 
     // Move the imaginary cursor into the bird position
-    context.translate(x, y);
+    context.translate(this.coordinate.x, this.coordinate.y);
 
     // Rotate the context using the code above as mid point
     context.rotate((this.rotation * Math.PI) / 180);

@@ -30,10 +30,11 @@
   },
   "homepage": "https://jxmked.github.io/FlappyBird/",
   "devDependencies": {
+    "@total-typescript/ts-reset": "^0.3.7",
     "@types/raf": "^3.4.0",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
-    "browser-sync": "^2.27.11",
+    "browser-sync": "^2.27.12",
     "browser-sync-webpack-plugin": "^2.3.0",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.3",
