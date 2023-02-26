@@ -1,3 +1,9 @@
+
+export interface IData {
+  mode:string;
+  value:string;
+}
+
 export default class Storage {
   private static sk: RegExpMatchArray | null | string = window.location
     .href!.toString()
@@ -50,7 +56,7 @@ export default class Storage {
     try {
       const obj = JSON.parse(
         Storage.atou(window.localStorage.getItem(`__${Storage.sk!}_${key}__`)!)
-      );
+      ) as IData;
 
       if (obj.mode ?? false) {
         switch (obj.mode) {
