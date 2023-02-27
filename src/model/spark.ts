@@ -1,5 +1,5 @@
 import ParentClass from '../abstracts/parent-class';
-import { lerp, rescaleDim, randomClamp } from '../utils';
+import { rescaleDim, randomClamp } from '../utils';
 import { asset } from '../lib/sprite-destructor';
 import { TimingEvent } from '../lib/animation';
 
@@ -51,7 +51,7 @@ export default class Spark extends ParentClass {
         width: this.images.get('spark-lg')!.width,
         height: this.images.get('spark-lg')!.height
       },
-      { width: lerp(0, width, 0.03) }
+      { width: width * 0.03 }
     );
   }
 

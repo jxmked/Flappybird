@@ -1,4 +1,4 @@
-import { lerp, rescaleDim } from '../utils';
+import { rescaleDim } from '../utils';
 
 import { GAME_SPEED } from '../constants';
 import ParentClass from '../abstracts/parent-class';
@@ -46,7 +46,7 @@ export default class Platform extends ParentClass {
      * We use linear interpolation instead of by pixel to move the object.
      * It is to keep the speed same in different Screen Sizes & Screen DPI
      * */
-    this.coordinate.x += lerp(0, this.canvasSize.width, this.velocity.x);
+    this.coordinate.x += this.canvasSize.width * this.velocity.x;
     this.coordinate.y += this.velocity.y;
   }
 

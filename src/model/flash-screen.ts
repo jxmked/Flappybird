@@ -2,7 +2,6 @@ import ParentClass from '../abstracts/parent-class';
 import { FadeOut } from '../lib/animation';
 import { IEasingKey } from '../lib/animation/easing';
 import { IFadingStatus } from '../lib/animation/abstracts/fading';
-import { lerp } from '../utils';
 
 export interface IFlashScreenConstructorOption {
   style: string;
@@ -89,7 +88,7 @@ export default class FlashScreen extends ParentClass {
   }
 
   public Display(context: CanvasRenderingContext2D): void {
-    context.globalAlpha = lerp(0, this.strong, this.value);
+    context.globalAlpha = this.strong * this.value;
     context.fillStyle = this.style;
     context.fillRect(0, 0, this.canvasSize.width, this.canvasSize.height);
     context.fill();

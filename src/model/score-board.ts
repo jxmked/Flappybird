@@ -1,4 +1,4 @@
-import { lerp, rescaleDim } from '../utils';
+import { rescaleDim } from '../utils';
 
 import ParentObject from '../abstracts/parent-class';
 import SparkModel from './spark';
@@ -114,16 +114,16 @@ export default class ScoreBoard extends ParentObject {
           width: this.images.get('banner-gameover')!.width,
           height: this.images.get('banner-gameover')!.height
         },
-        { width: lerp(0, this.canvasSize.width, 0.7) }
+        { width: this.canvasSize.width * 0.7 }
       );
       const anim = this.BounceInAnim.value;
-      const yPos = lerp(0, this.canvasSize.height, 0.225) - bgoScaled.height / 2;
+      const yPos = this.canvasSize.height * 0.225 - bgoScaled.height / 2;
 
       context.globalAlpha = anim.opacity;
       context.drawImage(
         this.images.get('banner-gameover')!,
-        lerp(0, this.canvasSize.width, 0.5) - bgoScaled.width / 2,
-        yPos + anim.value * lerp(0, this.canvasSize.height, 0.015),
+        this.canvasSize.width * 0.5 - bgoScaled.width / 2,
+        yPos + anim.value * (this.canvasSize.height * 0.015),
         bgoScaled.width,
         bgoScaled.height
       );
@@ -136,13 +136,13 @@ export default class ScoreBoard extends ParentObject {
           width: this.images.get('score-board')!.width,
           height: this.images.get('score-board')!.height
         },
-        { width: lerp(0, this.canvasSize.width, 0.85) }
+        { width: this.canvasSize.width * 0.85 }
       );
 
       // Need to clone
       const anim = Object.assign({}, this.FlyInAnim.value);
-      anim.x = lerp(0, this.canvasSize.width, anim.x) - sbScaled.width / 2;
-      anim.y = lerp(0, this.canvasSize.height, anim.y) - sbScaled.height / 2;
+      anim.x = this.canvasSize.width * anim.x - sbScaled.width / 2;
+      anim.y = this.canvasSize.height * anim.y - sbScaled.height / 2;
 
       context.drawImage(
         this.images.get('score-board')!,
@@ -239,11 +239,11 @@ export default class ScoreBoard extends ParentObject {
         width: medal!.width,
         height: medal!.height
       },
-      { width: lerp(0, parentSize.width, 0.1878) }
+      { width: parentSize.width * 0.1878 }
     );
     const pos = {
-      x: lerp(0, coord.x + parentSize.width / 2, 0.36),
-      y: lerp(0, coord.y + parentSize.height / 2, 0.9196)
+      x: (coord.x + parentSize.width / 2) * 0.36,
+      y: (coord.y + parentSize.height / 2) * 0.9196
     };
 
     context.drawImage(medal!, pos.x, pos.y, scaled.width, scaled.height);
@@ -262,12 +262,12 @@ export default class ScoreBoard extends ParentObject {
         width: this.images.get('number-1')!.width,
         height: this.images.get('number-1')!.height
       },
-      { width: lerp(0, parentSize.width, 0.05) }
+      { width: parentSize.width * 0.05 }
     );
 
     coord = Object.assign({}, coord);
-    coord.x = lerp(0, coord.x + parentSize.width / 2, 1.565);
-    coord.y = lerp(0, coord.y + parentSize.height / 2, 0.864);
+    coord.x = (coord.x + parentSize.width / 2) * 1.565;
+    coord.y = (coord.y + parentSize.height / 2) * 0.864;
 
     const numArr: string[] = String(this.currentGeneratedNumber).split('');
 
@@ -293,13 +293,13 @@ export default class ScoreBoard extends ParentObject {
         width: this.images.get('number-1')!.width,
         height: this.images.get('number-1')!.height
       },
-      { width: lerp(0, parentSize.width, 0.05) }
+      { width: parentSize.width * 0.05 }
     );
 
     coord = Object.assign({}, coord);
 
-    coord.x = lerp(0, coord.x + parentSize.width / 2, 1.565);
-    coord.y = lerp(0, coord.y + parentSize.height / 2, 1.074);
+    coord.x = (coord.x + parentSize.width / 2) * 1.565;
+    coord.y = (coord.y + parentSize.height / 2) * 1.074;
 
     const numArr: string[] = String(this.currentHighScore).split('');
 
@@ -320,13 +320,13 @@ export default class ScoreBoard extends ParentObject {
         width: this.images.get('new-icon')!.width,
         height: this.images.get('new-icon')!.height
       },
-      { width: lerp(0, parentSize.width, 0.14) }
+      { width: parentSize.width * 0.14 }
     );
 
     context.drawImage(
       this.images.get('new-icon')!,
-      lerp(0, coord.x, 0.73),
-      lerp(0, coord.y, 0.922),
+      coord.x * 0.73,
+      coord.y * 0.922,
       toastSize.width,
       toastSize.height
     );

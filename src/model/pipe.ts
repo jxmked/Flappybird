@@ -1,5 +1,5 @@
 import { GAME_SPEED, PIPE_HOLL_SIZE, PIPE_INITIAL_DIMENSION } from '../constants';
-import { lerp, rescaleDim } from '../utils';
+import { rescaleDim } from '../utils';
 import ParentClass from '../abstracts/parent-class';
 import { asset } from '../lib/sprite-destructor';
 import SceneGenerator from './scene-generator';
@@ -64,7 +64,7 @@ export default class Pipe extends ParentClass {
    * */
   public setHollPosition(coordinate: ICoordinate): void {
     // Positioning holl
-    this.hollSize = lerp(0, this.canvasSize.height, PIPE_HOLL_SIZE);
+    this.hollSize = this.canvasSize.height * PIPE_HOLL_SIZE;
 
     /**
      * The Logic is
@@ -96,18 +96,18 @@ export default class Pipe extends ParentClass {
     super.resize({ width, height });
 
     // Update Pipe Size
-    const min = lerp(0, this.canvasSize.width, 0.18);
+    const min = this.canvasSize.width * 0.18;
     Pipe.pipeSize = rescaleDim(PIPE_INITIAL_DIMENSION, { width: min });
 
     // Resize holl size
-    this.hollSize = lerp(0, this.canvasSize.height, PIPE_HOLL_SIZE);
+    this.hollSize = this.canvasSize.height * PIPE_HOLL_SIZE;
 
     // Relocate the pipe holl
-    this.coordinate.x = lerp(0, width, oldX / 100);
-    this.coordinate.y = lerp(0, height, oldY / 100);
+    this.coordinate.x = width * (oldX / 100);
+    this.coordinate.y = height * (oldY / 100);
 
     // Update velocity. Converting percentages to pixels
-    this.velocity.x = lerp(0, width, GAME_SPEED);
+    this.velocity.x = width * GAME_SPEED;
 
     this.scaled.top = rescaleDim(
       {
