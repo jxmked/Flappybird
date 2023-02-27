@@ -8,7 +8,7 @@
  * connected to Google Play Games or Apple Game Center
  * */
 
-import { lerp, rescaleDim } from '../utils';
+import { rescaleDim } from '../utils';
 
 import BirdModel from '../model/bird';
 import { IScreenChangerObject } from '../lib/screen-changer';
@@ -58,8 +58,8 @@ export default class Introduction extends ParentClass implements IScreenChangerO
   public Update(): void {
     this.bird.doWave(
       {
-        x: lerp(0, this.canvasSize.width, 0.5),
-        y: lerp(0, this.canvasSize.height, 0.4)
+        x: this.canvasSize.width * 0.5,
+        y: this.canvasSize.height * 0.4
       },
       1.4,
       9
@@ -82,13 +82,13 @@ export default class Introduction extends ParentClass implements IScreenChangerO
         width: this.flappyBirdBanner!.width,
         height: this.flappyBirdBanner!.height
       },
-      { width: lerp(0, this.canvasSize.width, 0.67) }
+      { width: this.canvasSize.width * 0.67 }
     );
 
     context.drawImage(
       this.flappyBirdBanner!,
-      lerp(0, this.canvasSize.width, 0.5) - fbbScaled.width / 2,
-      lerp(0, this.canvasSize.height, 0.28) - fbbScaled.height / 2,
+      this.canvasSize.width * 0.5 - fbbScaled.width / 2,
+      this.canvasSize.height * 0.28 - fbbScaled.height / 2,
       fbbScaled.width,
       fbbScaled.height
     );
@@ -100,13 +100,13 @@ export default class Introduction extends ParentClass implements IScreenChangerO
         width: this.copyright!.width,
         height: this.copyright!.height
       },
-      { width: lerp(0, this.canvasSize.width, 0.44) }
+      { width: this.canvasSize.width * 0.44 }
     );
 
     context.drawImage(
       this.copyright!,
-      lerp(0, this.canvasSize.width, 0.5) - crScaled.width / 2,
-      lerp(0, this.canvasSize.height, 0.806) - crScaled.height / 2,
+      this.canvasSize.width * 0.5 - crScaled.width / 2,
+      this.canvasSize.height * 0.806 - crScaled.height / 2,
       crScaled.width,
       crScaled.height
     );
@@ -116,9 +116,9 @@ export default class Introduction extends ParentClass implements IScreenChangerO
   }
 
   private insertAppVersion(context: CanvasRenderingContext2D): void {
-    const fSize = lerp(0, this.canvasSize.width, 0.04);
-    const bot = lerp(0, this.canvasSize.height, 0.985);
-    const right = lerp(0, this.canvasSize.width, 0.985);
+    const fSize = this.canvasSize.width * 0.04;
+    const bot = this.canvasSize.height * 0.985;
+    const right = this.canvasSize.width * 0.985;
 
     context.font = `bold ${fSize}px monospace`;
     context.textAlign = 'center';

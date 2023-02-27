@@ -1,4 +1,4 @@
-import { lerp, rescaleDim } from '../utils';
+import { rescaleDim } from '../utils';
 
 import { FadeOut } from '../lib/animation';
 import ParentClass from '../abstracts/parent-class';
@@ -106,7 +106,7 @@ export default class BannerInstruction extends ParentClass {
         width: this.instructImage.image!.width,
         height: this.instructImage.image!.height
       },
-      { width: lerp(0, width, this.instructImage.size) }
+      { width: width * this.instructImage.size }
     );
 
     this.getReadyImage.scaled = rescaleDim(
@@ -114,21 +114,21 @@ export default class BannerInstruction extends ParentClass {
         width: this.getReadyImage.image!.width,
         height: this.getReadyImage.image!.height
       },
-      { width: lerp(0, width, this.getReadyImage.size) }
+      { width: width * this.getReadyImage.size }
     );
 
     const instructImagePos = BANNER_INSTRUCTION.positions.instructImage;
     const getReadyImagePos = BANNER_INSTRUCTION.positions.getReadyImage;
 
     this.instructImage.position.x =
-      lerp(0, width, instructImagePos.x) - this.instructImage.scaled.width / 2;
+      width * instructImagePos.x - this.instructImage.scaled.width / 2;
     this.instructImage.position.y =
-      lerp(0, height, instructImagePos.y) - this.instructImage.scaled.height / 2;
+      height * instructImagePos.y - this.instructImage.scaled.height / 2;
 
     this.getReadyImage.position.x =
-      lerp(0, width, getReadyImagePos.x) - this.getReadyImage.scaled.width / 2;
+      width * getReadyImagePos.x - this.getReadyImage.scaled.width / 2;
     this.getReadyImage.position.y =
-      lerp(0, height, getReadyImagePos.y) - this.getReadyImage.scaled.height / 2;
+      height * getReadyImagePos.y - this.getReadyImage.scaled.height / 2;
   }
 
   public Update(): void {

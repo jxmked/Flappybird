@@ -9,7 +9,7 @@ import {
   BIRD_WEIGHT,
   BIRD_X_POSITION
 } from '../constants';
-import { clamp, flipRange, lerp, rescaleDim, sine as sineWave } from '../utils';
+import { clamp, flipRange, rescaleDim, sine as sineWave } from '../utils';
 import ParentClass from '../abstracts/parent-class';
 import Pipe from './pipe';
 import Sfx from './sfx';
@@ -144,16 +144,16 @@ export default class Bird extends ParentClass {
   public resize({ width, height }: IDimension): void {
     super.resize({ width, height });
 
-    this.coordinate.y = lerp(0, Bird.platformHeight, 0.5);
-    this.coordinate.x = lerp(0, width, BIRD_X_POSITION);
+    this.coordinate.y = Bird.platformHeight * 0.5;
+    this.coordinate.x = width * BIRD_X_POSITION;
 
-    this.force = lerp(0, height, BIRD_JUMP_HEIGHT);
+    this.force = height * BIRD_JUMP_HEIGHT;
     this.scaled = rescaleDim(BIRD_INITIAL_DIMENSION, {
-      height: lerp(0, height, BIRD_HEIGHT)
+      height: height * BIRD_HEIGHT
     });
 
-    this.max_fall_velocity = lerp(0, this.canvasSize.height, BIRD_MAX_DOWN_VELOCITY);
-    this.max_lift_velocity = lerp(0, this.canvasSize.height, BIRD_MAX_UP_VELOCITY);
+    this.max_fall_velocity = this.canvasSize.height * BIRD_MAX_DOWN_VELOCITY;
+    this.max_lift_velocity = this.canvasSize.height * BIRD_MAX_UP_VELOCITY;
   }
 
   /**
@@ -332,7 +332,7 @@ export default class Bird extends ParentClass {
     );
 
     // Slowly reduce the Y velocity by given weights
-    this.velocity.y += lerp(0, this.canvasSize.height, BIRD_WEIGHT);
+    this.velocity.y += this.canvasSize.height * BIRD_WEIGHT;
 
     this.handleRotation();
   }

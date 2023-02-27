@@ -1,5 +1,5 @@
 import { COUNT_COORDINATE, COUNT_DIMENSION } from '../constants';
-import { lerp, rescaleDim } from '../utils';
+import { rescaleDim } from '../utils';
 
 import ParentClass from '../abstracts/parent-class';
 import { asset } from '../lib/sprite-destructor';
@@ -46,11 +46,11 @@ export default class Count extends ParentClass {
   public resize({ width, height }: IDimension): void {
     super.resize({ width, height });
     this.numberDimension = rescaleDim(COUNT_DIMENSION, {
-      height: lerp(0, height, 0.065)
+      height: height * 0.065
     });
 
-    this.coordinate.x = lerp(0, this.canvasSize.width, COUNT_COORDINATE.x);
-    this.coordinate.y = lerp(0, this.canvasSize.height, COUNT_COORDINATE.y);
+    this.coordinate.x = this.canvasSize.width * COUNT_COORDINATE.x;
+    this.coordinate.y = this.canvasSize.height * COUNT_COORDINATE.y;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

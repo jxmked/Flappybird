@@ -5,8 +5,6 @@
  * Wait for the tap event
  * */
 
-import { lerp } from '../utils';
-
 import BannerInstruction from '../model/banner-instruction';
 import BirdModel from '../model/bird';
 import CounterModel from '../model/count';
@@ -110,7 +108,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
       this.bird.doWave(
         {
           x: this.bird.coordinate.x,
-          y: lerp(0, this.canvasSize.height, 0.48)
+          y: this.canvasSize.height * 0.48
         },
         1,
         6

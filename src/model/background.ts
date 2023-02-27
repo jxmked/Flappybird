@@ -1,5 +1,5 @@
 import { BG_SPEED } from '../constants';
-import { lerp, rescaleDim } from '../utils';
+import { rescaleDim } from '../utils';
 import ParentClass from '../abstracts/parent-class';
 import { asset } from '../lib/sprite-destructor';
 import SceneGenerator from './scene-generator';
@@ -76,7 +76,7 @@ export default class Background extends ParentClass {
      * We cannot rely on fps since it is not a constant value.
      * Which means is the game will speed up or slow down based on fps
      * */
-    this.coordinate.x += lerp(0, this.canvasSize.width, this.velocity.x);
+    this.coordinate.x += this.canvasSize.width * this.velocity.x;
     this.coordinate.y += this.velocity.y;
   }
 

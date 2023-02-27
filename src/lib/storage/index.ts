@@ -1,7 +1,6 @@
-
 export interface IData {
-  mode:string;
-  value:string;
+  mode: string;
+  value: string;
 }
 
 export default class Storage {
