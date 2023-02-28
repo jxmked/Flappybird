@@ -20,25 +20,20 @@ export type IBirdColor = string;
 export type IBirdRecords = Map<IBirdColor, HTMLImageElement>;
 
 export default class Bird extends ParentClass {
+  private static readonly FLAG_IS_ALIVE = 0b0001;
+  private static readonly FLAG_DIED = 0b0010;
+  private static readonly FLAG_DOES_LANDED = 0b0100;
+  private flags: number;
+
   /**
    * Platform Height
    * */
   public static platformHeight = 0;
 
   /**
-   * Bird state
-   * */
-  public alive: boolean;
-
-  /**
    * Score
    * */
   public score: number;
-
-  /**
-   * Will be use to play sound once dies
-   * */
-  private died: boolean;
 
   /**
    * 0 - Up
@@ -58,20 +53,18 @@ export default class Bird extends ParentClass {
   private rotation: number;
 
   /**
-   * Calculated Fixed Force to up
+   * Calculated Fixed Force to lift
    * */
   private force: number;
 
   /**
    * Cause of death
+   *
+   * 0 - None
+   * 1 - Fall
+   * 2 - Collidde
    * */
-  private causeOfDeath: string;
-
-  /**
-   * Does touch the floor?
-   * State
-   */
-  public doesLanded: boolean;
+  private causeOfDeath: number;
 
   private images: IBirdRecords;
   private color: IBirdColor;
@@ -83,22 +76,19 @@ export default class Bird extends ParentClass {
     super();
     this.color = 'yellow';
     this.images = new Map<string, HTMLImageElement>();
-    this.died = false;
-
-    this.alive = true;
     this.force = 0;
-    this.score = 0;
     this.scaled = {
       width: 0,
       height: 0
     };
-    this.rotation = 0;
-    this.wingState = 1;
-    this.causeOfDeath = 'none';
-    this.doesLanded = false;
-    this.lastCoord = 0;
     this.max_fall_velocity = 0;
     this.max_lift_velocity = 0;
+    this.score = 0;
+    this.rotation = 0;
+    this.causeOfDeath = 0;
+    this.flags = 0b0001;
+    this.lastCoord = 0;
+    this.wingState = 1;
   }
 
   /**
@@ -123,15 +113,23 @@ export default class Bird extends ParentClass {
     this.use(SceneGenerator.bird);
   }
 
-  public reset(): void {
-    this.alive = true;
+  private variableReset(): void {
     this.score = 0;
     this.rotation = 0;
-    this.doesLanded = false;
-    this.causeOfDeath = 'none';
-    this.died = false;
+    this.causeOfDeath = 0;
+    this.flags = 0b0001;
+    this.lastCoord = 0;
+    this.wingState = 1;
+  }
+
+  public reset(): void {
+    this.variableReset();
     this.resize(this.canvasSize);
     this.use(SceneGenerator.bird);
+  }
+
+  public get alive(): boolean {
+    return (this.flags & Bird.FLAG_IS_ALIVE) !== 0;
   }
 
   /**
@@ -189,7 +187,7 @@ export default class Bird extends ParentClass {
   public flap(): void {
     // Prevent flapping when the height of bird is
     // at the very top of canvas or the bird is not alive
-    if (this.coordinate.y < 0 || !this.alive) {
+    if (this.coordinate.y < 0 || (this.flags & Bird.FLAG_IS_ALIVE) === 0) {
       return;
     }
 
@@ -213,9 +211,9 @@ export default class Bird extends ParentClass {
    * */
   public isDead(pipes: Pipe[]): boolean {
     if (this.doesHitTheFloor()) {
-      this.alive = false;
-      this.causeOfDeath = 'fall';
-      return !this.alive;
+      this.flags &= ~Bird.FLAG_IS_ALIVE;
+      this.causeOfDeath = 1;
+      return (this.flags & Bird.FLAG_IS_ALIVE) === 0;
     }
 
     const newDim = this.rotatedDimension();
@@ -249,8 +247,8 @@ export default class Bird extends ParentClass {
             Math.abs(hcy - radius) >= this.coordinate.y - newDim.height ||
             hcy + radius <= this.coordinate.y + newDim.height
           ) {
-            this.alive = false;
-            this.causeOfDeath = 'collide';
+            this.flags &= ~Bird.FLAG_IS_ALIVE;
+            this.causeOfDeath = 2;
             break;
           }
         }
@@ -260,7 +258,7 @@ export default class Bird extends ParentClass {
       } catch (err) {}
     }
 
-    return !this.alive;
+    return (this.flags & Bird.FLAG_IS_ALIVE) === 0;
   }
 
   private rotatedDimension(): IDimension {
@@ -278,12 +276,12 @@ export default class Bird extends ParentClass {
   }
 
   /**
-   * Play Die sound once once the bird died
+   * Play fall die sound once once the bird died
    */
   public playDead(): void {
-    if (this.died) return;
-    this.died = true;
-    if (this.causeOfDeath === 'collide') Sfx.die();
+    if ((this.flags & Bird.FLAG_DIED) !== 0) return;
+    this.flags |= Bird.FLAG_DIED;
+    if (this.causeOfDeath === 2) Sfx.die();
   }
 
   /**
@@ -302,7 +300,7 @@ export default class Bird extends ParentClass {
     this.rotation += this.coordinate.y < this.lastCoord ? -7.2 : 6.5;
     this.rotation = clamp(BIRD_MIN_ROTATION, BIRD_MAX_ROTATION, this.rotation);
 
-    if (!this.alive) {
+    if ((this.flags & Bird.FLAG_IS_ALIVE) === 0) {
       this.wingState = 1;
       return;
     }
@@ -315,8 +313,8 @@ export default class Bird extends ParentClass {
 
   public Update(): void {
     // Always above the floor
-    if (this.doesHitTheFloor() || this.doesLanded) {
-      this.doesLanded = true;
+    if (this.doesHitTheFloor() || (this.flags & Bird.FLAG_DOES_LANDED) !== 0) {
+      this.flags |= Bird.FLAG_DOES_LANDED;
 
       this.coordinate.y =
         this.canvasSize.height - Bird.platformHeight - this.rotatedDimension().height;

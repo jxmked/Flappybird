@@ -26,10 +26,18 @@ if (process.env.NODE_ENV !== 'development') {
   }
 } */
 
+/**
+ * Enabling desynchronized to reduce latency
+ * but the frame tearing may experience so
+ * we'll need double buffer to atleast reduce
+ * the frame tearing
+ * */
+const virtualCanvas = document.createElement('canvas');
 const gameIcon = document.createElement('img');
 const canvas = document.querySelector('#main-canvas')! as HTMLCanvasElement;
+const physicalContext = canvas.getContext('2d')!;
 const loadingScreen = document.querySelector('#loading-modal')! as HTMLDivElement;
-const Game = new GameObject(canvas);
+const Game = new GameObject(virtualCanvas);
 const fps = new Framer(Game.context);
 
 let isLoaded = false;
@@ -42,6 +50,8 @@ fps.text({ x: 50, y: 50 }, '', ' Cycle');
 fps.container({ x: 10, y: 10}, { x: 230, y: 70});
 
 const GameUpdate = (): void => {
+  physicalContext.drawImage(virtualCanvas, 0, 0);
+
   Game.Update();
   Game.Display();
 
@@ -60,6 +70,8 @@ const ScreenResize = () => {
 
   canvas.height = sizeResult.height;
   canvas.width = sizeResult.width;
+  virtualCanvas.height = sizeResult.height;
+  virtualCanvas.width = sizeResult.width;
 
   console.log(`Canvas Size: ${sizeResult.width}x${sizeResult.height}`);
 
