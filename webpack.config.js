@@ -6,7 +6,7 @@ const WebpackPwaManifest = require('webpack-pwa-manifest');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 const GA4WebpackPlugin = require('ga4-webpack-plugin');
 const package = require('./package.json');
-const webpack = require("webpack");
+const webpack = require('webpack');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
@@ -28,7 +28,7 @@ const CONFIG = {
     entry: './src/index.ts', // Typescript only
     dir: 'src'
   },
-  
+
   // Changing this during runtime will not going to parse it.
   // Restart the webpack to load
   env: {
@@ -84,15 +84,14 @@ let prodPlugins = [
     basePath: '',
     publicPath: 'Flappybird/',
     fileName: 'asset-manifest.json'
-  }),
-  
+  })
+
   /*
   new CopyPlugin({
       patterns: [
         { from: 'src/sw.js', to: 'sw.js' },
       ],
     }), */
-  
 ];
 
 module.exports = function (env, config) {
@@ -111,7 +110,8 @@ module.exports = function (env, config) {
     CONFIG.output.chunk = '[id]';
     prodPlugins = [];
   }
-  
+  const DateToday = new Date().toISOString().substring(0, 10);
+
   return {
     entry: CONFIG.input.entry,
     module: {
@@ -136,7 +136,12 @@ module.exports = function (env, config) {
         {
           test: /\.((s[ca]|c)ss)$/,
           exclude: /node_modules/,
-          use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            'postcss-loader',
+            'sass-loader'
+          ]
         }
       ]
     },
@@ -159,7 +164,9 @@ module.exports = function (env, config) {
 
     plugins: [
       new webpack.DefinePlugin({
-        "process.env": Object.fromEntries(Object.entries(CONFIG.env).map((x) => [x[0], JSON.stringify(x[1])])),
+        'process.env': Object.fromEntries(
+          Object.entries(CONFIG.env).map((x) => [x[0], JSON.stringify(x[1])])
+        )
       }),
       new GA4WebpackPlugin({
         id: 'G-TFPC622JKX',
@@ -186,14 +193,21 @@ module.exports = function (env, config) {
         template: './' + path.join(CONFIG.input.dir, 'index.html'),
         //   manifest: './src/site.webmanifest',
         showErrors: devMode, // Include html error on emitted file
+        lang: 'en',
         meta: {
-          'viewport': 'width=device-width, initial-scale=1, shrink-to-fit=no' + (CONFIG.windowResizeable ? '' : ',user-scalable=no'),
+          'viewport':
+            'width=device-width, initial-scale=1, shrink-to-fit=no' +
+            (CONFIG.windowResizeable ? '' : ',user-scalable=no'),
           'robots': 'index,follow',
           'referrer': 'origin',
           'charset': { charset: 'UTF-8' },
           'http-equiv': {
             'http-equiv': 'Content-Type',
             'content': 'text/html; charset=UTF-8'
+          },
+          'http-equiv-IE': {
+            'http-equiv': 'X-UA-Compatible',
+            'content': 'IE=edge'
           },
           'color-scheme': 'light dark',
           'description': package.description,
@@ -207,7 +221,7 @@ module.exports = function (env, config) {
           // Open Graph
           'og:title': {
             property: 'og:title',
-            content: package.name
+            content: CONFIG.appName
           },
           'og:description': {
             property: 'og:description',
@@ -217,13 +231,18 @@ module.exports = function (env, config) {
             property: 'og:url',
             content: package.homepage
           },
+          'og:type': {
+            property: 'og:type',
+            content: 'app'
+          },
           'og:site_name': {
             property: 'og:site_name',
             content: 'Github Pages'
           },
           'og:image:url': {
             property: 'og:image:url',
-            content: 'https://raw.githubusercontent.com/jxmked/resources/xio/assets/icons/light/Windows/Square310x310Logo.scale-400.png'
+            content:
+              'https://raw.githubusercontent.com/jxmked/resources/xio/assets/icons/light/Windows/Square310x310Logo.scale-400.png'
           },
           'og:image:width': {
             property: 'og:image:width',
@@ -236,6 +255,59 @@ module.exports = function (env, config) {
           'og:image:alt': {
             property: 'og:image:alt',
             content: 'Logo'
+          },
+          'apple-meta-01': {
+            name: 'apple-mobile-web-app-capable',
+            content: 'yes'
+          },
+          'apple-meta-02': {
+            name: 'apple-mobile-web-app-status-bar-style',
+            content: 'black-translucent'
+          },
+          'apple-meta-03': {
+            name: 'apple-touch-icon',
+            content: './favicon.ico'
+          },
+          'apple-meta-04': {
+            name: 'apple-mobile-web-app-title',
+            content: CONFIG.appName
+          },
+          'tel-meta': {
+            name: 'format-detection',
+            content: 'telephone=no'
+          },
+          'twitter:card': {
+            name: 'twitter:card',
+            content: 'app'
+          },
+          'twitter:title': {
+            name: 'twitter:title',
+            content: CONFIG.appName
+          },
+          'twitter:description': {
+            name: 'twitter:description',
+            content: package.description
+          },
+          'twitter:image': {
+            name: 'twitter:image',
+            content:
+              'https://raw.githubusercontent.com/jxmked/resources/xio/assets/icons/light/Windows/Square310x310Logo.scale-400.png'
+          },
+          'geo.country': {
+            name: 'geo.country',
+            content: 'PH'
+          },
+          'date': {
+            name: 'date',
+            content: DateToday
+          },
+          'dcterms.created': {
+            name: 'dcterms.created',
+            content: DateToday
+          },
+          'dcterms.modified': {
+            name: 'dcterms.modified',
+            content: DateToday
           }
         }
       }),
