@@ -8,28 +8,28 @@ import { asset } from '../lib/sprite-destructor';
 import { Fly, BounceIn, TimingEvent } from '../lib/animation';
 import Storage from '../lib/storage';
 
-export interface IImageState {
-  banner: boolean;
-  scoreBoard: boolean;
-  buttons: boolean;
-}
-
 export default class ScoreBoard extends ParentObject {
+  private static readonly FLAG_SHOW_BANNER = 0b0001;
+  private static readonly FLAG_SHOW_SCOREBOARD = 0b0010;
+  private static readonly FLAG_SHOW_BUTTONS = 0b0100;
+  private static readonly FLAG_NEW_HIGH_SCORE = 0b1000;
+
+  private flags: number;
+
   private images: Map<string, HTMLImageElement>;
   private playButton: PlayButton;
   private rankingButton: RankingButton;
-  private show: IImageState;
   private FlyInAnim: Fly;
   private BounceInAnim: BounceIn;
   private currentScore: number;
   private currentGeneratedNumber: number;
   private currentHighScore: number;
   private TimingEventAnim: TimingEvent;
-  private isNewHighScore: boolean;
   private spark: SparkModel;
 
   constructor() {
     super();
+    this.flags = 0;
     this.images = new Map<string, HTMLImageElement>();
     this.playButton = new PlayButton();
     this.rankingButton = new RankingButton();
@@ -37,12 +37,6 @@ export default class ScoreBoard extends ParentObject {
     this.currentHighScore = 0;
     this.currentGeneratedNumber = 0;
     this.currentScore = 0;
-    this.isNewHighScore = false;
-    this.show = {
-      banner: false,
-      scoreBoard: false,
-      buttons: false
-    };
     this.FlyInAnim = new Fly({
       duration: 500,
       from: {
@@ -108,7 +102,7 @@ export default class ScoreBoard extends ParentObject {
   }
 
   public Display(context: CanvasRenderingContext2D): void {
-    if (this.show.banner) {
+    if ((this.flags & ScoreBoard.FLAG_SHOW_BANNER) !== 0) {
       const bgoScaled = rescaleDim(
         {
           width: this.images.get('banner-gameover')!.width,
@@ -130,7 +124,7 @@ export default class ScoreBoard extends ParentObject {
       context.globalAlpha = 1;
     }
 
-    if (this.show.scoreBoard) {
+    if ((this.flags & ScoreBoard.FLAG_SHOW_SCOREBOARD) !== 0) {
       const sbScaled = rescaleDim(
         {
           width: this.images.get('score-board')!.width,
@@ -163,7 +157,7 @@ export default class ScoreBoard extends ParentObject {
       if (this.TimingEventAnim.status.complete && !this.TimingEventAnim.status.running) {
         if (this.currentGeneratedNumber > this.currentHighScore) {
           this.setHighScore(this.currentGeneratedNumber);
-          this.isNewHighScore = true;
+          this.flags |= ScoreBoard.FLAG_NEW_HIGH_SCORE;
         }
 
         this.addMedal(context, anim, sbScaled);
@@ -171,7 +165,12 @@ export default class ScoreBoard extends ParentObject {
       }
 
       this.displayScore(context, anim, sbScaled);
-      this.displayBestScore(context, anim, sbScaled, this.isNewHighScore);
+      this.displayBestScore(
+        context,
+        anim,
+        sbScaled,
+        (this.flags & ScoreBoard.FLAG_NEW_HIGH_SCORE) !== 0
+      );
 
       if (this.FlyInAnim.status.complete && !this.FlyInAnim.status.running) {
         this.TimingEventAnim.start();
@@ -182,25 +181,25 @@ export default class ScoreBoard extends ParentObject {
       }
     }
 
-    if (this.show.buttons) {
+    if ((this.flags & ScoreBoard.FLAG_SHOW_BUTTONS) !== 0) {
       this.rankingButton.Display(context);
       this.playButton.Display(context);
     }
   }
 
   public showBanner(): void {
-    this.show.banner = true;
+    this.flags |= ScoreBoard.FLAG_SHOW_BANNER;
     this.BounceInAnim.start();
   }
 
   public showBoard(): void {
-    this.show.scoreBoard = true;
+    this.flags |= ScoreBoard.FLAG_SHOW_SCOREBOARD;
     this.FlyInAnim.start();
     this.spark.doSpark();
   }
 
   public showButtons(): void {
-    this.show.buttons = true;
+    this.flags |= ScoreBoard.FLAG_SHOW_BUTTONS;
     this.playButton.active = true;
     this.rankingButton.active = true;
   }
@@ -313,7 +312,7 @@ export default class ScoreBoard extends ParentObject {
       );
     });
 
-    if (!haveNewToast) return;
+    if ((this.flags & ScoreBoard.FLAG_NEW_HIGH_SCORE) === 0) return;
 
     const toastSize = rescaleDim(
       {
@@ -336,13 +335,11 @@ export default class ScoreBoard extends ParentObject {
    * Hide all at once
    * */
   public hide(): void {
-    this.show.banner = false;
-    this.show.scoreBoard = false;
-    this.show.buttons = false;
+    this.flags = 0;
+
     this.playButton.active = false;
     this.rankingButton.active = false;
     this.currentGeneratedNumber = 0;
-    this.isNewHighScore = false;
     this.FlyInAnim.reset();
     this.BounceInAnim.reset();
     this.TimingEventAnim.reset();

@@ -29,7 +29,10 @@ export default class Game extends ParentClass {
     this.screenChanger = new ScreenChanger();
     this.background = new BgModel();
     this.canvas = canvas;
-    this.context = this.canvas.getContext('2d')!;
+    this.context = this.canvas.getContext('2d', {
+      desynchronized: true,
+      alpha: false
+    })!;
     this.platform = new PlatformModel();
     this.pipeGenerator = new PipeGenerator();
     this.screenIntro = new Intro();
