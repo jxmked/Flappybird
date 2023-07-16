@@ -114,12 +114,14 @@ export default (callback: Function): void => {
     sd.cutOut('banner-instruction', 584, 182, 114, 98);
     sd.cutOut('copyright', 886, 184, 122, 10);
     sd.cutOut('icon-plus', 992, 168, 10, 10);
-
-    // Make sure this one is at the very bottom of SpriteDestructor.cutOut
-    sd.then(() => {
-      if (isLoaded) callback();
+    
+    const loadCallback = () => {
+      if(isLoaded) callback();
       isLoaded = true;
-    });
+    };
+    
+    // Make sure this one is at the very bottom of SpriteDestructor.cutOut
+    sd.then(loadCallback);
 
     new WebSfx(
       {
@@ -129,10 +131,7 @@ export default (callback: Function): void => {
         die: sfDie,
         point: sfPoint
       },
-      () => {
-        if (isLoaded) callback();
-        isLoaded = true;
-      }
+      loadCallback
     );
   });
 };
