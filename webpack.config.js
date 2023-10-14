@@ -237,7 +237,7 @@ module.exports = function (env, config) {
           },
           'og:site_name': {
             property: 'og:site_name',
-            content: 'Github Pages'
+            content: 'jxmked page'
           },
           'og:image:url': {
             property: 'og:image:url',
