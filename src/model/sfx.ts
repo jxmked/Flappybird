@@ -6,7 +6,7 @@ import sfSwoosh from '../assets/audio/swooshing.ogg';
 import sfWing from '../assets/audio/wing.ogg';
 
 export default class Sfx {
-  private static currentVolume = 1;
+  public static currentVolume = 1;
 
   public static async init() {
     await WebSfx.init();

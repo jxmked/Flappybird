@@ -114,12 +114,16 @@ export default (callback: Function): void => {
     sd.cutOut('banner-instruction', 584, 182, 114, 98);
     sd.cutOut('copyright', 886, 184, 122, 10);
     sd.cutOut('icon-plus', 992, 168, 10, 10);
-    
+    sd.cutOut('btn-mute-gray', 778, 313, 46, 46);
+    sd.cutOut('btn-mute-black', 775, 365, 48, 46);
+    sd.cutOut('btn-speaker-gray', 710, 313, 56, 46);
+    sd.cutOut('btn-speaker-black', 710, 365, 56, 46);
+
     const loadCallback = () => {
-      if(isLoaded) callback();
+      if (isLoaded) callback();
       isLoaded = true;
     };
-    
+
     // Make sure this one is at the very bottom of SpriteDestructor.cutOut
     sd.then(loadCallback);
 
