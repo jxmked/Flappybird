@@ -76,7 +76,7 @@ export default abstract class ButtonEventHandler {
           width: this.img.width,
           height: this.img.height
         },
-        { width: lerp(0, width, this.initialWidth) }
+        { width: width * this.initialWidth }
       );
     }
 
@@ -85,9 +85,9 @@ export default abstract class ButtonEventHandler {
 
   public Update(): void {
     this.calcCoord.x =
-      lerp(0, this.canvasSize.width, this.coordinate.x) + this.additionalTranslate.x;
+      this.canvasSize.width * this.coordinate.x + this.additionalTranslate.x;
     this.calcCoord.y =
-      lerp(0, this.canvasSize.height, this.coordinate.y) + this.additionalTranslate.y;
+      this.canvasSize.height * this.coordinate.y + this.additionalTranslate.y;
   }
 
   public mouseEvent(state: IMouseState, { x, y }: ICoordinate): void {
@@ -103,8 +103,8 @@ export default abstract class ButtonEventHandler {
   }
 
   protected move({ x, y }: ICoordinate): void {
-    this.additionalTranslate.x = lerp(0, this.canvasSize.width, x);
-    this.additionalTranslate.y = lerp(0, this.canvasSize.height, y);
+    this.additionalTranslate.x = this.canvasSize.width * x;
+    this.additionalTranslate.y = this.canvasSize.height * y;
   }
 
   private isInRange({ x, y }: ICoordinate): boolean {
