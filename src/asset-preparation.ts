@@ -14,42 +14,12 @@ export default (callback: Function): void => {
   // Do not load images and sfx at the same time
   new AssetLoader([atlas]).then(() => {
     const sd = new SpriteDestructor(asset(atlas as string) as HTMLImageElement);
-
-    // Virtual Canvas
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d')!;
-
-    /**
-     * Red top pipe needed to be flip
-     * */
-    sd.modify((name: string, img: HTMLImageElement) => {
-      if (name !== 'pipe-red-top') return Promise.resolve(img);
-
-      // Flip vertically
-      return new Promise<HTMLImageElement>((res: Function, rej: Function) => {
-        const tmp = new Image();
-        tmp.addEventListener('load', () => res(tmp));
-        tmp.addEventListener('error', () => rej());
-        canvas.width = img.width;
-        canvas.height = img.height;
-
-        ctx.clearRect(0, 0, img.width, img.height);
-        ctx.imageSmoothingEnabled = false;
-        ctx.imageSmoothingQuality = 'high';
-
-        ctx.translate(0, img.height);
-        ctx.scale(1, -1);
-        ctx.drawImage(img, 0, 0);
-
-        tmp.src = canvas.toDataURL();
-      });
-    });
-
+    
     sd.cutOut('theme-day', 0, 0, 288, 512);
     sd.cutOut('theme-night', 292, 0, 288, 512);
     sd.cutOut('platform', 584, 0, 236, 112);
-    sd.cutOut('pipe-red-bottom', 0, 646, 52, 320);
-    sd.cutOut('pipe-red-top', 56, 646, 52, 320);
+    sd.cutOut('pipe-red-top', 0, 646, 52, 320);
+    sd.cutOut('pipe-red-bottom', 56, 646, 52, 320);
     sd.cutOut('pipe-green-bottom', 168, 646, 52, 320);
     sd.cutOut('pipe-green-top', 112, 646, 52, 320);
     sd.cutOut('score-board', 4, 516, 232, 123);

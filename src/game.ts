@@ -136,6 +136,7 @@ export default class Game extends ParentClass {
       this.screenIntro.playButton.active = false;
       this.screenIntro.rankingButton.active = false;
       this.screenIntro.rateButton.active = false;
+      this.screenIntro.toggleSpeakerButton.active = false;
 
       this.transition.reset();
       this.transition.start();
