@@ -14,7 +14,7 @@ export default class ToggleSpeakerBtn extends PlayButton {
     this.is_mute = false;
     this.color = 'gray';
     this.coordinate.x = 0.93;
-    this.coordinate.y = 0.03;
+    this.coordinate.y = 0.04;
   }
 
   public click(): void {
@@ -36,9 +36,9 @@ export default class ToggleSpeakerBtn extends PlayButton {
 
   public init(): void {
     this.assets.set('mute-gray', asset('btn-mute-gray'));
-    this.assets.set('mute-black', asset('btn-mute-black'));
+    this.assets.set('mute-green', asset('btn-mute-green'));
     this.assets.set('speaker-gray', asset('btn-speaker-gray'));
-    this.assets.set('speaker-black', asset('btn-speaker-black'));
+    this.assets.set('speaker-green', asset('btn-speaker-green'));
 
     this.setImg();
   }
