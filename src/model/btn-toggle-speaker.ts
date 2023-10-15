@@ -5,14 +5,12 @@ import Sfx from './sfx';
 export default class ToggleSpeakerBtn extends Parent {
   private assets: Map<string, HTMLImageElement>;
   private is_mute: boolean;
-  private color: string;
 
   constructor() {
     super();
     this.initialWidth = 0.1;
     this.assets = new Map();
     this.is_mute = false;
-    this.color = 'white';
     this.coordinate.x = 0.93;
     this.coordinate.y = 0.04;
     this.active = true;
@@ -26,17 +24,13 @@ export default class ToggleSpeakerBtn extends Parent {
   }
 
   private setImg(): void {
-    const key = `${this.is_mute ? 'mute' : 'speaker'}-${this.color}`;
+    const key = `${this.is_mute ? 'mute' : 'unmute'}`;
     this.img = this.assets.get(key) as HTMLImageElement;
   }
 
   public init(): void {
-    this.assets.set('mute-gray', asset('btn-mute-gray'));
-    this.assets.set('mute-green', asset('btn-mute-green'));
-    this.assets.set('mute-white', asset('btn-mute-white'));
-    this.assets.set('speaker-gray', asset('btn-speaker-gray'));
-    this.assets.set('speaker-green', asset('btn-speaker-green'));
-    this.assets.set('speaker-white', asset('btn-speaker-white'));
+    this.assets.set('mute', asset('btn-mute'));
+    this.assets.set('unmute', asset('btn-speaker'));
 
     this.setImg();
   }
