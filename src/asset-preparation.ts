@@ -86,8 +86,11 @@ export default (callback: Function): void => {
     sd.cutOut('icon-plus', 992, 168, 10, 10);
     sd.cutOut('btn-mute-gray', 748, 317, 30, 30);
     sd.cutOut('btn-mute-green', 748, 353, 30, 30);
+    sd.cutOut('btn-mute-white', 748, 386, 30, 30);
     sd.cutOut('btn-speaker-gray', 710, 316, 30, 30);
     sd.cutOut('btn-speaker-green', 710, 352, 30, 30);
+    sd.cutOut('btn-speaker-white', 710, 385, 30, 30);
+
    
     const loadCallback = () => {
       if (isLoaded) callback();
