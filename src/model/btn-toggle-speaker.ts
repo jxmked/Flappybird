@@ -33,10 +33,10 @@ export default class ToggleSpeakerBtn extends Parent {
   public init(): void {
     this.assets.set('mute-gray', asset('btn-mute-gray'));
     this.assets.set('mute-green', asset('btn-mute-green'));
-    this.assets.set('mute-white', asset('btn-mute-white'))
+    this.assets.set('mute-white', asset('btn-mute-white'));
     this.assets.set('speaker-gray', asset('btn-speaker-gray'));
     this.assets.set('speaker-green', asset('btn-speaker-green'));
-    this.assets.set('speaker-white', asset('btn-speaker-white'))
+    this.assets.set('speaker-white', asset('btn-speaker-white'));
 
     this.setImg();
   }

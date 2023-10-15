@@ -14,7 +14,7 @@ export default (callback: Function): void => {
   // Do not load images and sfx at the same time
   new AssetLoader([atlas]).then(() => {
     const sd = new SpriteDestructor(asset(atlas as string) as HTMLImageElement);
-    
+
     sd.cutOut('theme-day', 0, 0, 288, 512);
     sd.cutOut('theme-night', 292, 0, 288, 512);
     sd.cutOut('platform', 584, 0, 236, 112);
@@ -91,7 +91,6 @@ export default (callback: Function): void => {
     sd.cutOut('btn-speaker-green', 710, 352, 30, 30);
     sd.cutOut('btn-speaker-white', 710, 385, 30, 30);
 
-   
     const loadCallback = () => {
       if (isLoaded) callback();
       isLoaded = true;
