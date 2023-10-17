@@ -84,8 +84,8 @@ export default (callback: Function): void => {
     sd.cutOut('banner-instruction', 584, 182, 114, 98);
     sd.cutOut('copyright', 886, 184, 122, 10);
     sd.cutOut('icon-plus', 992, 168, 10, 10);
-    sd.cutOut('btn-mute', 728, 311, 16, 16);
-    sd.cutOut('btn-speaker', 710, 311, 16, 16);
+    sd.cutOut('btn-mute', 816, 306, 90, 66);
+    sd.cutOut('btn-speaker', 712, 306, 90, 66);
 
     const loadCallback = () => {
       if (isLoaded) callback();
