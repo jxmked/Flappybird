@@ -14,34 +14,52 @@ export type ICallbackModify = (
 
 export default class SpriteDestructor {
   // Virtuals
-  private static Canvas = document.createElement('canvas');
+  private readonly Canvas = document.createElement('canvas');
   private ctx: CanvasRenderingContext2D;
 
   /**
    * Cache for later use
    * */
-  private static cached: Map<string, HTMLImageElement> = new Map<
-    string,
-    HTMLImageElement
-  >();
+  private static readonly cached: Map<string, HTMLImageElement> = new Map();
 
-  private sprite: HTMLImageElement;
   private loading: Promise<IPromiseImageHandled>[];
 
   private cb_modify: ICallbackModify;
+  private then_called: boolean;
+  private cutout_call_count: number;
 
-  constructor(img: HTMLImageElement) {
-    this.sprite = img;
-    this.ctx = SpriteDestructor.Canvas.getContext('2d')!;
+  constructor(private sprite: HTMLImageElement) {
+    this.ctx = this.Canvas.getContext('2d')!;
     this.loading = [];
     this.cb_modify = (name: string, img: HTMLImageElement) => Promise.resolve(img);
+    this.then_called = false;
+    this.cutout_call_count = 0;
   }
 
-  public then(callback: Function): void {
-    Promise.all(this.loading).then((resolved: IPromiseImageHandled[]) => {
-      resolved.forEach(({ name, img }) => SpriteDestructor.cached.set(name, img));
-      callback();
-    });
+  public async then(callback: Function): Promise<void> {
+    if (this.then_called) return;
+    this.then_called = true;
+
+    await Promise.allSettled(this.loading).then(
+      (resolved: PromiseSettledResult<IPromiseImageHandled>[]) => {
+        let error_count = 0;
+
+        for (const result of resolved) {
+          if (result.status === 'fulfilled' && 'value' in result) {
+            SpriteDestructor.cached.set(result.value.name, result.value.img);
+            continue;
+          }
+          ++error_count;
+        }
+
+        console.info(
+          `Does match with cutout: ${this.cutout_call_count === resolved.length}`
+        );
+        console.warn(`Error count: ${error_count}`);
+
+        callback();
+      }
+    );
   }
 
   public static asset(key: string): HTMLImageElement {
@@ -59,17 +77,17 @@ export default class SpriteDestructor {
 
   public cutOut(name: string, sx: number, sy: number, dx: number, dy: number): void {
     // Resize the canvas based on cutout image
-    SpriteDestructor.Canvas.width = dx;
-    SpriteDestructor.Canvas.height = dy;
+    this.Canvas.width = dx;
+    this.Canvas.height = dy;
 
     this.ctx.clearRect(0, 0, dx, dy);
 
-    // Disable image Smoothing & use the highest possible image
+    // Disable image Smoothing
     this.ctx.imageSmoothingEnabled = false;
-    this.ctx.imageSmoothingQuality = 'high';
 
     // Draw
     this.ctx.drawImage(this.sprite, sx, sy, dx, dy, 0, 0, dx, dy);
+
     this.feedImage(name);
   }
 
@@ -80,13 +98,15 @@ export default class SpriteDestructor {
     this.loading.push(
       new Promise<IPromiseImageHandled>((resolve: Function, reject: Function) => {
         const img = new Image();
-        img.src = SpriteDestructor.Canvas.toDataURL();
+        img.src = this.Canvas.toDataURL();
         img.addEventListener('load', async () => {
           resolve({ name, img: await this.cb_modify(name, img) });
         });
         img.addEventListener('error', (err) => reject(err));
       })
     );
+
+    this.cutout_call_count++;
   }
 }
 
