@@ -1,13 +1,15 @@
 {
   "main.css": "Flappybird/main.ac64de651ce055b7ad0e.css",
-  "main.js": "Flappybird/main.71ed5c0d05ccf178a984.js",
+  "main.js": "Flappybird/main.17dd6b9894d911f736b5.js",
   "icon.png": "Flappybird/1f82ae5350be3039bfb3fe84ce4c4f89.png",
   "favicon.ico": "Flappybird/favicon.ico",
   "atlas.png": "Flappybird/3fa15f611241a3fbba7573a9b26102c2.png",
   "die.ogg": "Flappybird/fb85655698a54f8cde03153d61436a8e.ogg",
   "hit.ogg": "Flappybird/53be63225a77062f0e0567615aaef471.ogg",
+  "workbox-0858eadd.js": "Flappybird/workbox-0858eadd.js",
   "swooshing.ogg": "Flappybird/09f7e99dce7a2d12b43909f45bcff6f2.ogg",
   "point.ogg": "Flappybird/25b7658563967e60ca23fb51af9c084f.ogg",
   "wing.ogg": "Flappybird/06f58df2486e5ade890cf491a58b4e35.ogg",
-  "index.html": "Flappybird/index.html"
+  "index.html": "Flappybird/index.html",
+  "service-worker.js": "Flappybird/service-worker.js"
 }
