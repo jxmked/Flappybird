@@ -8,23 +8,11 @@ import EventHandler from './events';
 import GameObject from './game';
 import prepareAssets from './asset-preparation';
 import raf from 'raf';
+import SwOffline from './lib/workbox-work-offline';
 
-/* Working on this
-if (process.env.NODE_ENV !== 'development') {
-  // Load Service Worker
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker
-        .register('sw.js')
-        .then((registration) => {
-          console.log('SW registered');
-        })
-        .catch((registrationError) => {
-          console.log('SW registration failed');
-        });
-    });
-  }
-} */
+if (process.env.NODE_ENV === 'production') {
+  SwOffline();
+}
 
 /**
  * Enabling desynchronized to reduce latency

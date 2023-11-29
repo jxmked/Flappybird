@@ -9,6 +9,9 @@ const package = require('./package.json');
 const webpack = require('webpack');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
+
+
 
 /**
  * First Webpack Config
@@ -80,18 +83,19 @@ let prodPlugins = [
     inject: true, // Insert html tag <link rel="manifest" ... />
     filename: 'site.webmanifest'
   }),
+  
   new WebpackManifestPlugin({
     basePath: '',
     publicPath: 'Flappybird/',
     fileName: 'asset-manifest.json'
-  })
+  }),
 
-  /*
-  new CopyPlugin({
-      patterns: [
-        { from: 'src/sw.js', to: 'sw.js' },
-      ],
-    }), */
+  new WorkboxPlugin.GenerateSW({
+    // these options encourage the ServiceWorkers to get in there fast
+    // and not allow any straggling "old" SWs to hang around
+    clientsClaim: true,
+    skipWaiting: true,
+  })
 ];
 
 module.exports = function (env, config) {
