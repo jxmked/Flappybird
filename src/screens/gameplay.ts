@@ -16,11 +16,12 @@ import PipeGenerator from '../model/pipe-generator';
 import ScoreBoard from '../model/score-board';
 import Sfx from '../model/sfx';
 
+export type IGameState = 'died' | 'playing' | 'none';
 export default class GetReady extends ParentClass implements IScreenChangerObject {
   private bird: BirdModel;
   private pipeGenerator: PipeGenerator;
   private state: string;
-  private gameState: string;
+  private gameState: IGameState;
   private count: CounterModel;
   private game: MainGameController;
   private bannerInstruction: BannerInstruction;
@@ -192,5 +193,8 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     if (this.gameState !== 'died') return;
 
     this.scoreBoard.mouseUp({ x, y });
+  }
+  public startAtKeyBoardEvent(): void {
+    if (this.gameState === 'died') this.scoreBoard.triggerPlayATKeyboardEvent();
   }
 }

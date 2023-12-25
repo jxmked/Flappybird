@@ -379,4 +379,8 @@ export default class ScoreBoard extends ParentObject {
     this.rankingButton.mouseEvent('up', { x, y });
     this.toggleSpeakerButton.mouseEvent('up', { x, y });
   }
+
+  public triggerPlayATKeyboardEvent(): void {
+    if ((this.flags & ScoreBoard.FLAG_SHOW_BUTTONS) !== 0) this.playButton.click();
+  }
 }

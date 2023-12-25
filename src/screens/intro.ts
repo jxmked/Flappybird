@@ -149,4 +149,8 @@ export default class Introduction extends ParentClass implements IScreenChangerO
     this.rankingButton.mouseEvent('up', { x, y });
     this.rateButton.mouseEvent('up', { x, y });
   }
+
+  public startAtKeyBoardEvent(): void {
+    this.playButton.click();
+  }
 }

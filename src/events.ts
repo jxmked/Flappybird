@@ -152,6 +152,8 @@ export default (Game: Game, canvas: HTMLCanvasElement) => {
       code === 'NumpadEnter' ||
       code === 'Enter'
     ) {
+      Game.startAtKeyBoardEvent();
+
       mouseDown(
         {
           x: canvas.width / 2,

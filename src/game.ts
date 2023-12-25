@@ -11,6 +11,8 @@ import Sfx from './model/sfx';
 import Storage from './lib/storage';
 import FlashScreen from './model/flash-screen';
 
+export type IGameState = 'intro' | 'game';
+
 export default class Game extends ParentClass {
   public background: BgModel;
   public platform: PlatformModel;
@@ -22,7 +24,7 @@ export default class Game extends ParentClass {
   private transition: FlashScreen;
   private screenIntro: Intro;
   private gamePlay: GamePlay;
-  private state: string;
+  private state: IGameState;
 
   constructor(canvas: HTMLCanvasElement) {
     super();
@@ -157,5 +159,14 @@ export default class Game extends ParentClass {
   public mouseUp({ x, y }: ICoordinate): void {
     this.screenIntro.mouseUp({ x, y });
     this.gamePlay.mouseUp({ x, y });
+  }
+
+  public startAtKeyBoardEvent(): void {
+    if (this.state === 'intro') this.screenIntro.startAtKeyBoardEvent();
+    else this.gamePlay.startAtKeyBoardEvent();
+  }
+
+  public get currentState(): IGameState {
+    return this.state;
   }
 }
