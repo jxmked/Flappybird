@@ -7,7 +7,7 @@ export default class SceneGenerator {
   public static birdColorList: IBirdColor[] = [];
   public static bgThemeList: ITheme[] = [];
   public static pipeColorList: IPipeColor[] = [];
-  private static isNight: boolean = false;
+  private static isNight = false;
 
   public static get background(): ITheme {
     if (SceneGenerator.bgThemeList.length < 1) throw new Error('No theme available');

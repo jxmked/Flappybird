@@ -59,7 +59,7 @@ export default class Game extends ParentClass {
     this.platform.init();
     this.transition.init();
 
-    Sfx.init();
+    void Sfx.init();
     Sfx.volume(SFX_VOLUME);
 
     this.screenIntro.init();

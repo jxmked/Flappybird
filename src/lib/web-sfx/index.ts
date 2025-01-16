@@ -3,15 +3,15 @@
  * Handling Sound Effects
  * */
 
-export type IWebSfxObject = { [key: string]: string };
-export type IWebSfxCache = { [key: string]: AudioBuffer };
+export type IWebSfxObject = Record<string, string>;
+export type IWebSfxCache = Record<string, AudioBuffer>;
 export interface ILoadRequest {
   content: AudioBuffer;
   name: string;
   path: string;
 }
 
-declare var webkitAudioContext: AudioContext;
+declare let webkitAudioContext: AudioContext;
 
 export interface IWebSfxOptions {
   autoInitAudioContext: boolean;
@@ -23,7 +23,7 @@ export default class WebSfx {
   private static Cached: IWebSfxCache = {};
   private static concurrentDownload = 5;
   private static gainContext: undefined | GainNode;
-  private static isReady: boolean = false;
+  private static isReady = false;
 
   /**
    * The constructor function takes two arguments, files and callback. The files argument is an object

@@ -12,3 +12,5 @@ interface IVelocity {
   x: number;
   y: number;
 }
+
+type IEmptyFunction = (...args) => void;

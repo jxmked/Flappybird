@@ -5,8 +5,8 @@ export interface IData {
 
 export default class Storage {
   private static sk: RegExpMatchArray | null | string = window.location
-    .href!.toString()
-    .match(/([a-zA-Z\-]+\.github\.io\/[a-zA-Z\-\.]+\/)/i);
+    .href.toString()
+    .match(/([a-zA-Z-]+\.github\.io\/[a-zA-Z\-.]+\/)/i);
   private static isAvailable: boolean;
 
   constructor() {
@@ -23,6 +23,7 @@ export default class Storage {
       Storage.isAvailable = false;
     }
   }
+
   static utoa(data: string): string {
     return btoa(unescape(encodeURIComponent(data)));
   }
@@ -36,12 +37,12 @@ export default class Storage {
       console.warn('Storage is not available');
       return;
     }
-    let mode = typeof value;
+    const mode = typeof value;
     if (typeof value !== 'string') {
       value = String(value);
     }
     window.localStorage.setItem(
-      `__${Storage.sk!}_${key}__`,
+      `__${Storage.sk! as string}_${key}__`,
       Storage.utoa(JSON.stringify({ mode, value }))
     );
   }
@@ -54,7 +55,7 @@ export default class Storage {
 
     try {
       const obj = JSON.parse(
-        Storage.atou(window.localStorage.getItem(`__${Storage.sk!}_${key}__`)!)
+        Storage.atou(window.localStorage.getItem(`__${Storage.sk! as string}_${key}__`)!)
       ) as IData;
 
       if (obj.mode ?? false) {

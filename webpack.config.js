@@ -83,7 +83,7 @@ let prodPlugins = [
     inject: true, // Insert html tag <link rel="manifest" ... />
     filename: 'site.webmanifest'
   }),
-  
+
   new WebpackManifestPlugin({
     basePath: '',
     publicPath: 'Flappybird/',

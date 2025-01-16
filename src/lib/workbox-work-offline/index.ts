@@ -6,10 +6,10 @@ export default () => {
     window.addEventListener('load', () => {
       navigator.serviceWorker
         .register('./service-worker.js')
-        .then((registration) => {
+        .then(() => {
           console.log('SW registered');
         })
-        .catch((registrationError) => {
+        .catch(() => {
           console.log('SW registration failed');
         });
     });

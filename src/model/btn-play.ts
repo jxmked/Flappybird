@@ -3,7 +3,7 @@ import Sfx from './sfx';
 import { asset } from '../lib/sprite-destructor';
 
 export default class PlayButton extends Parent {
-  protected callback: Function;
+  protected callback?: IEmptyFunction;
 
   constructor() {
     super();
@@ -13,15 +13,14 @@ export default class PlayButton extends Parent {
       y: 0.6998
     };
     this.active = true;
-    this.callback = () => {};
   }
 
   public click(): void {
     Sfx.swoosh();
-    this.callback();
+    this.callback?.();
   }
 
-  public onClick(callback: Function): void {
+  public onClick(callback: IEmptyFunction): void {
     this.callback = callback;
   }
 

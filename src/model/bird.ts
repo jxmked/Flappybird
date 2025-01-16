@@ -349,7 +349,7 @@ export default class Bird extends ParentClass {
 
     // Start the image at top-left then bottom-right
     context.drawImage(
-      this.images.get(birdKeyString as IBirdColor)!,
+      this.images.get(birdKeyString)!,
       -this.scaled.width,
       -this.scaled.height,
       this.scaled.width * 2,

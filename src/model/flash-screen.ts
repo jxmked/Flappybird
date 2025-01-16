@@ -15,7 +15,7 @@ export interface IRecordEvent {
     min: number;
     max: number;
   };
-  callback: Function;
+  callback: IEmptyFunction;
   isCalled: boolean;
 }
 
@@ -42,6 +42,7 @@ export default class FlashScreen extends ParentClass {
     this.value = 0;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public init(): void {}
 
   public reset(): void {
@@ -55,7 +56,7 @@ export default class FlashScreen extends ParentClass {
     this.fadeEvent.start();
   }
 
-  public setEvent(range: number[], callback: Function): void {
+  public setEvent(range: number[], callback: IEmptyFunction): void {
     this.events.push({
       range: {
         min: range[0],

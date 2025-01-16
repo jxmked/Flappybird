@@ -294,7 +294,7 @@ export default class ScoreBoard extends ParentObject {
     context: CanvasRenderingContext2D,
     coord: ICoordinate,
     parentSize: IDimension,
-    haveNewToast: boolean
+    _p0: boolean
   ): void {
     const numSize = rescaleDim(
       {
@@ -356,11 +356,11 @@ export default class ScoreBoard extends ParentObject {
     this.spark.stop();
   }
 
-  public onRestart(cb: Function): void {
+  public onRestart(cb: IEmptyFunction): void {
     this.playButton.onClick(cb);
   }
 
-  public onShowRanks(cb: Function): void {
+  public onShowRanks(_cb: IEmptyFunction): void {
     /**
      * I don't know what to do on ranking?
      *

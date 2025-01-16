@@ -1,15 +1,15 @@
 declare module '*.svg' {
-  const content: any;
+  const content: string;
   export default content;
 }
 
 declare module '*.png' {
-  const value: any;
+  const value: string;
   export default value;
 }
 
 declare module '*.ogg' {
-  const value: any;
+  const value: string;
   export default value;
 }
 
@@ -17,4 +17,4 @@ declare module '*.scss';
 declare module '*.sass';
 declare module '*.css';
 
-declare var WebKitMutationObserver: MutationObserver;
+declare let WebKitMutationObserver: MutationObserver;

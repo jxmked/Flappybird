@@ -22,15 +22,15 @@ if (process.env.NODE_ENV === 'production') {
  * */
 const virtualCanvas = document.createElement('canvas');
 const gameIcon = document.createElement('img');
-const canvas = document.querySelector('#main-canvas')! as HTMLCanvasElement;
+const canvas = document.querySelector<HTMLCanvasElement>('#main-canvas')!;
 const physicalContext = canvas.getContext('2d')!;
-const loadingScreen = document.querySelector('#loading-modal')! as HTMLDivElement;
+const loadingScreen = document.querySelector<HTMLDivElement>('#loading-modal')!;
 const Game = new GameObject(virtualCanvas);
 const fps = new Framer(Game.context);
 
 let isLoaded = false;
 
-gameIcon.src = gameSpriteIcon as string;
+gameIcon.src = gameSpriteIcon;
 
 // prettier-ignore
 fps.text({ x: 50, y: 50 }, '', ' Cycle');

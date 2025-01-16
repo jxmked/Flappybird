@@ -18,26 +18,26 @@ export default class Sfx {
 
   public static die(): void {
     WebSfx.volume(Sfx.currentVolume);
-    WebSfx.play(sfDie as string);
+    WebSfx.play(sfDie);
   }
 
   public static point(): void {
     WebSfx.volume(Sfx.currentVolume);
-    WebSfx.play(sfPoint as string);
+    WebSfx.play(sfPoint);
   }
 
-  public static hit(cb: Function): void {
+  public static hit(cb: IEmptyFunction): void {
     WebSfx.volume(Sfx.currentVolume);
-    WebSfx.play(sfHit as string, cb);
+    WebSfx.play(sfHit, cb);
   }
 
   public static swoosh(): void {
     WebSfx.volume(Sfx.currentVolume);
-    WebSfx.play(sfSwoosh as string);
+    WebSfx.play(sfSwoosh );
   }
 
   public static wing(): void {
     WebSfx.volume(Sfx.currentVolume);
-    WebSfx.play(sfWing as string);
+    WebSfx.play(sfWing);
   }
 }

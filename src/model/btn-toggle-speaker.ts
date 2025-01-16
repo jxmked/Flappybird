@@ -25,7 +25,7 @@ export default class ToggleSpeakerBtn extends Parent {
 
   private setImg(): void {
     const key = `${this.is_mute ? 'mute' : 'unmute'}`;
-    this.img = this.assets.get(key) as HTMLImageElement;
+    this.img = this.assets.get(key)!;
   }
 
   public init(): void {

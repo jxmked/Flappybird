@@ -9,11 +9,12 @@ import sfPoint from './assets/audio/point.ogg';
 import sfSwoosh from './assets/audio/swooshing.ogg';
 import sfWing from './assets/audio/wing.ogg';
 
-export default (callback: Function): void => {
-  let isLoaded: boolean = false;
+export default (callback: IEmptyFunction): void => {
+  let isLoaded = false;
+
   // Do not load images and sfx at the same time
   new AssetLoader([atlas]).then(() => {
-    const sd = new SpriteDestructor(asset(atlas as string) as HTMLImageElement);
+    const sd = new SpriteDestructor(asset(atlas) as HTMLImageElement);
 
     sd.cutOut('theme-day', 0, 0, 288, 512);
     sd.cutOut('theme-night', 292, 0, 288, 512);
@@ -93,7 +94,7 @@ export default (callback: Function): void => {
     };
 
     // Make sure this one is at the very bottom of SpriteDestructor.cutOut
-    sd.then(loadCallback);
+    void sd.then(loadCallback);
 
     new WebSfx(
       {

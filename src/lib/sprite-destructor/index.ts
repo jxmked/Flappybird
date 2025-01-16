@@ -20,23 +20,23 @@ export default class SpriteDestructor {
   /**
    * Cache for later use
    * */
-  private static readonly cached: Map<string, HTMLImageElement> = new Map();
+  private static readonly cached = new Map<string, HTMLImageElement>();
 
   private loading: Promise<IPromiseImageHandled>[];
 
   private cb_modify: ICallbackModify;
   private then_called: boolean;
-  private cutout_call_count: number;
+  // private cutout_call_count: number;
 
   constructor(private sprite: HTMLImageElement) {
     this.ctx = this.Canvas.getContext('2d')!;
     this.loading = [];
     this.cb_modify = (name: string, img: HTMLImageElement) => Promise.resolve(img);
     this.then_called = false;
-    this.cutout_call_count = 0;
+    // this.cutout_call_count = 0;
   }
 
-  public async then(callback: Function): Promise<void> {
+  public async then(callback: IEmptyFunction): Promise<void> {
     if (this.then_called) return;
     this.then_called = true;
 
@@ -52,9 +52,9 @@ export default class SpriteDestructor {
           ++error_count;
         }
 
-        console.info(
-          `Does match with cutout: ${this.cutout_call_count === resolved.length}`
-        );
+        // console.info(
+        //   `Does match with cutout: ${this.cutout_call_count === resolved.length}`
+        // );
         console.warn(`Error count: ${error_count}`);
 
         callback();
@@ -96,7 +96,7 @@ export default class SpriteDestructor {
      * Load the cutout image then push it into promse handler
      * */
     this.loading.push(
-      new Promise<IPromiseImageHandled>((resolve: Function, reject: Function) => {
+      new Promise<IPromiseImageHandled>((resolve: IEmptyFunction, reject: IEmptyFunction) => {
         const img = new Image();
         img.src = this.Canvas.toDataURL();
         img.addEventListener('load', async () => {
@@ -106,7 +106,7 @@ export default class SpriteDestructor {
       })
     );
 
-    this.cutout_call_count++;
+    // this.cutout_call_count++;
   }
 }
 
