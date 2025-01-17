@@ -24,14 +24,12 @@ export default class SpriteDestructor {
 
   private loading: Promise<IPromiseImageHandled>[];
 
-  private cb_modify: ICallbackModify;
   private then_called: boolean;
   // private cutout_call_count: number;
 
   constructor(private sprite: HTMLImageElement) {
     this.ctx = this.Canvas.getContext('2d')!;
     this.loading = [];
-    this.cb_modify = (name: string, img: HTMLImageElement) => Promise.resolve(img);
     this.then_called = false;
     // this.cutout_call_count = 0;
   }
@@ -68,13 +66,6 @@ export default class SpriteDestructor {
     throw new TypeError(`Key: ${key} does not defined on SpriteDestructor`);
   }
 
-  /**
-   * If you need
-   * */
-  public modify(callback: ICallbackModify): void {
-    this.cb_modify = callback;
-  }
-
   public cutOut(name: string, sx: number, sy: number, dx: number, dy: number): void {
     // Resize the canvas based on cutout image
     this.Canvas.width = dx;
@@ -100,9 +91,7 @@ export default class SpriteDestructor {
         (resolve: IEmptyFunction, reject: IEmptyFunction) => {
           const img = new Image();
           img.src = this.Canvas.toDataURL();
-          img.addEventListener('load', () =>
-            resolve({ name, img: this.cb_modify(name, img) })
-          );
+          img.addEventListener('load', () => resolve({ name, img }));
           img.addEventListener('error', (err) => reject(err));
         }
       )

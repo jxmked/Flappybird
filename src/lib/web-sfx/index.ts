@@ -33,7 +33,7 @@ export default class WebSfx {
    * to load.
    * @param {Function} callback - A function that will be called when all the files have been loaded.
    */
-  constructor(files: IWebSfxObject, callback: Function) {
+  constructor(files: IWebSfxObject, callback: IEmptyFunction) {
     WebSfx.audioContext = new (AudioContext || webkitAudioContext)();
 
     WebSfx.audioContext.addEventListener('statechange', () => {
@@ -48,7 +48,7 @@ export default class WebSfx {
    * @param {string} key - string - The key of the audio file to play.
    * @returns Void.
    */
-  public static play(key: string, endedcb: Function = () => {}): void {
+  public static play(key: string, endedcb?: IEmptyFunction): void {
     if (typeof WebSfx.Cached[key] === void 0) {
       throw new TypeError(`Key ${key} does not load or not exists.`);
     }
@@ -64,7 +64,7 @@ export default class WebSfx {
       const context = WebSfx.audioContext!;
       const bufferSource = context.createBufferSource();
       bufferSource.buffer = WebSfx.Cached[key];
-      bufferSource.addEventListener('ended', () => endedcb());
+      bufferSource.addEventListener('ended', () => endedcb?.());
       bufferSource.connect(WebSfx.gainContext!);
       bufferSource.start();
     } catch (err) {
@@ -118,7 +118,7 @@ export default class WebSfx {
   /**
    * Loading Assets Section
    * */
-  private static load(files: IWebSfxObject, complete: Function, level: number = 0): void {
+  private static load(files: IWebSfxObject, complete: IEmptyFunction, level = 0): void {
     const loading = [];
     const entries = Object.entries(files);
 
