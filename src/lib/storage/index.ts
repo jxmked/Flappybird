@@ -1,11 +1,12 @@
+export type IStoreValue = string | number | boolean;
 export interface IData {
-  mode: string;
+  type: IStoreValue;
   value: string;
 }
 
 export default class Storage {
-  private static sk: RegExpMatchArray | null | string = window.location
-    .href.toString()
+  private static sk: RegExpMatchArray | null | string = window.location.href
+    .toString()
     .match(/([a-zA-Z-]+\.github\.io\/[a-zA-Z\-.]+\/)/i);
   private static isAvailable: boolean;
 
@@ -25,14 +26,14 @@ export default class Storage {
   }
 
   static utoa(data: string): string {
-    return btoa(unescape(encodeURIComponent(data)));
+    return btoa(encodeURIComponent(data));
   }
 
   static atou(b64: string): string {
-    return decodeURIComponent(escape(atob(b64)));
+    return decodeURIComponent(atob(b64));
   }
 
-  static save(key: string, value: string | number | boolean): void {
+  static save(key: string, value: IStoreValue): void {
     if (!Storage.isAvailable) {
       console.warn('Storage is not available');
       return;
@@ -47,29 +48,36 @@ export default class Storage {
     );
   }
 
-  static get(key: string): string | number | boolean | undefined {
+  static get(key: string): IStoreValue | undefined {
     if (!Storage.isAvailable) {
       console.warn('Storage is not available');
-      return;
+      return void 0;
     }
 
     try {
-      const obj = JSON.parse(
-        Storage.atou(window.localStorage.getItem(`__${Storage.sk! as string}_${key}__`)!)
-      ) as IData;
+      const read_item = window.localStorage.getItem(
+        `__${Storage.sk! as string}_${key}__`
+      );
 
-      if (obj.mode ?? false) {
-        switch (obj.mode) {
-          case 'string':
-            return obj.value ?? '';
-          case 'number':
-            return Number(obj.value ?? 0);
-          case 'boolean':
-            return (obj.value ?? false) && obj.value === 'true' ? true : false;
-        }
+      if (!read_item) return void 0;
+
+      const obj = JSON.parse(Storage.atou(read_item)) as IData;
+
+      let return_value: IStoreValue|undefined = void 0;
+
+      switch (obj.type) {
+        case 'string':
+          return_value = String(obj.value);
+          break;
+        case 'number':
+          return_value = Number(obj.value);
+          break;
+        case 'boolean':
+          return_value = obj.value === 'true' ? true : false;
+          break;
       }
 
-      return void 0;
+      return return_value;
     } catch (err) {
       console.error('Failed to fetch highscore');
       return void 0;
