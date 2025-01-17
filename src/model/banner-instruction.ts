@@ -2,7 +2,7 @@ import { rescaleDim } from '../utils';
 
 import { FadeOut } from '../lib/animation';
 import ParentClass from '../abstracts/parent-class';
-import { asset } from '../lib/sprite-destructor';
+import SpriteDestructor from '../lib/sprite-destructor';
 
 export interface IImagePositions {
   instructImage: ICoordinate;
@@ -81,8 +81,8 @@ export default class BannerInstruction extends ParentClass {
   }
 
   public init(): void {
-    this.instructImage.image = asset('banner-instruction');
-    this.getReadyImage.image = asset('banner-game-ready');
+    this.instructImage.image = SpriteDestructor.asset('banner-instruction');
+    this.getReadyImage.image = SpriteDestructor.asset('banner-game-ready');
   }
 
   public reset(): void {

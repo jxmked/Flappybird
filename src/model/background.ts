@@ -1,7 +1,7 @@
 import { BG_SPEED } from '../constants';
 import { rescaleDim } from '../utils';
 import ParentClass from '../abstracts/parent-class';
-import { asset } from '../lib/sprite-destructor';
+import SpriteDestructor from '../lib/sprite-destructor';
 import SceneGenerator from './scene-generator';
 
 export type ITheme = string;
@@ -32,8 +32,8 @@ export default class Background extends ParentClass {
    * Initialize Images after all asset has been loaded
    * */
   public init(): void {
-    this.images.set('day', asset('theme-day'));
-    this.images.set('night', asset('theme-night'));
+    this.images.set('day', SpriteDestructor.asset('theme-day'));
+    this.images.set('night', SpriteDestructor.asset('theme-night'));
 
     Object.assign(SceneGenerator.bgThemeList, ['day', 'night']);
     this.use(SceneGenerator.background);

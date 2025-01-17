@@ -9,7 +9,7 @@ class ParentLoader {
     this.ready = 0;
   }
 
-  protected eventTracking<T>(resolve: Function, object: T): void {
+  protected eventTracking<T>(resolve: IEmptyFunction, object: T): void {
     this.ready--;
 
     if (this.ready < 1) {

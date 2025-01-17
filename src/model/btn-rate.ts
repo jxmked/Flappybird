@@ -1,5 +1,5 @@
 import PlayButton from './btn-play'; // Instead of duplicating
-import { asset } from '../lib/sprite-destructor';
+import SpriteDestructor from '../lib/sprite-destructor';
 import { openInNewTab } from '../utils';
 
 /**
@@ -16,7 +16,7 @@ export default class RateNutton extends PlayButton {
   }
 
   public init(): void {
-    this.img = asset('btn-rate');
+    this.img = SpriteDestructor.asset('btn-rate');
   }
 
   public click(): void {

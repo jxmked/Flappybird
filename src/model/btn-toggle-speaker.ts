@@ -1,5 +1,5 @@
 import Parent from '../abstracts/button-event-handler';
-import { asset } from '../lib/sprite-destructor';
+import SpriteDestructor from '../lib/sprite-destructor';
 import Sfx from './sfx';
 
 export default class ToggleSpeakerBtn extends Parent {
@@ -29,8 +29,8 @@ export default class ToggleSpeakerBtn extends Parent {
   }
 
   public init(): void {
-    this.assets.set('mute', asset('btn-mute'));
-    this.assets.set('unmute', asset('btn-speaker'));
+    this.assets.set('mute', SpriteDestructor.asset('btn-mute'));
+    this.assets.set('unmute', SpriteDestructor.asset('btn-speaker'));
 
     this.setImg();
   }

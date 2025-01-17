@@ -2,7 +2,7 @@ import { rescaleDim } from '../utils';
 
 import { GAME_SPEED } from '../constants';
 import ParentClass from '../abstracts/parent-class';
-import { asset } from '../lib/sprite-destructor';
+import SpriteDestructor from '../lib/sprite-destructor';
 
 export default class Platform extends ParentClass {
   public platformSize: IDimension;
@@ -19,7 +19,7 @@ export default class Platform extends ParentClass {
   }
 
   public init() {
-    this.img = asset('platform');
+    this.img = SpriteDestructor.asset('platform');
   }
 
   public reset(): void {

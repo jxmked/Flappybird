@@ -2,14 +2,14 @@ import AudioLoader from './loaders/audio';
 import ImageLoader from './loaders/image';
 import { IPromiseResolve, ILoaders } from './interfaces';
 
+export type IAssets = HTMLImageElement | HTMLAudioElement;
+
 export default class AssetsLoader {
-  private static assets: Map<string, any> = new Map<string, any>();
-  private callback: Function;
+  private static assets: Map<string, IAssets> = new Map<string, IAssets>();
+  private callback?: IEmptyFunction;
   private static loaders: ILoaders[] = [AudioLoader, ImageLoader];
 
   constructor(sources: string[]) {
-    this.callback = () => {};
-
     const InitializeLoad = sources.map((source: string) => {
       for (const loader of AssetsLoader.loaders) {
         const instance = new loader(source);
@@ -29,10 +29,10 @@ export default class AssetsLoader {
     Promise.all(InitializeLoad)
       .then((resolveArray: IPromiseResolve[]) => {
         resolveArray.forEach((resolve: IPromiseResolve) => {
-          AssetsLoader.assets.set(resolve['source'], resolve['object']);
+          AssetsLoader.assets.set(resolve.source, resolve.object as IAssets);
         });
 
-        this.callback();
+        this.callback?.();
       })
       .catch((err) => {
         console.error(err);
@@ -40,13 +40,13 @@ export default class AssetsLoader {
   }
 
   // Call the instance function after all assets has been loaded
-  then(callback: Function): void {
+  then(callback: IEmptyFunction): void {
     this.callback = callback;
   }
 
-  static get(source: string): any {
-    return AssetsLoader.assets.get(source);
+  static get<T>(source: string): T {
+    return AssetsLoader.assets.get(source) as T;
   }
 }
 
-export const asset = AssetsLoader.get;
+// export const asset = AssetsLoader.get;

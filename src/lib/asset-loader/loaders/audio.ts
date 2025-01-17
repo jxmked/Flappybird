@@ -2,7 +2,7 @@ import { IPromiseResolve } from '../interfaces';
 import { AbstractLoader } from '../abstraction';
 
 export default class AudioLoader extends AbstractLoader {
-  public static regexp: RegExp = /\.(mp3|wav|ogg|aac)/i;
+  public static regexp = /\.(mp3|wav|ogg|aac)/i;
 
   public test(): boolean {
     return AudioLoader.regexp.test(this.source);
@@ -12,7 +12,7 @@ export default class AudioLoader extends AbstractLoader {
     // Load Event Count
     this.ready = 2;
 
-    return new Promise<IPromiseResolve>((resolve: Function, reject) => {
+    return new Promise<IPromiseResolve>((resolve: IEmptyFunction, reject) => {
       const audio = new Audio();
 
       /**

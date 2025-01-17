@@ -1,5 +1,5 @@
 import PlayButton from './btn-play'; // Instead of duplicating
-import { asset } from '../lib/sprite-destructor';
+import SpriteDestructor from '../lib/sprite-destructor';
 
 /**
  * Instead of creating everything from scratch
@@ -14,6 +14,6 @@ export default class RankingButton extends PlayButton {
   }
 
   public init(): void {
-    this.img = asset('btn-ranking');
+    this.img = SpriteDestructor.asset('btn-ranking');
   }
 }

@@ -17,7 +17,7 @@ import PlayButton from '../model/btn-play';
 import RankingButton from '../model/btn-ranking';
 import RateButton from '../model/btn-rate';
 import ToggleSpeaker from '../model/btn-toggle-speaker';
-import { asset } from '../lib/sprite-destructor';
+import SpriteDestructor from '../lib/sprite-destructor';
 import { APP_VERSION } from '../constants';
 
 export default class Introduction extends ParentClass implements IScreenChangerObject {
@@ -47,8 +47,8 @@ export default class Introduction extends ParentClass implements IScreenChangerO
     this.rankingButton.init();
     this.rateButton.init();
     this.toggleSpeakerButton.init();
-    this.flappyBirdBanner = asset('banner-flappybird');
-    this.copyright = asset('copyright');
+    this.flappyBirdBanner = SpriteDestructor.asset('banner-flappybird');
+    this.copyright = SpriteDestructor.asset('copyright');
   }
 
   public resize({ width, height }: IDimension): void {

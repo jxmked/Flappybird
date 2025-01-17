@@ -96,18 +96,18 @@ export default class SpriteDestructor {
      * Load the cutout image then push it into promse handler
      * */
     this.loading.push(
-      new Promise<IPromiseImageHandled>((resolve: IEmptyFunction, reject: IEmptyFunction) => {
-        const img = new Image();
-        img.src = this.Canvas.toDataURL();
-        img.addEventListener('load', async () => {
-          resolve({ name, img: await this.cb_modify(name, img) });
-        });
-        img.addEventListener('error', (err) => reject(err));
-      })
+      new Promise<IPromiseImageHandled>(
+        (resolve: IEmptyFunction, reject: IEmptyFunction) => {
+          const img = new Image();
+          img.src = this.Canvas.toDataURL();
+          img.addEventListener('load', () =>
+            resolve({ name, img: this.cb_modify(name, img) })
+          );
+          img.addEventListener('error', (err) => reject(err));
+        }
+      )
     );
 
     // this.cutout_call_count++;
   }
 }
-
-export const asset = SpriteDestructor.asset;

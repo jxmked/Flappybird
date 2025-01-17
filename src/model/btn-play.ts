@@ -1,6 +1,6 @@
 import Parent from '../abstracts/button-event-handler';
 import Sfx from './sfx';
-import { asset } from '../lib/sprite-destructor';
+import SpriteDestructor from '../lib/sprite-destructor';
 
 export default class PlayButton extends Parent {
   protected callback?: IEmptyFunction;
@@ -25,7 +25,7 @@ export default class PlayButton extends Parent {
   }
 
   public init(): void {
-    this.img = asset('btn-play');
+    this.img = SpriteDestructor.asset('btn-play');
   }
 
   public Update(): void {

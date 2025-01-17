@@ -5,7 +5,7 @@ import SparkModel from './spark';
 import PlayButton from './btn-play';
 import RankingButton from './btn-ranking';
 import ToggleSpeaker from './btn-toggle-speaker';
-import { asset } from '../lib/sprite-destructor';
+import SpriteDestructor from '../lib/sprite-destructor';
 import { Fly, BounceIn, TimingEvent } from '../lib/animation';
 import Storage from '../lib/storage';
 
@@ -62,16 +62,16 @@ export default class ScoreBoard extends ParentObject {
   }
 
   public init(): void {
-    this.images.set('banner-gameover', asset('banner-game-over'));
-    this.images.set('score-board', asset('score-board'));
-    this.images.set('coin-10', asset('coin-dull-bronze'));
-    this.images.set('coin-20', asset('coin-dull-metal'));
-    this.images.set('coin-30', asset('coin-shine-gold'));
-    this.images.set('coin-40', asset('coin-shine-silver'));
-    this.images.set('new-icon', asset('toast-new'));
+    this.images.set('banner-gameover', SpriteDestructor.asset('banner-game-over'));
+    this.images.set('score-board', SpriteDestructor.asset('score-board'));
+    this.images.set('coin-10', SpriteDestructor.asset('coin-dull-bronze'));
+    this.images.set('coin-20', SpriteDestructor.asset('coin-dull-metal'));
+    this.images.set('coin-30', SpriteDestructor.asset('coin-shine-gold'));
+    this.images.set('coin-40', SpriteDestructor.asset('coin-shine-silver'));
+    this.images.set('new-icon', SpriteDestructor.asset('toast-new'));
 
     for (let i = 0; i < 10; ++i) {
-      this.images.set(`number-${i}`, asset(`number-md-${i}`));
+      this.images.set(`number-${i}`, SpriteDestructor.asset(`number-md-${i}`));
     }
 
     this.rankingButton.init();

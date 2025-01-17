@@ -2,7 +2,7 @@ import { COUNT_COORDINATE, COUNT_DIMENSION } from '../constants';
 import { rescaleDim } from '../utils';
 
 import ParentClass from '../abstracts/parent-class';
-import { asset } from '../lib/sprite-destructor';
+import SpriteDestructor from '../lib/sprite-destructor';
 
 export type INumberString = Record<string, HTMLImageElement>;
 
@@ -36,7 +36,7 @@ export default class Count extends ParentClass {
   }
 
   private setInitAsset(num: number, loc: string): void {
-    this.numberAsset[String(num)] = asset(loc);
+    this.numberAsset[String(num)] = SpriteDestructor.asset(loc);
   }
 
   public setNum(value: number): void {

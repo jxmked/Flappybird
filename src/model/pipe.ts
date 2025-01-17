@@ -1,7 +1,7 @@
 import { GAME_SPEED, PIPE_HOLL_SIZE, PIPE_INITIAL_DIMENSION } from '../constants';
 import { rescaleDim } from '../utils';
 import ParentClass from '../abstracts/parent-class';
-import { asset } from '../lib/sprite-destructor';
+import SpriteDestructor from '../lib/sprite-destructor';
 import SceneGenerator from './scene-generator';
 
 export interface IPipePairPosition {
@@ -51,10 +51,10 @@ export default class Pipe extends ParentClass {
   }
 
   public init(): void {
-    this.images.set('green.top', asset('pipe-green-top'));
-    this.images.set('green.bottom', asset('pipe-green-bottom'));
-    this.images.set('red.top', asset('pipe-red-top'));
-    this.images.set('red.bottom', asset('pipe-red-bottom'));
+    this.images.set('green.top', SpriteDestructor.asset('pipe-green-top'));
+    this.images.set('green.bottom', SpriteDestructor.asset('pipe-green-bottom'));
+    this.images.set('red.top', SpriteDestructor.asset('pipe-red-top'));
+    this.images.set('red.bottom', SpriteDestructor.asset('pipe-red-bottom'));
 
     Object.assign(SceneGenerator.pipeColorList, ['red', 'green']);
   }

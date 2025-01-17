@@ -1,6 +1,6 @@
 import ParentClass from '../abstracts/parent-class';
 import { rescaleDim, randomClamp } from '../utils';
-import { asset } from '../lib/sprite-destructor';
+import SpriteDestructor from '../lib/sprite-destructor';
 import { TimingEvent } from '../lib/animation';
 
 export default class Spark extends ParentClass {
@@ -37,9 +37,9 @@ export default class Spark extends ParentClass {
   }
 
   public init(): void {
-    this.images.set('spark-sm', asset('spark-sm'));
-    this.images.set('spark-md', asset('spark-md'));
-    this.images.set('spark-lg', asset('spark-lg'));
+    this.images.set('spark-sm',SpriteDestructor.asset('spark-sm'));
+    this.images.set('spark-md', SpriteDestructor.asset('spark-md'));
+    this.images.set('spark-lg', SpriteDestructor.asset('spark-lg'));
     this.sparkList = ['spark-sm', 'spark-md', 'spark-lg', 'spark-md', 'spark-sm'];
   }
 
