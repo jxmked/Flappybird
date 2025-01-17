@@ -33,7 +33,7 @@ export default class Sfx {
 
   public static swoosh(): void {
     WebSfx.volume(Sfx.currentVolume);
-    WebSfx.play(sfSwoosh );
+    WebSfx.play(sfSwoosh);
   }
 
   public static wing(): void {

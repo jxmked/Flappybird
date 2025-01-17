@@ -1,4 +1,4 @@
-import  AssetLoader from './lib/asset-loader';
+import AssetLoader from './lib/asset-loader';
 
 import SpriteDestructor from './lib/sprite-destructor';
 import WebSfx from './lib/web-sfx';
@@ -14,7 +14,7 @@ export default (callback: IEmptyFunction): void => {
 
   // Do not load images and sfx at the same time
   new AssetLoader([atlas]).then(() => {
-    const sd = new SpriteDestructor( AssetLoader.get<HTMLImageElement>(atlas));
+    const sd = new SpriteDestructor(AssetLoader.get<HTMLImageElement>(atlas));
 
     sd.cutOut('theme-day', 0, 0, 288, 512);
     sd.cutOut('theme-night', 292, 0, 288, 512);

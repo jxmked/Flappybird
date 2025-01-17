@@ -63,7 +63,7 @@ export default class Storage {
 
       const obj = JSON.parse(Storage.atou(read_item)) as IData;
 
-      let return_value: IStoreValue|undefined = void 0;
+      let return_value: IStoreValue | undefined = void 0;
 
       switch (obj.type) {
         case 'string':
