@@ -60,7 +60,7 @@ export default class Platform extends ParentClass {
     const offset = x % width;
 
     for (let i = 0; i < sequence; i++) {
-      context.drawImage(this.img!, i * width - offset, y, width, height);
+      context.drawImage(this.img!, i * (width - i) - offset, y, width, height);
     }
   }
 }

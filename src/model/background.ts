@@ -96,7 +96,7 @@ export default class Background extends ParentClass {
     for (let i = 0; i < sequence; i++) {
       context.drawImage(
         this.images.get(this.theme)!,
-        i * width - offset,
+        i * (width - i) - offset,
         y,
         width,
         height
