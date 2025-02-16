@@ -58,5 +58,9 @@
     "webpack-nano": "^1.1.1",
     "webpack-pwa-manifest": "^4.3.0",
     "workbox-webpack-plugin": "^7.3.0"
+  },
+  "dependencies": {
+    "@solid-primitives/raf": "^2.3.0",
+    "gh-pages": "^6.3.0"
   }
 }
