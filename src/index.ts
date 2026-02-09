@@ -1,6 +1,7 @@
 import './styles/main.scss';
 import gameSpriteIcon from './assets/icon.png';
 import '@total-typescript/ts-reset';
+import raf from 'raf';
 
 import { framer as Framer, rescaleDim } from './utils';
 import { CANVAS_DIMENSION } from './constants';
@@ -45,7 +46,7 @@ const GameUpdate = (): void => {
 
   if (process.env.NODE_ENV === 'development') fps.mark();
 
-  // raf(GameUpdate); Issue #16
+  // raf(GameUpdate); // Issue #16
 };
 
 const ScreenResize = () => {
@@ -75,7 +76,7 @@ const removeLoadingScreen = () => {
 //
 // Quick Fix. Locking to 60fps
 // Quick fix.Long term :)
-const [game_running, game_start] = createRAF(targetFPS(GameUpdate, 60));
+const [game_running, game_start] = createRAF(targetFPS(GameUpdate, 120));
 
 window.addEventListener('DOMContentLoaded', () => {
   loadingScreen.insertBefore(gameIcon, loadingScreen.childNodes[0]);
@@ -87,8 +88,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
     ScreenResize();
 
-    // raf(GameUpdate); Issue #16
-    if (!game_running()) game_start(); // Quick fix. Long term :)
+    // #Temp
+    setInterval(GameUpdate, 1000 / 120);
+
+    raf(GameUpdate);// Issue #16
+    // if (!game_running()) game_start(); // Quick fix. Long term :)
 
     if (process.env.NODE_ENV === 'development') removeLoadingScreen();
     else window.setTimeout(removeLoadingScreen, 1000);

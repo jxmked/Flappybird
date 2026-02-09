@@ -6,6 +6,7 @@ import SceneGenerator from './scene-generator';
 
 export type ITheme = string;
 export type IRecords = Map<ITheme, HTMLImageElement>;
+
 export default class Background extends ParentClass {
   /**
    * background dimension.
