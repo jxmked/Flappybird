@@ -94,14 +94,14 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.transition.resize(this.canvasSize);
   }
 
-  public Update(): void {
-    this.flashScreen.Update();
-    this.transition.Update();
-    this.scoreBoard.Update();
+  public Update(dt: number): void {
+    this.flashScreen.Update(dt);
+    this.transition.Update(dt);
+    this.scoreBoard.Update(dt);
 
     if (!this.bird.alive) {
       this.game.bgPause = true;
-      this.bird.Update();
+      this.bird.Update(dt);
       return;
     }
 
@@ -117,9 +117,9 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
       return;
     }
 
-    this.bannerInstruction.Update();
-    this.pipeGenerator.Update();
-    this.bird.Update();
+    this.bannerInstruction.Update(dt);
+    this.pipeGenerator.Update(dt);
+    this.bird.Update(dt);
 
     if (this.bird.isDead(this.pipeGenerator.pipes)) {
       this.flashScreen.reset();

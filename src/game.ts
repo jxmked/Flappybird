@@ -100,16 +100,16 @@ export default class Game extends ParentClass {
     this.canvas.height = height;
   }
 
-  public Update(): void {
-    this.transition.Update();
+  public Update(dt: number): void {
+    this.transition.Update(dt);
     this.screenChanger.setState(this.state);
 
     if (!this.bgPause) {
-      this.background.Update();
-      this.platform.Update();
+      this.background.Update(dt);
+      this.platform.Update(dt);
     }
 
-    this.screenChanger.Update();
+    this.screenChanger.Update(dt);
   }
 
   public Display(): void {

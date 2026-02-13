@@ -131,7 +131,7 @@ export default class BannerInstruction extends ParentClass {
       height * getReadyImagePos.y - this.getReadyImage.scaled.height / 2;
   }
 
-  public Update(): void {
+  public Update(dt: number): void {
     if (!this.doesTap) {
       this.opacity = 1;
       return;

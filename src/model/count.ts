@@ -54,7 +54,7 @@ export default class Count extends ParentClass {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public Update(): void {}
+  public Update(dt: number): void {}
 
   public Display(context: CanvasRenderingContext2D): void {
     const numArr: string[] = String(this.currentValue).split('');

@@ -8,10 +8,10 @@
  * */
 
 // Pipe and Platform Speed should be the same
-export const GAME_SPEED = 0.0062;
+export const GAME_SPEED = 0.28;
 
 // Background Speed
-export const BG_SPEED = 0.0002;
+export const BG_SPEED = GAME_SPEED * 0.08;
 
 // Initial Canvas Size. Changing this may cause problem in some cases.
 export const CANVAS_DIMENSION = {

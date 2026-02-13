@@ -101,10 +101,10 @@ export default class ScoreBoard extends ParentObject {
     this.toggleSpeakerButton.resize(this.canvasSize);
   }
 
-  public Update(): void {
+  public Update(dt: number): void {
     this.rankingButton.Update();
     this.playButton.Update();
-    this.spark.Update();
+    this.spark.Update(dt);
     this.toggleSpeakerButton.Update();
   }
 

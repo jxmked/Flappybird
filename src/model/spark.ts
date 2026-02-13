@@ -82,7 +82,7 @@ export default class Spark extends ParentClass {
     this.dimension = dimension;
   }
 
-  public Update(): void {
+  public Update(dt: number): void {
     if (this.status === 'stopped') return;
 
     if (this.timingEvent.value) {

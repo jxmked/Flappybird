@@ -35,12 +35,16 @@ gameIcon.src = gameSpriteIcon;
 // prettier-ignore
 fps.text({ x: 50, y: 50 }, '', ' Cycle');
 // prettier-ignore
-fps.container({ x: 10, y: 10}, { x: 230, y: 70});
+fps.container({ x: 10, y: 10 }, { x: 230, y: 70 });
 
+let init_time = 0;
 const GameUpdate = (): void => {
   physicalContext.drawImage(virtualCanvas, 0, 0);
-
-  Game.Update();
+  const c = performance.now();
+  const dt = (c - init_time) / 1000
+  init_time = c;
+  
+  Game.Update(dt);
   Game.Display();
 
   if (process.env.NODE_ENV === 'development') fps.mark();
@@ -88,7 +92,9 @@ window.addEventListener('DOMContentLoaded', () => {
     ScreenResize();
 
     // raf(GameUpdate); Issue #16
-    if (!game_running()) game_start(); // Quick fix. Long term :)
+    // if (!game_running()) game_start(); // Quick fix. Long term :)
+    init_time = performance.now();
+    setInterval(GameUpdate, 1000 / 60);
 
     if (process.env.NODE_ENV === 'development') removeLoadingScreen();
     else window.setTimeout(removeLoadingScreen, 1000);
