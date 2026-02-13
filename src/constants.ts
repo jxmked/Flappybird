@@ -8,10 +8,10 @@
  * */
 
 // Pipe and Platform Speed should be the same
-export const GAME_SPEED = 0.0062;
+export const GAME_SPEED = 0.32;
 
 // Background Speed
-export const BG_SPEED = 0.0002;
+export const BG_SPEED = GAME_SPEED * 0.08;
 
 // Initial Canvas Size. Changing this may cause problem in some cases.
 export const CANVAS_DIMENSION = {
@@ -30,7 +30,7 @@ export const APP_VERSION = process.env.APP_VERSION!;
  */
 
 // Jump Height. Based on canvas height.
-export const BIRD_JUMP_HEIGHT = -0.009;
+export const BIRD_JUMP_HEIGHT = -0.5533;
 
 // Fixed X-Axis position of bird. Based on canvas width.
 export const BIRD_X_POSITION = 0.3;
@@ -45,7 +45,7 @@ export const BIRD_MIN_ROTATION = -19;
 export const BIRD_HEIGHT = 0.024;
 
 // Weight of bird. Drag every update. Based on canvas height
-export const BIRD_WEIGHT = 0.00047;
+export const BIRD_WEIGHT = 1.658;
 
 // Maximum lift velocity. Preventing our bird to overspeed. Based on canvas height
 export const BIRD_MAX_UP_VELOCITY = -0.3;

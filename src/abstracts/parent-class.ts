@@ -25,6 +25,6 @@ export default abstract class ParentObject {
   }
 
   public abstract init(): void;
-  public abstract Update(): void;
+  public abstract Update(dt: number): void;
   public abstract Display(context: CanvasRenderingContext2D): void;
 }

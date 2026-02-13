@@ -2,9 +2,7 @@ import {
   BIRD_HEIGHT,
   BIRD_INITIAL_DIMENSION,
   BIRD_JUMP_HEIGHT,
-  BIRD_MAX_DOWN_VELOCITY,
   BIRD_MAX_ROTATION,
-  BIRD_MAX_UP_VELOCITY,
   BIRD_MIN_ROTATION,
   BIRD_WEIGHT,
   BIRD_X_POSITION
@@ -69,8 +67,6 @@ export default class Bird extends ParentClass {
   private images: IBirdRecords;
   private color: IBirdColor;
   private lastCoord: number;
-  private max_lift_velocity: number;
-  private max_fall_velocity: number;
 
   constructor() {
     super();
@@ -81,8 +77,7 @@ export default class Bird extends ParentClass {
       width: 0,
       height: 0
     };
-    this.max_fall_velocity = 0;
-    this.max_lift_velocity = 0;
+
     this.score = 0;
     this.rotation = 0;
     this.causeOfDeath = 0;
@@ -149,9 +144,6 @@ export default class Bird extends ParentClass {
     this.scaled = rescaleDim(BIRD_INITIAL_DIMENSION, {
       height: height * BIRD_HEIGHT
     });
-
-    this.max_fall_velocity = this.canvasSize.height * BIRD_MAX_DOWN_VELOCITY;
-    this.max_lift_velocity = this.canvasSize.height * BIRD_MAX_UP_VELOCITY;
   }
 
   /**
@@ -296,8 +288,8 @@ export default class Bird extends ParentClass {
   /**
    * Handling Bird Rotation
    * */
-  private handleRotation(): void {
-    this.rotation += this.coordinate.y < this.lastCoord ? -7.2 : 6.5;
+  private handleRotation(dt: number): void {
+    this.rotation += (this.coordinate.y < this.lastCoord ? -7.2 : 6.5) * dt * 48;
     this.rotation = clamp(BIRD_MIN_ROTATION, BIRD_MAX_ROTATION, this.rotation);
 
     if ((this.flags & Bird.FLAG_IS_ALIVE) === 0) {
@@ -311,28 +303,24 @@ export default class Bird extends ParentClass {
     this.flapWing(flipRange(4, 8.2, f));
   }
 
-  public Update(): void {
+  public Update(dt: number): void {
     // Always above the floor
     if (this.doesHitTheFloor() || (this.flags & Bird.FLAG_DOES_LANDED) !== 0) {
       this.flags |= Bird.FLAG_DOES_LANDED;
 
       this.coordinate.y =
         this.canvasSize.height - Bird.platformHeight - this.rotatedDimension().height;
-      this.handleRotation();
+      this.handleRotation(dt);
       return;
     }
 
-    // Add the Y velocity into Y coordinate but make sure we did not overspeed
-    this.coordinate.y += clamp(
-      this.max_lift_velocity,
-      this.max_fall_velocity,
-      this.velocity.y
-    );
+    this.velocity.y += this.canvasSize.height * BIRD_WEIGHT * dt;
 
-    // Slowly reduce the Y velocity by given weights
-    this.velocity.y += this.canvasSize.height * BIRD_WEIGHT;
+    this.velocity.y = Math.min(this.velocity.y, this.canvasSize.height * 0.793);
 
-    this.handleRotation();
+    this.coordinate.y += this.velocity.y * dt;
+
+    this.handleRotation(dt);
   }
 
   public Display(context: CanvasRenderingContext2D): void {
