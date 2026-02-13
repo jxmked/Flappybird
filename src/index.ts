@@ -7,7 +7,8 @@ import { CANVAS_DIMENSION } from './constants';
 import EventHandler from './events';
 import GameObject from './game';
 import prepareAssets from './asset-preparation';
-import createRAF, { targetFPS } from '@solid-primitives/raf';
+// import createRAF, { targetFPS } from '@solid-primitives/raf';
+import raf from "raf";
 import SwOffline from './lib/workbox-work-offline';
 
 if (process.env.NODE_ENV === 'production') {
@@ -49,7 +50,7 @@ const GameUpdate = (): void => {
 
   if (process.env.NODE_ENV === 'development') fps.mark();
 
-  // raf(GameUpdate); Issue #16
+  raf(GameUpdate); //Issue #16
 };
 
 const ScreenResize = () => {
@@ -79,7 +80,7 @@ const removeLoadingScreen = () => {
 //
 // Quick Fix. Locking to 60fps
 // Quick fix.Long term :)
-const [game_running, game_start] = createRAF(targetFPS(GameUpdate, 60));
+// const [game_running, game_start] = createRAF(targetFPS(GameUpdate, 60));
 
 window.addEventListener('DOMContentLoaded', () => {
   loadingScreen.insertBefore(gameIcon, loadingScreen.childNodes[0]);
@@ -91,10 +92,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     ScreenResize();
 
-    // raf(GameUpdate); Issue #16
-    // if (!game_running()) game_start(); // Quick fix. Long term :)
     init_time = performance.now();
-    setInterval(GameUpdate, 1000 / 60);
+    raf(GameUpdate); //Issue #16
+    // if (!game_running()) game_start(); // Quick fix. Long term :)
+    // setInterval(GameUpdate, 1000 / 60);
 
     if (process.env.NODE_ENV === 'development') removeLoadingScreen();
     else window.setTimeout(removeLoadingScreen, 1000);
