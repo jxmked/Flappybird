@@ -7,8 +7,8 @@ import { CANVAS_DIMENSION } from './constants';
 import EventHandler from './events';
 import GameObject from './game';
 import prepareAssets from './asset-preparation';
-import raf from 'raf';
 import SwOffline from './lib/workbox-work-offline';
+import DynamicFps from './lib/dynamic-fps';
 
 /**
  * Enabling desynchronized to reduce latency
@@ -23,6 +23,7 @@ const physicalContext = canvas.getContext('2d')!;
 const loadingScreen = document.querySelector<HTMLDivElement>('#loading-modal')!;
 const Game = new GameObject(virtualCanvas);
 const fps = new Framer(Game.context);
+const dynamicFps = new DynamicFps();
 
 let isLoaded = false;
 
@@ -40,19 +41,13 @@ if (process.env.NODE_ENV === 'production') {
   Framer.SHOW_FPS = true;
 }
 
-let init_time = 0;
-const GameUpdate = (): void => {
+const GameUpdate = (dt: number, runtime: number): void => {
   physicalContext.drawImage(virtualCanvas, 0, 0);
-  const c = performance.now();
-  const dt = (c - init_time) / 1000;
-  init_time = c;
 
   Game.Update(dt);
   Game.Display();
 
   fps.PROD_SHOW_FPS();
-
-  raf(GameUpdate);
 };
 
 const ScreenResize = () => {
@@ -82,6 +77,8 @@ const removeLoadingScreen = () => {
 window.addEventListener('DOMContentLoaded', () => {
   loadingScreen.insertBefore(gameIcon, loadingScreen.childNodes[0]);
 
+  dynamicFps.add_loop_function(GameUpdate);
+
   prepareAssets(() => {
     isLoaded = true;
 
@@ -89,8 +86,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     ScreenResize();
 
-    init_time = performance.now();
-    raf(GameUpdate);
+    dynamicFps.start();
 
     if (process.env.NODE_ENV === 'development') removeLoadingScreen();
     else window.setTimeout(removeLoadingScreen, 1000);

@@ -10,6 +10,7 @@ import { Fly, BounceIn, TimingEvent } from '../lib/animation';
 import Storage from '../lib/storage';
 import ToggleFPSBtn from './btn-toggle-fps';
 import ButtonEventHandler from '../abstracts/button-event-handler';
+import ToggleLockFPSBtn from './btn-toggle-lock-fps';
 
 export default class ScoreBoard extends ParentObject {
   private static readonly FLAG_SHOW_BANNER = 0b0001;
@@ -24,6 +25,7 @@ export default class ScoreBoard extends ParentObject {
   private rankingButton: RankingButton;
   private toggleSpeakerButton: ToggleSpeaker;
   private toggleFpsBtn: ToggleFPSBtn;
+  private toggleLockFpsBtn: ToggleLockFPSBtn;
 
   private FlyInAnim: Fly;
   private BounceInAnim: BounceIn;
@@ -44,9 +46,10 @@ export default class ScoreBoard extends ParentObject {
     this.rankingButton = new RankingButton();
     this.toggleSpeakerButton = new ToggleSpeaker();
     this.toggleFpsBtn = new ToggleFPSBtn();
+    this.toggleLockFpsBtn = new ToggleLockFPSBtn();
 
     this.spark = new SparkModel();
-    this.buttonArray = [this.playButton, this.rankingButton, this.toggleFpsBtn, this.toggleSpeakerButton];
+    this.buttonArray = [this.playButton, this.rankingButton, this.toggleFpsBtn, this.toggleSpeakerButton, this.toggleLockFpsBtn];
     this.currentHighScore = 0;
     this.currentGeneratedNumber = 0;
     this.currentScore = 0;

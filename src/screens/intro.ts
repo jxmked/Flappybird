@@ -21,6 +21,7 @@ import ToggleFPSBtn from '../model/btn-toggle-fps';
 import SpriteDestructor from '../lib/sprite-destructor';
 import { APP_VERSION } from '../constants';
 import ButtonEventHandler from '../abstracts/button-event-handler';
+import ToggleLockFPSBtn from '../model/btn-toggle-lock-fps';
 
 export default class Introduction extends ParentClass implements IScreenChangerObject {
   public playButton: PlayButton;
@@ -28,6 +29,7 @@ export default class Introduction extends ParentClass implements IScreenChangerO
   public rateButton: RateButton;
   public toggleSpeakerButton: ToggleSpeaker;
   public toggleFpsBtn: ToggleFPSBtn;
+  public toggleLockFpsBtn: ToggleLockFPSBtn;
 
   public btnArray: ButtonEventHandler[];
 
@@ -43,9 +45,17 @@ export default class Introduction extends ParentClass implements IScreenChangerO
     this.rateButton = new RateButton();
     this.toggleSpeakerButton = new ToggleSpeaker();
     this.toggleFpsBtn = new ToggleFPSBtn();
+    this.toggleLockFpsBtn = new ToggleLockFPSBtn();
     this.flappyBirdBanner = void 0;
     this.copyright = void 0;
-    this.btnArray = [this.playButton, this.rateButton, this.rankingButton, this.toggleFpsBtn, this.toggleSpeakerButton];
+    this.btnArray = [
+      this.playButton,
+      this.rateButton,
+      this.rankingButton,
+      this.toggleFpsBtn,
+      this.toggleSpeakerButton,
+      this.toggleLockFpsBtn
+    ];
   }
 
   public init(): void {

@@ -89,6 +89,8 @@ export default (callback: IEmptyFunction): void => {
     sd.cutOut('btn-speaker', 712, 306, 90, 66);
     sd.cutOut('btn-fps-enable', 710, 403, 60, 36);
     sd.cutOut('btn-fps-disable', 798, 403, 60, 36);
+    sd.cutOut('btn-fps-locked', 729, 462, 41, 36);
+    sd.cutOut('btn-fps-unlocked', 799, 462, 41, 36);
 
     const loadCallback = () => {
       if (isLoaded) callback();
