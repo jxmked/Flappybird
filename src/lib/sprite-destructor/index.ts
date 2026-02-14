@@ -53,7 +53,7 @@ export default class SpriteDestructor {
         // console.info(
         //   `Does match with cutout: ${this.cutout_call_count === resolved.length}`
         // );
-        console.warn(`Error count: ${error_count}`);
+        console.log(`Error count: ${error_count}`);
 
         callback();
       }
