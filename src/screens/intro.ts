@@ -45,7 +45,7 @@ export default class Introduction extends ParentClass implements IScreenChangerO
     this.toggleFpsBtn = new ToggleFPSBtn();
     this.flappyBirdBanner = void 0;
     this.copyright = void 0;
-    this.btnArray = [this.playButton, this.rankingButton, this.rankingButton, this.toggleFpsBtn, this.toggleSpeakerButton];
+    this.btnArray = [this.playButton, this.rateButton, this.rankingButton, this.toggleFpsBtn, this.toggleSpeakerButton];
   }
 
   public init(): void {

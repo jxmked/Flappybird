@@ -37,7 +37,7 @@ fps.container({ x: 10, y: 10 }, { x: 180, y: 60 });
 if (process.env.NODE_ENV === 'production') {
   if (process.env.availableOffline) SwOffline();
 } else {
-  // Framer.SHOW_FPS = true;
+  Framer.SHOW_FPS = true;
 }
 
 let init_time = 0;
