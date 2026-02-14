@@ -63,13 +63,7 @@ export default class Count extends ParentClass {
     const topPos = this.coordinate.y - this.numberDimension.height / 2;
 
     numArr.forEach((numString: string) => {
-      context.drawImage(
-        this.numberAsset[numString],
-        lastWidth,
-        topPos,
-        this.numberDimension.width,
-        this.numberDimension.height
-      );
+      context.drawImage(this.numberAsset[numString], lastWidth, topPos, this.numberDimension.width, this.numberDimension.height);
 
       lastWidth += this.numberDimension.width;
     });

@@ -9,10 +9,7 @@ export interface IFlyingOption {
   to: ICoordinate;
 }
 
-export interface IFlyingContructorOption extends Omit<
-  IFlyingOption,
-  'transition' | 'duration'
-> {
+export interface IFlyingContructorOption extends Omit<IFlyingOption, 'transition' | 'duration'> {
   duration?: number;
   transition?: IEasingKey;
 }

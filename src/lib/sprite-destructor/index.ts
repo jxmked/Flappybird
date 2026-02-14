@@ -7,10 +7,7 @@ export interface IPromiseImageHandled {
   img: HTMLImageElement;
 }
 
-export type ICallbackModify = (
-  name: string,
-  img: HTMLImageElement
-) => Promise<HTMLImageElement>;
+export type ICallbackModify = (name: string, img: HTMLImageElement) => Promise<HTMLImageElement>;
 
 export default class SpriteDestructor {
   // Virtuals
@@ -38,26 +35,24 @@ export default class SpriteDestructor {
     if (this.then_called) return;
     this.then_called = true;
 
-    await Promise.allSettled(this.loading).then(
-      (resolved: PromiseSettledResult<IPromiseImageHandled>[]) => {
-        let error_count = 0;
+    await Promise.allSettled(this.loading).then((resolved: PromiseSettledResult<IPromiseImageHandled>[]) => {
+      let error_count = 0;
 
-        for (const result of resolved) {
-          if (result.status === 'fulfilled' && 'value' in result) {
-            SpriteDestructor.cached.set(result.value.name, result.value.img);
-            continue;
-          }
-          ++error_count;
+      for (const result of resolved) {
+        if (result.status === 'fulfilled' && 'value' in result) {
+          SpriteDestructor.cached.set(result.value.name, result.value.img);
+          continue;
         }
-
-        // console.info(
-        //   `Does match with cutout: ${this.cutout_call_count === resolved.length}`
-        // );
-        console.log(`Error count: ${error_count}`);
-
-        callback();
+        ++error_count;
       }
-    );
+
+      // console.info(
+      //   `Does match with cutout: ${this.cutout_call_count === resolved.length}`
+      // );
+      console.log(`Error count: ${error_count}`);
+
+      callback();
+    });
   }
 
   public static asset(key: string): HTMLImageElement {
@@ -87,14 +82,12 @@ export default class SpriteDestructor {
      * Load the cutout image then push it into promse handler
      * */
     this.loading.push(
-      new Promise<IPromiseImageHandled>(
-        (resolve: IEmptyFunction, reject: IEmptyFunction) => {
-          const img = new Image();
-          img.src = this.Canvas.toDataURL();
-          img.addEventListener('load', () => resolve({ name, img }));
-          img.addEventListener('error', (err) => reject(err));
-        }
-      )
+      new Promise<IPromiseImageHandled>((resolve: IEmptyFunction, reject: IEmptyFunction) => {
+        const img = new Image();
+        img.src = this.Canvas.toDataURL();
+        img.addEventListener('load', () => resolve({ name, img }));
+        img.addEventListener('error', (err) => reject(err));
+      })
     );
 
     // this.cutout_call_count++;

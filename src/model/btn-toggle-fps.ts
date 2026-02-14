@@ -1,36 +1,38 @@
 import Parent from '../abstracts/button-event-handler';
 import SpriteDestructor from '../lib/sprite-destructor';
+import Stats from '../lib/stats';
 import Sfx from './sfx';
 
-export default class ToggleSpeakerBtn extends Parent {
+export default class ToggleFPSBtn extends Parent {
   private assets: Map<string, HTMLImageElement>;
-  private is_mute: boolean;
+  private is_active: boolean;
 
   constructor() {
     super();
-    this.initialWidth = 0.1;
+    this.initialWidth = 0.098;
     this.assets = new Map();
-    this.is_mute = false;
-    this.coordinate.x = 0.93;
-    this.coordinate.y = 0.04;
+    this.is_active = Stats.SHOW_FPS;
+    this.coordinate.x = 0.92;
+    this.coordinate.y = 0.1;
     this.active = true;
   }
 
   public click(): void {
     Sfx.swoosh();
-    this.is_mute = !this.is_mute;
 
-    Sfx.currentVolume = this.is_mute ? 0 : 1;
+    this.is_active = !this.is_active;
+
+    Stats.SHOW_FPS = this.is_active;
   }
 
   private setImg(): void {
-    const key = `${this.is_mute ? 'mute' : 'unmute'}`;
+    const key = `${this.is_active ? 'enable' : 'disable'}`;
     this.img = this.assets.get(key)!;
   }
 
   public init(): void {
-    this.assets.set('mute', SpriteDestructor.asset('btn-mute'));
-    this.assets.set('unmute', SpriteDestructor.asset('btn-speaker'));
+    this.assets.set('disable', SpriteDestructor.asset('btn-fps-disable'));
+    this.assets.set('enable', SpriteDestructor.asset('btn-fps-enable'));
 
     this.setImg();
   }

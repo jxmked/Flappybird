@@ -17,6 +17,8 @@ export default class Stats {
   private textProps: ITextProperties;
   private containerProps: IContainerProperties;
 
+  public static SHOW_FPS = false;
+
   constructor(context: CanvasRenderingContext2D) {
     this.fps = 0;
     this.timeArray = [];
@@ -90,5 +92,11 @@ export default class Stats {
     ctx.textAlign = 'left';
     ctx.fillText(out, position.x, position.y);
     ctx.closePath();
+  }
+
+  public PROD_SHOW_FPS() {
+    if (Stats.SHOW_FPS) {
+      this.mark();
+    }
   }
 }

@@ -120,15 +120,11 @@ export default class BannerInstruction extends ParentClass {
     const instructImagePos = BANNER_INSTRUCTION.positions.instructImage;
     const getReadyImagePos = BANNER_INSTRUCTION.positions.getReadyImage;
 
-    this.instructImage.position.x =
-      width * instructImagePos.x - this.instructImage.scaled.width / 2;
-    this.instructImage.position.y =
-      height * instructImagePos.y - this.instructImage.scaled.height / 2;
+    this.instructImage.position.x = width * instructImagePos.x - this.instructImage.scaled.width / 2;
+    this.instructImage.position.y = height * instructImagePos.y - this.instructImage.scaled.height / 2;
 
-    this.getReadyImage.position.x =
-      width * getReadyImagePos.x - this.getReadyImage.scaled.width / 2;
-    this.getReadyImage.position.y =
-      height * getReadyImagePos.y - this.getReadyImage.scaled.height / 2;
+    this.getReadyImage.position.x = width * getReadyImagePos.x - this.getReadyImage.scaled.width / 2;
+    this.getReadyImage.position.y = height * getReadyImagePos.y - this.getReadyImage.scaled.height / 2;
   }
 
   public Update(dt: number): void {

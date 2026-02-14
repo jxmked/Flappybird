@@ -94,13 +94,7 @@ export default class Background extends ParentClass {
 
     // Draw the background next to each other in given sequence
     for (let i = 0; i < sequence; i++) {
-      context.drawImage(
-        this.images.get(this.theme)!,
-        i * (width - i) - offset,
-        y,
-        width,
-        height
-      );
+      context.drawImage(this.images.get(this.theme)!, i * (width - i) - offset, y, width, height);
     }
   }
 }

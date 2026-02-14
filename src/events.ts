@@ -47,11 +47,7 @@ export default (Game: Game, canvas: HTMLCanvasElement) => {
     mouse.position = getBoundedPosition({ x, y });
   };
 
-  const mouseUP = (
-    { x, y }: ICoordinate,
-    evt: IEventParam,
-    isRetreive: boolean
-  ): void => {
+  const mouseUP = ({ x, y }: ICoordinate, evt: IEventParam, isRetreive: boolean): void => {
     if (hasMouseUp) return;
     hasMouseUp = true;
     hasMouseDown = false;

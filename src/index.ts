@@ -10,10 +10,6 @@ import prepareAssets from './asset-preparation';
 import raf from 'raf';
 import SwOffline from './lib/workbox-work-offline';
 
-if (process.env.NODE_ENV === 'production' && process.env.availableOffline) {
-  SwOffline();
-}
-
 /**
  * Enabling desynchronized to reduce latency
  * but the frame tearing may experience so
@@ -37,6 +33,13 @@ fps.text({ x: 50, y: 50 }, '', ' FPS');
 // prettier-ignore
 fps.container({ x: 10, y: 10 }, { x: 180, y: 60 });
 
+// Make the app available offline
+if (process.env.NODE_ENV === 'production') {
+  if (process.env.availableOffline) SwOffline();
+} else {
+  // Framer.SHOW_FPS = true;
+}
+
 let init_time = 0;
 const GameUpdate = (): void => {
   physicalContext.drawImage(virtualCanvas, 0, 0);
@@ -47,7 +50,7 @@ const GameUpdate = (): void => {
   Game.Update(dt);
   Game.Display();
 
-  if (process.env.NODE_ENV === 'development') fps.mark();
+  fps.PROD_SHOW_FPS();
 
   raf(GameUpdate);
 };

@@ -84,10 +84,8 @@ export default abstract class ButtonEventHandler {
   }
 
   public Update(): void {
-    this.calcCoord.x =
-      this.canvasSize.width * this.coordinate.x + this.additionalTranslate.x;
-    this.calcCoord.y =
-      this.canvasSize.height * this.coordinate.y + this.additionalTranslate.y;
+    this.calcCoord.x = this.canvasSize.width * this.coordinate.x + this.additionalTranslate.x;
+    this.calcCoord.y = this.canvasSize.height * this.coordinate.y + this.additionalTranslate.y;
   }
 
   public mouseEvent(state: IMouseState, { x, y }: ICoordinate): void {

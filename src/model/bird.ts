@@ -192,10 +192,7 @@ export default class Bird extends ParentClass {
    * Check if the bird touches the platform
    * */
   private doesHitTheFloor(): boolean {
-    return (
-      this.coordinate.y + this.rotatedDimension().height >
-      Math.abs(this.canvasSize.height - Bird.platformHeight)
-    );
+    return this.coordinate.y + this.rotatedDimension().height > Math.abs(this.canvasSize.height - Bird.platformHeight);
   }
 
   /**
@@ -235,10 +232,7 @@ export default class Bird extends ParentClass {
           }
 
           // Top Pipe ---------- Bottom Pipe
-          if (
-            Math.abs(hcy - radius) >= this.coordinate.y - newDim.height ||
-            hcy + radius <= this.coordinate.y + newDim.height
-          ) {
+          if (Math.abs(hcy - radius) >= this.coordinate.y - newDim.height || hcy + radius <= this.coordinate.y + newDim.height) {
             this.flags &= ~Bird.FLAG_IS_ALIVE;
             this.causeOfDeath = 2;
             break;
@@ -308,8 +302,7 @@ export default class Bird extends ParentClass {
     if (this.doesHitTheFloor() || (this.flags & Bird.FLAG_DOES_LANDED) !== 0) {
       this.flags |= Bird.FLAG_DOES_LANDED;
 
-      this.coordinate.y =
-        this.canvasSize.height - Bird.platformHeight - this.rotatedDimension().height;
+      this.coordinate.y = this.canvasSize.height - Bird.platformHeight - this.rotatedDimension().height;
       this.handleRotation(dt);
       return;
     }

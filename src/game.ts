@@ -135,10 +135,9 @@ export default class Game extends ParentClass {
       if (this.state !== 'intro') return;
 
       // Deactivate buttons
-      this.screenIntro.playButton.active = false;
-      this.screenIntro.rankingButton.active = false;
-      this.screenIntro.rateButton.active = false;
-      this.screenIntro.toggleSpeakerButton.active = false;
+      for (const btn of this.screenIntro.btnArray) {
+        btn.active = false;
+      }
 
       this.transition.reset();
       this.transition.start();

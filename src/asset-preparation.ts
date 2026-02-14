@@ -18,7 +18,7 @@ export default (callback: IEmptyFunction): void => {
 
     sd.cutOut('theme-day', 0, 0, 288, 512);
     sd.cutOut('theme-night', 292, 0, 288, 512);
-    sd.cutOut('platform', 584, 0, 236, 112);
+    sd.cutOut('platform', 584, 0, 336, 112);
     sd.cutOut('pipe-red-top', 0, 646, 52, 320);
     sd.cutOut('pipe-red-bottom', 56, 646, 52, 320);
     sd.cutOut('pipe-green-bottom', 168, 646, 52, 320);
@@ -87,6 +87,8 @@ export default (callback: IEmptyFunction): void => {
     sd.cutOut('icon-plus', 992, 168, 10, 10);
     sd.cutOut('btn-mute', 816, 306, 90, 66);
     sd.cutOut('btn-speaker', 712, 306, 90, 66);
+    sd.cutOut('btn-fps-enable', 710, 403, 60, 36);
+    sd.cutOut('btn-fps-disable', 798, 403, 60, 36);
 
     const loadCallback = () => {
       if (isLoaded) callback();

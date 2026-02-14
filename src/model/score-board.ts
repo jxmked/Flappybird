@@ -8,6 +8,8 @@ import ToggleSpeaker from './btn-toggle-speaker';
 import SpriteDestructor from '../lib/sprite-destructor';
 import { Fly, BounceIn, TimingEvent } from '../lib/animation';
 import Storage from '../lib/storage';
+import ToggleFPSBtn from './btn-toggle-fps';
+import ButtonEventHandler from '../abstracts/button-event-handler';
 
 export default class ScoreBoard extends ParentObject {
   private static readonly FLAG_SHOW_BANNER = 0b0001;
@@ -21,6 +23,8 @@ export default class ScoreBoard extends ParentObject {
   private playButton: PlayButton;
   private rankingButton: RankingButton;
   private toggleSpeakerButton: ToggleSpeaker;
+  private toggleFpsBtn: ToggleFPSBtn;
+
   private FlyInAnim: Fly;
   private BounceInAnim: BounceIn;
   private currentScore: number;
@@ -29,14 +33,20 @@ export default class ScoreBoard extends ParentObject {
   private TimingEventAnim: TimingEvent;
   private spark: SparkModel;
 
+  private buttonArray: ButtonEventHandler[];
+
   constructor() {
     super();
     this.flags = 0;
     this.images = new Map<string, HTMLImageElement>();
+
     this.playButton = new PlayButton();
     this.rankingButton = new RankingButton();
     this.toggleSpeakerButton = new ToggleSpeaker();
+    this.toggleFpsBtn = new ToggleFPSBtn();
+
     this.spark = new SparkModel();
+    this.buttonArray = [this.playButton, this.rankingButton, this.toggleFpsBtn, this.toggleSpeakerButton];
     this.currentHighScore = 0;
     this.currentGeneratedNumber = 0;
     this.currentScore = 0;
@@ -74,13 +84,11 @@ export default class ScoreBoard extends ParentObject {
       this.images.set(`number-${i}`, SpriteDestructor.asset(`number-md-${i}`));
     }
 
-    this.rankingButton.init();
-    this.playButton.init();
-    this.toggleSpeakerButton.init();
+    for (const btn of this.buttonArray) {
+      btn.init();
+      btn.active = false;
+    }
 
-    this.playButton.active = false;
-    this.rankingButton.active = false;
-    this.toggleSpeakerButton.active = false;
     this.spark.init();
 
     /**
@@ -94,18 +102,19 @@ export default class ScoreBoard extends ParentObject {
 
   public resize({ width, height }: IDimension): void {
     super.resize({ width, height });
-
-    this.rankingButton.resize(this.canvasSize);
-    this.playButton.resize(this.canvasSize);
     this.spark.resize(this.canvasSize);
-    this.toggleSpeakerButton.resize(this.canvasSize);
+
+    for (const btn of this.buttonArray) {
+      btn.resize(this.canvasSize);
+    }
   }
 
   public Update(dt: number): void {
-    this.rankingButton.Update();
-    this.playButton.Update();
     this.spark.Update(dt);
-    this.toggleSpeakerButton.Update();
+
+    for (const btn of this.buttonArray) {
+      btn.Update();
+    }
   }
 
   public Display(context: CanvasRenderingContext2D): void {
@@ -145,13 +154,7 @@ export default class ScoreBoard extends ParentObject {
       anim.x = this.canvasSize.width * anim.x - sbScaled.width / 2;
       anim.y = this.canvasSize.height * anim.y - sbScaled.height / 2;
 
-      context.drawImage(
-        this.images.get('score-board')!,
-        anim.x,
-        anim.y,
-        sbScaled.width,
-        sbScaled.height
-      );
+      context.drawImage(this.images.get('score-board')!, anim.x, anim.y, sbScaled.width, sbScaled.height);
 
       if (this.TimingEventAnim.value && this.currentScore > this.currentGeneratedNumber) {
         this.currentGeneratedNumber++;
@@ -172,12 +175,7 @@ export default class ScoreBoard extends ParentObject {
       }
 
       this.displayScore(context, anim, sbScaled);
-      this.displayBestScore(
-        context,
-        anim,
-        sbScaled,
-        (this.flags & ScoreBoard.FLAG_NEW_HIGH_SCORE) !== 0
-      );
+      this.displayBestScore(context, anim, sbScaled, (this.flags & ScoreBoard.FLAG_NEW_HIGH_SCORE) !== 0);
 
       if (this.FlyInAnim.status.complete && !this.FlyInAnim.status.running) {
         this.TimingEventAnim.start();
@@ -189,9 +187,9 @@ export default class ScoreBoard extends ParentObject {
     }
 
     if ((this.flags & ScoreBoard.FLAG_SHOW_BUTTONS) !== 0) {
-      this.rankingButton.Display(context);
-      this.playButton.Display(context);
-      this.toggleSpeakerButton.Display(context);
+      for (const btn of this.buttonArray) {
+        btn.Display(context);
+      }
     }
   }
 
@@ -208,9 +206,10 @@ export default class ScoreBoard extends ParentObject {
 
   public showButtons(): void {
     this.flags |= ScoreBoard.FLAG_SHOW_BUTTONS;
-    this.playButton.active = true;
-    this.rankingButton.active = true;
-    this.toggleSpeakerButton.active = true;
+
+    for (const btn of this.buttonArray) {
+      btn.active = true;
+    }
   }
 
   private setHighScore(num: number): void {
@@ -222,11 +221,7 @@ export default class ScoreBoard extends ParentObject {
     this.currentScore = num;
   }
 
-  private addMedal(
-    context: CanvasRenderingContext2D,
-    coord: ICoordinate,
-    parentSize: IDimension
-  ): void {
+  private addMedal(context: CanvasRenderingContext2D, coord: ICoordinate, parentSize: IDimension): void {
     if (this.currentScore < 10) return; // So sad having a no medal :)
     let medal: HTMLImageElement | undefined;
 
@@ -260,11 +255,7 @@ export default class ScoreBoard extends ParentObject {
     this.spark.Display(context);
   }
 
-  private displayScore(
-    context: CanvasRenderingContext2D,
-    coord: ICoordinate,
-    parentSize: IDimension
-  ): void {
+  private displayScore(context: CanvasRenderingContext2D, coord: ICoordinate, parentSize: IDimension): void {
     const numSize = rescaleDim(
       {
         width: this.images.get('number-1')!.width,
@@ -290,12 +281,7 @@ export default class ScoreBoard extends ParentObject {
     });
   }
 
-  private displayBestScore(
-    context: CanvasRenderingContext2D,
-    coord: ICoordinate,
-    parentSize: IDimension,
-    _p0: boolean
-  ): void {
+  private displayBestScore(context: CanvasRenderingContext2D, coord: ICoordinate, parentSize: IDimension, _p0: boolean): void {
     const numSize = rescaleDim(
       {
         width: this.images.get('number-1')!.width,
@@ -331,13 +317,7 @@ export default class ScoreBoard extends ParentObject {
       { width: parentSize.width * 0.14 }
     );
 
-    context.drawImage(
-      this.images.get('new-icon')!,
-      coord.x * 0.73,
-      coord.y * 0.922,
-      toastSize.width,
-      toastSize.height
-    );
+    context.drawImage(this.images.get('new-icon')!, coord.x * 0.73, coord.y * 0.922, toastSize.width, toastSize.height);
   }
 
   /**
@@ -346,9 +326,10 @@ export default class ScoreBoard extends ParentObject {
   public hide(): void {
     this.flags = 0;
 
-    this.playButton.active = false;
-    this.rankingButton.active = false;
-    this.toggleSpeakerButton.active = false;
+    for (const btn of this.buttonArray) {
+      btn.active = false;
+    }
+
     this.currentGeneratedNumber = 0;
     this.FlyInAnim.reset();
     this.BounceInAnim.reset();
@@ -368,16 +349,16 @@ export default class ScoreBoard extends ParentObject {
      * */
   }
 
-  public mouseDown({ x, y }: ICoordinate): void {
-    this.playButton.mouseEvent('down', { x, y });
-    this.rankingButton.mouseEvent('down', { x, y });
-    this.toggleSpeakerButton.mouseEvent('down', { x, y });
+  public mouseDown(coor: ICoordinate): void {
+    for (const btn of this.buttonArray) {
+      btn.mouseEvent('down', coor);
+    }
   }
 
-  public mouseUp({ x, y }: ICoordinate): void {
-    this.playButton.mouseEvent('up', { x, y });
-    this.rankingButton.mouseEvent('up', { x, y });
-    this.toggleSpeakerButton.mouseEvent('up', { x, y });
+  public mouseUp(coor: ICoordinate): void {
+    for (const btn of this.buttonArray) {
+      btn.mouseEvent('up', coor);
+    }
   }
 
   public triggerPlayATKeyboardEvent(): void {

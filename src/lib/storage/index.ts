@@ -42,10 +42,7 @@ export default class Storage {
     if (typeof value !== 'string') {
       value = String(value);
     }
-    window.localStorage.setItem(
-      `__${Storage.sk! as string}_${key}__`,
-      Storage.utoa(JSON.stringify({ mode, value }))
-    );
+    window.localStorage.setItem(`__${Storage.sk! as string}_${key}__`, Storage.utoa(JSON.stringify({ mode, value })));
   }
 
   static get(key: string): IStoreValue | undefined {
@@ -55,9 +52,7 @@ export default class Storage {
     }
 
     try {
-      const read_item = window.localStorage.getItem(
-        `__${Storage.sk! as string}_${key}__`
-      );
+      const read_item = window.localStorage.getItem(`__${Storage.sk! as string}_${key}__`);
 
       if (!read_item) return void 0;
 

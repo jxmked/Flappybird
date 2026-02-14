@@ -67,14 +67,8 @@ export default class Spark extends ParentClass {
   }
 
   private relocate(): void {
-    this.target.x = randomClamp(
-      this.coordinate.x,
-      this.coordinate.x + this.dimension.width
-    );
-    this.target.y = randomClamp(
-      this.coordinate.y,
-      this.coordinate.y + this.dimension.height
-    );
+    this.target.x = randomClamp(this.coordinate.x, this.coordinate.x + this.dimension.width);
+    this.target.y = randomClamp(this.coordinate.y, this.coordinate.y + this.dimension.height);
   }
 
   public move({ x, y }: ICoordinate, dimension: IDimension): void {
