@@ -19,22 +19,22 @@ declare module '*.css';
 
 declare let WebKitMutationObserver: MutationObserver;
 
-declare const process: {
-  readonly env: {
-    APP_VERSION: string;
-    NODE_ENV: 'development' | 'production';
-    APP_NAME: string;
-    APP_SHORT_NAME: string;
-    APP_DESCRIPTION: string;
-    APP_HOMEPAGE: string;
-    APP_REPOSITORY: string;
-    AUTHOR: string;
-    PROJECT_NAME: string;
-    BUILD_DATE: string;
-    availableOffline: boolean;
-    backgroundColor: string;
-    themeColor: string;
-    windowResizeable: boolean;
+declare namespace NodeJS {
+  interface ProcessEnv {
+    APP_VERSION?: string;
+    NODE_ENV?: 'development' | 'production';
+    APP_NAME?: string;
+    APP_SHORT_NAME?: string;
+    APP_DESCRIPTION?: string;
+    APP_HOMEPAGE?: string;
+    APP_REPOSITORY?: string;
+    AUTHOR?: string;
+    PROJECT_NAME?: string;
+    BUILD_DATE?: string;
+    availableOffline?: string;
+    backgroundColor?: string;
+    themeColor?: string;
+    windowResizeable?: string;
     [key: string]: string | undefined;
-  };
-};
+  }
+}
