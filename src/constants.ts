@@ -4,11 +4,11 @@
 
 /**
  * Note: Everything related to positioning & velocities
- * uses percentages ranging 0.0 - 1.0
+ * uses percentages ranging 0.0 - 1.0 or can get higher and lower
  * */
 
 // Pipe and Platform Speed should be the same
-export const GAME_SPEED = 0.32;
+export const GAME_SPEED = 0.3892;
 
 // Background Speed
 export const BG_SPEED = GAME_SPEED * 0.08;
