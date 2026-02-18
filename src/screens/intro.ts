@@ -19,7 +19,7 @@ import RateButton from '../model/btn-rate';
 import ToggleSpeaker from '../model/btn-toggle-speaker';
 import ToggleFPSBtn from '../model/btn-toggle-fps';
 import SpriteDestructor from '../lib/sprite-destructor';
-import { APP_VERSION } from '../constants';
+import { ENV } from '../constants';
 import ButtonEventHandler from '../abstracts/button-event-handler';
 import ToggleLockFPSBtn from '../model/btn-toggle-lock-fps';
 
@@ -147,7 +147,7 @@ export default class Introduction extends ParentClass implements IScreenChangerO
     context.font = `bold ${fSize}px monospace`;
     context.textAlign = 'center';
     context.fillStyle = '#8E8E93';
-    context.fillText(`v${APP_VERSION}`, right - 2 * fSize, bot);
+    context.fillText(`v${ENV.APP_VERSION}`, right - 2 * fSize, bot);
 
     // context.strokeStyle = 'black';
     // context.strokeText(`v${APP_VERSION}`, right - 2 * fSize, bot);

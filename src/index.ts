@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === 'production') {
   Framer.SHOW_FPS = true;
 }
 
-const GameUpdate = (dt: number, runtime: number): void => {
+const GameUpdate = (dt: number): void => {
   physicalContext.drawImage(virtualCanvas, 0, 0);
 
   Game.Update(dt);
