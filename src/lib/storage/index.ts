@@ -47,7 +47,7 @@ export default class Storage {
         const decoded = new TextDecoder().decode(byte);
         Object.assign(data, JSON.parse(decoded));
       } catch (err) {
-        console.log(err);
+        console.log('Failed to save data');
       }
     }
 
@@ -57,8 +57,8 @@ export default class Storage {
       value = String(value);
 
       data[key] = {
-        type: type,
-        value: value
+        type,
+        value
       };
     }
 
@@ -101,7 +101,7 @@ export default class Storage {
           return target.value === 'true' ? true : false;
       }
     } catch (err) {
-      console.error('Failed to fetch highscore');
+      console.warn('Failed to fetch data');
       return void 0;
     }
   }
