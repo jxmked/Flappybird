@@ -15,7 +15,7 @@ export default class DynamicFps {
   constructor() {
     this.last_time = 0;
     this.begin_time = 0;
-    this.loop_function = (dt: number, runtime: number) => void 0;
+    this.loop_function = () => void 0;
     this.primitiveRaf = createRAF(targetFPS(this.loop.bind(this), LOCKABLE_FPS));
   }
 

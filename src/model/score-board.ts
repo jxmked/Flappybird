@@ -99,7 +99,7 @@ export default class ScoreBoard extends ParentObject {
      * else may throw any error during
      * image retrieval
      * */
-    const prevScore = Storage.get('highscore') as number;
+    const prevScore = Storage.get('highscore') as number | undefined;
     this.currentHighScore = typeof prevScore === 'number' ? prevScore : 0;
   }
 
