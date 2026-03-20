@@ -1,7 +1,7 @@
 {
   "name": "flappybird",
   "description": "Mimicking the old retro game FlappyBird but as a web app",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "main": "webpack.config.mjs",
   "type": "module",
   "scripts": {
