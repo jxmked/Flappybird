@@ -5,7 +5,7 @@ export interface IScreenChangerObject {
 
 export default class ScreenChanger implements IScreenChangerObject {
   private objects: Map<string, IScreenChangerObject>;
-  private currentState: string;
+  public currentState: string;
 
   constructor() {
     this.objects = new Map<string, IScreenChangerObject>();

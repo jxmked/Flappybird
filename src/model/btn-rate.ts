@@ -7,7 +7,7 @@ import { openInNewTab } from '../utils';
  * Let us depend on PlayButton since they have
  * a lot of similarities
  * */
-export default class RateNutton extends PlayButton {
+export default class RateButton extends PlayButton {
   constructor() {
     super();
     this.initialWidth = 0.24;

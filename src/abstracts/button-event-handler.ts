@@ -21,6 +21,7 @@ export type IMouseState = 'down' | 'up';
 
 export default abstract class ButtonEventHandler {
   public active: boolean;
+  public hidden: boolean;
 
   protected coordinate: ICoordinate;
   protected img: HTMLImageElement | undefined;
@@ -60,6 +61,7 @@ export default abstract class ButtonEventHandler {
       y: 0
     };
     this.active = false;
+    this.hidden = false;
     this.img = void 0;
     this.hoverState = false;
     this.initialWidth = 0;
@@ -84,15 +86,22 @@ export default abstract class ButtonEventHandler {
   }
 
   public Update(): void {
+    if (this.hidden) return;
+
     this.calcCoord.x = this.canvasSize.width * this.coordinate.x + this.additionalTranslate.x;
     this.calcCoord.y = this.canvasSize.height * this.coordinate.y + this.additionalTranslate.y;
   }
 
   public mouseEvent(state: IMouseState, { x, y }: ICoordinate): void {
-    if (state === 'down') {
-      this.onMouseDown({ x, y });
-    } else if (state === 'up') {
-      this.onMouseup({ x, y });
+    if (this.hidden) return;
+
+    switch (state) {
+      case 'down':
+        this.onMouseDown({ x, y });
+        break;
+      case 'up':
+        this.onMouseup({ x, y });
+        break;
     }
   }
 
@@ -121,6 +130,7 @@ export default abstract class ButtonEventHandler {
   }
 
   private onMouseDown(coord: ICoordinate): void {
+    if (this.hidden) return;
     if (!this.active) return;
 
     this.touchStart = coord;
@@ -131,7 +141,9 @@ export default abstract class ButtonEventHandler {
   }
 
   private onMouseup(coord: ICoordinate): void {
+    if (this.hidden) return;
     if (!this.active) return;
+
     this.hoverState = false;
     // Only click if mouse down start inside of the button
     // and up inside of the button

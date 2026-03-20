@@ -42,6 +42,8 @@ export default class PlayButton extends Parent {
   }
 
   public Display(context: CanvasRenderingContext2D): void {
+    if (this.hidden) return;
+
     const xLoc = this.calcCoord.x;
     const yLoc = this.calcCoord.y;
     const xRad = this.dimension.width / 2;

@@ -10,6 +10,7 @@ import ScreenChanger from './lib/screen-changer';
 import Sfx from './model/sfx';
 import Storage from './lib/storage';
 import FlashScreen from './model/flash-screen';
+import ButtonsHandler from './buttons';
 
 export type IGameState = 'intro' | 'game';
 
@@ -66,9 +67,9 @@ export default class Game extends ParentClass {
     this.gamePlay.init();
     this.setEvent();
 
-    this.screenIntro.playButton.active = true;
-    this.screenIntro.rankingButton.active = true;
-    this.screenIntro.rateButton.active = true;
+    for (const btn of ButtonsHandler.btns) {
+      btn.active = true;
+    }
 
     // Register screens
     this.screenChanger.register('intro', this.screenIntro);
@@ -131,11 +132,11 @@ export default class Game extends ParentClass {
   }
 
   public setEvent(): void {
-    this.screenIntro.playButton.onClick(() => {
+    ButtonsHandler.play.onClick(() => {
       if (this.state !== 'intro') return;
 
       // Deactivate buttons
-      for (const btn of this.screenIntro.btnArray) {
+      for (const btn of ButtonsHandler.btns) {
         btn.active = false;
       }
 
@@ -151,13 +152,19 @@ export default class Game extends ParentClass {
   }
 
   public mouseDown({ x, y }: ICoordinate): void {
-    this.screenIntro.mouseDown({ x, y });
-    this.gamePlay.mouseDown({ x, y });
+    if (this.screenChanger.currentState === 'intro') {
+      this.screenIntro.mouseDown({ x, y });
+    } else {
+      this.gamePlay.mouseDown({ x, y });
+    }
   }
 
   public mouseUp({ x, y }: ICoordinate): void {
-    this.screenIntro.mouseUp({ x, y });
-    this.gamePlay.mouseUp({ x, y });
+    if (this.screenChanger.currentState === 'intro') {
+      this.screenIntro.mouseUp({ x, y });
+    } else {
+      this.gamePlay.mouseUp({ x, y });
+    }
   }
 
   public startAtKeyBoardEvent(): void {

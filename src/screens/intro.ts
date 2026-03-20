@@ -13,25 +13,12 @@ import { rescaleDim } from '../utils';
 import BirdModel from '../model/bird';
 import { IScreenChangerObject } from '../lib/screen-changer';
 import ParentClass from '../abstracts/parent-class';
-import PlayButton from '../model/btn-play';
-import RankingButton from '../model/btn-ranking';
-import RateButton from '../model/btn-rate';
-import ToggleSpeaker from '../model/btn-toggle-speaker';
-import ToggleFPSBtn from '../model/btn-toggle-fps';
 import SpriteDestructor from '../lib/sprite-destructor';
 import { ENV } from '../constants';
-import ButtonEventHandler from '../abstracts/button-event-handler';
-import ToggleLockFPSBtn from '../model/btn-toggle-lock-fps';
+import ButtonsHandler from '../buttons';
 
 export default class Introduction extends ParentClass implements IScreenChangerObject {
-  public playButton: PlayButton;
-  public rankingButton: RankingButton;
-  public rateButton: RateButton;
-  public toggleSpeakerButton: ToggleSpeaker;
-  public toggleFpsBtn: ToggleFPSBtn;
-  public toggleLockFpsBtn: ToggleLockFPSBtn;
-
-  public btnArray: ButtonEventHandler[];
+  public btnHandler: ButtonsHandler;
 
   private bird: BirdModel;
   private flappyBirdBanner: HTMLImageElement | undefined;
@@ -40,29 +27,18 @@ export default class Introduction extends ParentClass implements IScreenChangerO
   constructor() {
     super();
     this.bird = new BirdModel();
-    this.playButton = new PlayButton();
-    this.rankingButton = new RankingButton();
-    this.rateButton = new RateButton();
-    this.toggleSpeakerButton = new ToggleSpeaker();
-    this.toggleFpsBtn = new ToggleFPSBtn();
-    this.toggleLockFpsBtn = new ToggleLockFPSBtn();
     this.flappyBirdBanner = void 0;
     this.copyright = void 0;
-    this.btnArray = [
-      this.playButton,
-      this.rateButton,
-      this.rankingButton,
-      this.toggleFpsBtn,
-      this.toggleSpeakerButton,
-      this.toggleLockFpsBtn
-    ];
+    this.btnHandler = new ButtonsHandler();
   }
 
   public init(): void {
     this.bird.init();
 
-    for (const btn of this.btnArray) {
-      btn.init();
+    this.btnHandler.init();
+
+    for (const btn of ButtonsHandler.btns) {
+      btn.active = true;
     }
 
     this.flappyBirdBanner = SpriteDestructor.asset('banner-flappybird');
@@ -73,9 +49,7 @@ export default class Introduction extends ParentClass implements IScreenChangerO
     super.resize(screen_dimension);
     this.bird.resize(screen_dimension);
 
-    for (const btn of this.btnArray) {
-      btn.resize(screen_dimension);
-    }
+    this.btnHandler.resize(screen_dimension);
   }
 
   public Update(): void {
@@ -88,15 +62,11 @@ export default class Introduction extends ParentClass implements IScreenChangerO
       9
     );
 
-    for (const btn of this.btnArray) {
-      btn.Update();
-    }
+    this.btnHandler.Update();
   }
 
   public Display(context: CanvasRenderingContext2D): void {
-    for (const btn of this.btnArray) {
-      btn.Display(context);
-    }
+    this.btnHandler.Display(context);
 
     this.bird.Display(context);
 
@@ -148,24 +118,21 @@ export default class Introduction extends ParentClass implements IScreenChangerO
     context.textAlign = 'center';
     context.fillStyle = '#8E8E93';
     context.fillText(`v${ENV.APP_VERSION}`, right - 2 * fSize, bot);
-
-    // context.strokeStyle = 'black';
-    // context.strokeText(`v${APP_VERSION}`, right - 2 * fSize, bot);
   }
 
   public mouseDown(coor: ICoordinate): void {
-    for (const btn of this.btnArray) {
+    for (const btn of ButtonsHandler.btns) {
       btn.mouseEvent('down', coor);
     }
   }
 
   public mouseUp(coor: ICoordinate): void {
-    for (const btn of this.btnArray) {
+    for (const btn of ButtonsHandler.btns) {
       btn.mouseEvent('up', coor);
     }
   }
 
   public startAtKeyBoardEvent(): void {
-    this.playButton.click();
+    ButtonsHandler.play.click();
   }
 }

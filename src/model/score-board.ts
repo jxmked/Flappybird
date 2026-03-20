@@ -2,15 +2,10 @@ import { rescaleDim } from '../utils';
 
 import ParentObject from '../abstracts/parent-class';
 import SparkModel from './spark';
-import PlayButton from './btn-play';
-import RankingButton from './btn-ranking';
-import ToggleSpeaker from './btn-toggle-speaker';
 import SpriteDestructor from '../lib/sprite-destructor';
 import { Fly, BounceIn, TimingEvent } from '../lib/animation';
 import Storage from '../lib/storage';
-import ToggleFPSBtn from './btn-toggle-fps';
-import ButtonEventHandler from '../abstracts/button-event-handler';
-import ToggleLockFPSBtn from './btn-toggle-lock-fps';
+import ButtonsHandler from '../buttons';
 
 export default class ScoreBoard extends ParentObject {
   private static readonly FLAG_SHOW_BANNER = 0b0001;
@@ -21,11 +16,6 @@ export default class ScoreBoard extends ParentObject {
   private flags: number;
 
   private images: Map<string, HTMLImageElement>;
-  private playButton: PlayButton;
-  private rankingButton: RankingButton;
-  private toggleSpeakerButton: ToggleSpeaker;
-  private toggleFpsBtn: ToggleFPSBtn;
-  private toggleLockFpsBtn: ToggleLockFPSBtn;
 
   private FlyInAnim: Fly;
   private BounceInAnim: BounceIn;
@@ -35,21 +25,16 @@ export default class ScoreBoard extends ParentObject {
   private TimingEventAnim: TimingEvent;
   private spark: SparkModel;
 
-  private buttonArray: ButtonEventHandler[];
+  buttonHandler: ButtonsHandler;
 
   constructor() {
     super();
     this.flags = 0;
     this.images = new Map<string, HTMLImageElement>();
 
-    this.playButton = new PlayButton();
-    this.rankingButton = new RankingButton();
-    this.toggleSpeakerButton = new ToggleSpeaker();
-    this.toggleFpsBtn = new ToggleFPSBtn();
-    this.toggleLockFpsBtn = new ToggleLockFPSBtn();
+    this.buttonHandler = new ButtonsHandler();
 
     this.spark = new SparkModel();
-    this.buttonArray = [this.playButton, this.rankingButton, this.toggleFpsBtn, this.toggleSpeakerButton, this.toggleLockFpsBtn];
     this.currentHighScore = 0;
     this.currentGeneratedNumber = 0;
     this.currentScore = 0;
@@ -87,7 +72,7 @@ export default class ScoreBoard extends ParentObject {
       this.images.set(`number-${i}`, SpriteDestructor.asset(`number-md-${i}`));
     }
 
-    for (const btn of this.buttonArray) {
+    for (const btn of ButtonsHandler.btns) {
       btn.init();
       btn.active = false;
     }
@@ -107,7 +92,7 @@ export default class ScoreBoard extends ParentObject {
     super.resize({ width, height });
     this.spark.resize(this.canvasSize);
 
-    for (const btn of this.buttonArray) {
+    for (const btn of ButtonsHandler.btns) {
       btn.resize(this.canvasSize);
     }
   }
@@ -115,7 +100,7 @@ export default class ScoreBoard extends ParentObject {
   public Update(dt: number): void {
     this.spark.Update(dt);
 
-    for (const btn of this.buttonArray) {
+    for (const btn of ButtonsHandler.btns) {
       btn.Update();
     }
   }
@@ -190,7 +175,7 @@ export default class ScoreBoard extends ParentObject {
     }
 
     if ((this.flags & ScoreBoard.FLAG_SHOW_BUTTONS) !== 0) {
-      for (const btn of this.buttonArray) {
+      for (const btn of ButtonsHandler.btns) {
         btn.Display(context);
       }
     }
@@ -210,9 +195,13 @@ export default class ScoreBoard extends ParentObject {
   public showButtons(): void {
     this.flags |= ScoreBoard.FLAG_SHOW_BUTTONS;
 
-    for (const btn of this.buttonArray) {
+    for (const btn of ButtonsHandler.btns) {
       btn.active = true;
     }
+
+    // skip rate button
+    ButtonsHandler.rate.active = false;
+    ButtonsHandler.rate.hidden = true;
   }
 
   private setHighScore(num: number): void {
@@ -329,7 +318,7 @@ export default class ScoreBoard extends ParentObject {
   public hide(): void {
     this.flags = 0;
 
-    for (const btn of this.buttonArray) {
+    for (const btn of ButtonsHandler.btns) {
       btn.active = false;
     }
 
@@ -341,7 +330,7 @@ export default class ScoreBoard extends ParentObject {
   }
 
   public onRestart(cb: IEmptyFunction): void {
-    this.playButton.onClick(cb);
+    ButtonsHandler.play.onClick(cb);
   }
 
   public onShowRanks(_cb: IEmptyFunction): void {
@@ -353,18 +342,18 @@ export default class ScoreBoard extends ParentObject {
   }
 
   public mouseDown(coor: ICoordinate): void {
-    for (const btn of this.buttonArray) {
+    for (const btn of ButtonsHandler.btns) {
       btn.mouseEvent('down', coor);
     }
   }
 
   public mouseUp(coor: ICoordinate): void {
-    for (const btn of this.buttonArray) {
+    for (const btn of ButtonsHandler.btns) {
       btn.mouseEvent('up', coor);
     }
   }
 
   public triggerPlayATKeyboardEvent(): void {
-    if ((this.flags & ScoreBoard.FLAG_SHOW_BUTTONS) !== 0) this.playButton.click();
+    if ((this.flags & ScoreBoard.FLAG_SHOW_BUTTONS) !== 0) ButtonsHandler.play.click();
   }
 }
