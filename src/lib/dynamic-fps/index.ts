@@ -1,4 +1,4 @@
-import raf from 'raf';
+// import raf from 'raf';
 import createRAF, { targetFPS } from '@solid-primitives/raf';
 import { LOCKABLE_FPS } from '../../constants';
 
@@ -33,7 +33,8 @@ export default class DynamicFps {
 
     if (!DynamicFps.IS_LOCK) {
       this.primitiveRaf[2](); // Stop Primitive Raf
-      raf(this.loop.bind(this));
+      // raf(this.loop.bind(this));
+      window.requestAnimationFrame(this.loop.bind(this));
     } else {
       this.primitiveRaf[1]();
     }

@@ -18,6 +18,8 @@ import Sfx from '../model/sfx';
 
 export type IGameState = 'died' | 'playing' | 'none';
 export default class GetReady extends ParentClass implements IScreenChangerObject {
+  public scoreBoard: ScoreBoard;
+
   private bird: BirdModel;
   private pipeGenerator: PipeGenerator;
   private state: string;
@@ -25,7 +27,6 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
   private count: CounterModel;
   private game: MainGameController;
   private bannerInstruction: BannerInstruction;
-  private scoreBoard: ScoreBoard;
   private transition: FlashScreen;
   private hideBird: boolean;
   private flashScreen: FlashScreen;
@@ -162,7 +163,7 @@ export default class GetReady extends ParentClass implements IScreenChangerObjec
     this.transition.Display(context);
   }
 
-  private setButtonEvent(): void {
+  public setButtonEvent(): void {
     this.scoreBoard.onRestart(() => {
       if (this.transition.status.running) return;
       this.transition.reset();

@@ -142,6 +142,9 @@ export default class Game extends ParentClass {
 
       this.transition.reset();
       this.transition.start();
+
+      // Deployed to prod without this line
+      this.gamePlay.setButtonEvent();
     });
   }
 

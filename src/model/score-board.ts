@@ -331,6 +331,8 @@ export default class ScoreBoard extends ParentObject {
 
   public onRestart(cb: IEmptyFunction): void {
     ButtonsHandler.play.onClick(cb);
+    ButtonsHandler.play.active = true;
+
   }
 
   public onShowRanks(_cb: IEmptyFunction): void {
