@@ -356,7 +356,8 @@ export default function (env, config) {
       new GA4WebpackPlugin({
         id: ENTRIES.GA4_MEASUREMENT_ID,
         inject: ENTRIES.GA4_MEASUREMENT_ID === false ? false : !devMode, // Only inject in build mode
-        callPageView: true
+        callPageView: true,
+        appVersion: CONFIG.env.APP_VERSION
       }),
 
       new MiniCssExtractPlugin({

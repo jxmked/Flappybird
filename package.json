@@ -45,7 +45,7 @@
     "dotenv": "^17.3.1",
     "eslint": "^8.57.1",
     "file-loader": "^6.2.0",
-    "ga4-webpack-plugin": "^1.1.12",
+    "ga4-webpack-plugin": "^1.2.1",
     "gh-pages": "^6.3.0",
     "html-minifier": "^4.0.0",
     "html-webpack-plugin": "5.6.*",
