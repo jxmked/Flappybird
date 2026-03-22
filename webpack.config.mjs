@@ -357,7 +357,9 @@ export default function (env, config) {
         id: ENTRIES.GA4_MEASUREMENT_ID,
         inject: ENTRIES.GA4_MEASUREMENT_ID === false ? false : !devMode, // Only inject in build mode
         callPageView: true,
-        appVersion: CONFIG.env.APP_VERSION
+        param: {
+          "application_version": CONFIG.env.APP_VERSION
+        }
       }),
 
       new MiniCssExtractPlugin({
