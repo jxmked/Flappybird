@@ -27,6 +27,10 @@ const dynamicFps = new DynamicFps();
 
 let isLoaded = false;
 
+let has_gamepads = false;
+let gamepad_primary_idx = -1;
+let just_flaped = false;
+
 gameIcon.src = gameSpriteIcon;
 
 // prettier-ignore
@@ -42,6 +46,25 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const GameUpdate = (dt: number): void => {
+
+  // to be honest, idk to implement this well.
+  // atleast i dont use AI for this, so i think this is better?!
+  if (has_gamepads) {
+    const gp = navigator.getGamepads()[gamepad_primary_idx];
+
+    if (gp?.buttons[0].pressed) {
+      if (Game.currentState === 'game') {
+        if (!just_flaped) {
+          Game.flap();
+          just_flaped = true;
+        }
+      }
+      Game.startAtKeyBoardEvent();
+    } else {
+      just_flaped = false;
+    }
+  }
+
   physicalContext.drawImage(virtualCanvas, 0, 0);
 
   Game.Update(dt);
@@ -97,4 +120,17 @@ window.addEventListener('resize', () => {
   if (!isLoaded) return;
 
   ScreenResize();
+});
+
+window.addEventListener('gamepadconnected', (e) => {
+  console.log('Gamepad connected');
+  has_gamepads = true;
+  gamepad_primary_idx = e.gamepad.index;
+});
+
+window.addEventListener('gamepaddisconnected', (e) => {
+  console.log('Gamepad disconnected');
+
+  has_gamepads = false;
+  gamepad_primary_idx = -1;
 });

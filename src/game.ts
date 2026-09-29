@@ -175,6 +175,10 @@ export default class Game extends ParentClass {
     else this.gamePlay.startAtKeyBoardEvent();
   }
 
+  public flap(): void {
+    this.gamePlay.click({ x: 0, y: 0 });
+  }
+
   public get currentState(): IGameState {
     return this.state;
   }
